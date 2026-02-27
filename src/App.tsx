@@ -1,8 +1,8 @@
-import Contact from './Component/Contact'
+import AboutUs from './Component/AboutUs'
 import './App.css'
 
 function App() {
-  return <Contact />
+  return <AboutUs />
 }
 
 export default App
