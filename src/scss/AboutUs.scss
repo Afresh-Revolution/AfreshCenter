@@ -32,11 +32,15 @@ body {
 ═══════════════════════════════════════════════ */
 .about-hero {
     position: relative;
+    width: 1440px;
+    height: 717.75px;
+    max-width: 100%;
+    margin: 0 auto;
     min-height: 420px;
     color: #fff;
     background-image:
         linear-gradient(rgba(15, 20, 28, 0.65), rgba(15, 20, 28, 0.65)),
-        url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80');
+        url('../assets/images/corporategroup.jpg');
     background-size: cover;
     background-position: center top;
     overflow: hidden;
@@ -87,6 +91,12 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+}
+
+.about-logo-img {
+    height: 34px;
+    width: auto;
+    display: block;
 }
 
 .about-mark {
@@ -214,6 +224,10 @@ body {
 
 .about-section--light {
     background: #ffffff;
+}
+
+.about-section--soft {
+    background: #efefef;
 }
 
 .about-two-col {
@@ -418,6 +432,12 @@ body {
     margin-bottom: 10px;
 }
 
+.footer-logo-img {
+    height: 34px;
+    width: auto;
+    display: block;
+}
+
 .footer-mark {
     width: 32px;
     height: 32px;
@@ -526,7 +546,7 @@ body {
    INTRODUCING OUR CEO
 ═══════════════════════════════════════════════ */
 .ceo-section {
-    background: #ffffff;
+    background: #efefef;
     border-top: 1px solid var(--line);
     padding: 64px 32px;
 }
@@ -589,7 +609,7 @@ body {
    MEET OUR TEAM
 ═══════════════════════════════════════════════ */
 .team-section {
-    background: #f7f9fb;
+    background: #efefef;
     border-top: 1px solid var(--line);
     padding: 64px 0 80px;
     overflow: hidden;
@@ -659,7 +679,7 @@ body {
     cursor: not-allowed;
 }
 
-/* ── Carousel track ── */
+/* Carousel track */
 .team-carousel {
     display: flex;
     justify-content: center;
@@ -686,7 +706,7 @@ body {
     cursor: pointer;
 
     /* Position cards based on --offset */
-    transform: translateX(calc(var(--offset) * 240px)) scale(calc(1 - abs(var(--offset)) * 0.06));
+    transform: translateX(calc(var(--offset) * 270px)) scale(calc(1 - abs(var(--offset)) * 0.06));
     opacity: calc(1 - abs(var(--offset)) * 0.25);
     z-index: calc(10 - abs(var(--offset)) * 2);
 }

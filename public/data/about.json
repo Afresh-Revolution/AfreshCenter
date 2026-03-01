@@ -1,0 +1,69 @@
+{
+  "heroTitle": "About Us",
+  "topWorks": [
+    {
+      "id": "cbrilliance",
+      "title": "Cbrilliance",
+      "description": "Software development involves collaboration to design, code, test, and maintain user-friendly applications.",
+      "link": "#",
+      "imgKey": "cbrilliance"
+    },
+    {
+      "id": "joscity",
+      "title": "JosCity",
+      "description": "Software development involves collaboration to design, code, test, and maintain user-friendly applications.",
+      "link": "#",
+      "imgKey": "joscity"
+    },
+    {
+      "id": "knowrist",
+      "title": "Knowrist",
+      "description": "Software development involves collaboration to design, code, test, and maintain user-friendly applications.",
+      "link": "#",
+      "imgKey": "knowrist"
+    }
+  ],
+  "teamMembers": [
+    {
+      "id": "felix",
+      "name": "Felix Nwachukwu",
+      "role": "Hardware Manager",
+      "roleColor": "#f68014",
+      "bio": "Oversees the procurement and maintenance of hardware infrastructure, ensuring all systems function efficiently and securely.",
+      "imgKey": "felix"
+    },
+    {
+      "id": "blessing",
+      "name": "Blessing Adukuchilli",
+      "role": "Administrative Manager",
+      "roleColor": "#f68014",
+      "bio": "Manages internal documentation, compliance, scheduling, and organizational processes. Ensures smooth administrative operations and supports executive management.",
+      "imgKey": "blessing"
+    },
+    {
+      "id": "jethro",
+      "name": "Jethro Mark Da'ar",
+      "role": "Chief Executive Officer (CEO)",
+      "roleColor": "#f68014",
+      "bio": "Leads the overall vision, strategic direction, and growth of the company. Oversees major partnerships, financial decisions, and long-term development initiatives.",
+      "imgKey": "jethro",
+      "featured": true
+    },
+    {
+      "id": "dominic",
+      "name": "Dominic Ray Nanjwan",
+      "role": "General Manager",
+      "roleColor": "#f68014",
+      "bio": "Oversees daily operations, coordinating teams and performance goals to ensure all departments function efficiently and meet company objectives.",
+      "imgKey": "dominic"
+    },
+    {
+      "id": "william",
+      "name": "William Bosworth",
+      "role": "Software Manager",
+      "roleColor": "#f68014",
+      "bio": "Leads software architecture, system design, and technical innovation across all company platforms.",
+      "imgKey": "william"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+// Base & app
+@forward 'base';
+@forward 'AboutUs';
+@forward 'admin/Login';
+
+// Admin (variables first, then layout & pages)
+@forward 'admin/admin';
+@forward 'admin/AdminLayout';
+@forward 'admin/overview/Overview';
+@forward 'admin/services/Services';
+@forward 'admin/bookings/Bookings';
+@forward 'admin/contacts/Contacts';
+@forward 'admin/settings/Settings';

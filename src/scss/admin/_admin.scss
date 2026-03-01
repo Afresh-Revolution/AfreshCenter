@@ -1,0 +1,31 @@
+// Admin shared variables
+$admin-bg: #f7f7f7;
+$admin-sidebar-bg: #fff;
+$admin-text-primary: #333;
+$admin-text-secondary: #80736b;
+$admin-accent: #ea580c;
+$admin-accent-hover: #c2410c;
+$admin-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+$admin-card-radius: 12px;
+$admin-sidebar-width: 260px;
+$admin-header-height: 80px;
+
+// Responsive breakpoints (use with max-width in media queries)
+$bp-mobile: 480px;
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+
+// Status colors
+$status-pending: #fef3c7;
+$status-pending-text: #92400e;
+$status-confirmed: #d1fae5;
+$status-confirmed-text: #065f46;
+$status-completed: #e5e7eb;
+$status-completed-text: #374151;
+$metric-green: #22c55e;
+$metric-blue: #3b82f6;
+$logout-red: #dc2626;
+$status-active: #dcfce7;
+$status-active-text: #166534;
+$status-inactive: #f3f4f6;
+$status-inactive-text: #6b7280;

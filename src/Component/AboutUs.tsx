@@ -1,40 +1,95 @@
-import { useState } from 'react'
-import './AboutUs.css'
+import { useEffect, useState } from 'react'
+import cbrillianceImg from '../assets/images/cbrilliance.jpg'
+import knowristImg from '../assets/images/knowrist.jpg'
+import josCityImg from '../assets/images/joscity.jpg'
+import designerImg from '../assets/images/designerrrr.png'
+import joinUsImg from '../assets/images/faf5808cbbf8bf77544b1eed718d2e7cbd59dd0f.png'
+import afreshLogoImg from '../assets/images/AfreshLogo.png'
+import felixImg from '../assets/images/MrFelix.JPG'
+import blessingImg from '../assets/images/BlessingWilliams.jpg'
+import jethroImg from '../assets/images/JethroMD.jpg'
+import dominicImg from '../assets/images/DominicRay.JPG'
+import williamImg from '../assets/images/WilliamsBosw.jpg'
+
+type TopWork = {
+    id: string
+    title: string
+    description: string
+    link: string
+    imgKey: string
+}
+
+type TeamMember = {
+    id: string
+    name: string
+    role: string
+    roleColor: string
+    bio: string
+    imgKey: string
+    featured?: boolean
+}
+
+type AboutContent = {
+    heroTitle: string
+    topWorks: TopWork[]
+    teamMembers: TeamMember[]
+}
+
+const imageMap: Record<string, string> = {
+    cbrilliance: cbrillianceImg,
+    knowrist: knowristImg,
+    joscity: josCityImg,
+    designer: designerImg,
+    joinus: joinUsImg,
+    afreshlogo: afreshLogoImg,
+    felix: felixImg,
+    blessing: blessingImg,
+    jethro: jethroImg,
+    dominic: dominicImg,
+    william: williamImg,
+}
+
+const getFeaturedIndex = (members: TeamMember[]) => {
+    const idx = members.findIndex((member) => member.featured)
+    return idx >= 0 ? idx : 0
+}
+
+const defaultHeroTitle = 'About Us'
 
 /* ── Top Works data ── */
-const topWorks = [
+const defaultTopWorks: TopWork[] = [
     {
         id: 'cbrilliance',
         title: 'Cbrilliance',
         description: 'Software development involves collaboration to design, code, test, and maintain user‑friendly applications.',
         link: '#',
-        img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80',
+        imgKey: 'cbrilliance',
     },
     {
         id: 'joscity',
         title: 'JosCity',
         description: 'Software development involves collaboration to design, code, test, and maintain user‑friendly applications.',
         link: '#',
-        img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80',
+        imgKey: 'joscity',
     },
     {
         id: 'knowrist',
         title: 'Knowrist',
         description: 'Software development involves collaboration to design, code, test, and maintain user‑friendly applications.',
         link: '#',
-        img: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80',
+        imgKey: 'knowrist',
     },
 ]
 
 /* ── Team members data ── */
-const teamMembers = [
+const defaultTeamMembers: TeamMember[] = [
     {
         id: 'felix',
         name: 'Felix Nwachukwu',
         role: 'Hardware Manager',
         roleColor: '#f68014',
         bio: 'Oversees the procurement and maintenance of hardware infrastructure, ensuring all systems function efficiently and securely.',
-        img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80',
+        imgKey: 'felix',
     },
     {
         id: 'blessing',
@@ -42,7 +97,7 @@ const teamMembers = [
         role: 'Administrative Manager',
         roleColor: '#f68014',
         bio: 'Manages internal documentation, compliance, scheduling, and organizational processes. Ensures smooth administrative operations and supports executive management.',
-        img: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=400&q=80',
+        imgKey: 'blessing',
     },
     {
         id: 'jethro',
@@ -50,7 +105,7 @@ const teamMembers = [
         role: 'Chief Executive Officer (CEO)',
         roleColor: '#f68014',
         bio: 'Leads the overall vision, strategic direction, and growth of the company. Oversees major partnerships, financial decisions, and long‑term development initiatives.',
-        img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+        imgKey: 'jethro',
         featured: true,
     },
     {
@@ -59,7 +114,7 @@ const teamMembers = [
         role: 'General Manager',
         roleColor: '#f68014',
         bio: 'Oversees daily operations, coordinating teams and performance goals to ensure all departments function efficiently and meet company objectives.',
-        img: 'https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=400&q=80',
+        imgKey: 'dominic',
     },
     {
         id: 'william',
@@ -67,7 +122,7 @@ const teamMembers = [
         role: 'Software Manager',
         roleColor: '#f68014',
         bio: 'Leads software architecture, system design, and technical innovation across all company platforms.',
-        img: 'https://images.unsplash.com/photo-1619895862022-09114b41f16f?auto=format&fit=crop&w=400&q=80',
+        imgKey: 'william',
     },
 ]
 
@@ -98,11 +153,42 @@ const quickLinks = ['Home', 'About', 'Services', 'Support', 'Account']
    COMPONENT
 ───────────────────────────────────────── */
 function AboutUs() {
+    const [content, setContent] = useState<AboutContent>({
+        heroTitle: defaultHeroTitle,
+        topWorks: defaultTopWorks,
+        teamMembers: defaultTeamMembers,
+    })
     /* carousel: centre index (CEO is default centre = index 2) */
-    const [centreIdx, setCentreIdx] = useState(2)
+    const [centreIdx, setCentreIdx] = useState(() => getFeaturedIndex(defaultTeamMembers))
 
+    useEffect(() => {
+        let isActive = true
+        const fetchContent = async () => {
+            try {
+                const res = await fetch('/data/about.json', { cache: 'no-store' })
+                if (!res.ok) return
+                const data = (await res.json()) as Partial<AboutContent>
+                const heroTitle = typeof data.heroTitle === 'string' && data.heroTitle.trim()
+                    ? data.heroTitle
+                    : defaultHeroTitle
+                const topWorks = Array.isArray(data.topWorks) ? data.topWorks : defaultTopWorks
+                const teamMembers = Array.isArray(data.teamMembers) ? data.teamMembers : defaultTeamMembers
+                if (!isActive) return
+                setContent({ heroTitle, topWorks, teamMembers })
+                setCentreIdx(getFeaturedIndex(teamMembers))
+            } catch {
+                /* fall back to defaults */
+            }
+        }
+        fetchContent()
+        return () => {
+            isActive = false
+        }
+    }, [])
+
+    const maxIdx = Math.max(0, content.teamMembers.length - 1)
     const prev = () => setCentreIdx((i) => Math.max(0, i - 1))
-    const next = () => setCentreIdx((i) => Math.min(teamMembers.length - 1, i + 1))
+    const next = () => setCentreIdx((i) => Math.min(maxIdx, i + 1))
 
     return (
         <main className="about-page">
@@ -114,8 +200,7 @@ function AboutUs() {
                 <div className="about-hero-overlay" />
                 <div className="about-topbar">
                     <div className="about-logo">
-                        <span className="about-mark" aria-hidden="true">afr</span>
-                        <span className="about-logo-text">AfrESH</span>
+                        <img src={afreshLogoImg} alt="AfrESH logo" className="about-logo-img" />
                     </div>
                     <nav aria-label="Primary navigation">
                         <ul className="about-nav">
@@ -128,7 +213,7 @@ function AboutUs() {
                     <button className="about-cta" type="button">Afresh Academy</button>
                 </div>
                 <div className="about-hero-content">
-                    <h1>About Us</h1>
+                    <h1>{content.heroTitle}</h1>
                 </div>
             </header>
 
@@ -153,7 +238,7 @@ function AboutUs() {
             {/* ══════════════════════════════
           OUR STORY
       ══════════════════════════════ */}
-            <section className="about-section about-section--light" aria-label="Our Story">
+            <section className="about-section about-section--light about-section--soft" aria-label="Our Story">
                 <div className="about-two-col">
                     <div className="about-text-col">
                         <h2 className="section-label">OUR STORY</h2>
@@ -166,7 +251,7 @@ function AboutUs() {
                         <div
                             className="about-img-placeholder"
                             aria-label="Our story image"
-                            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80')" }}
+                            style={{ backgroundImage: `url(${designerImg})` }}
                         />
                     </div>
                 </div>
@@ -181,7 +266,7 @@ function AboutUs() {
                         <div
                             className="about-img-placeholder"
                             aria-label="Our mission image"
-                            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80')" }}
+                            style={{ backgroundImage: `url(${designerImg})` }}
                         />
                     </div>
                     <div className="about-text-col">
@@ -194,7 +279,7 @@ function AboutUs() {
             {/* ══════════════════════════════
           OUR VISION
       ══════════════════════════════ */}
-            <section className="about-section about-section--light" aria-label="Our Vision">
+            <section className="about-section about-section--light about-section--soft" aria-label="Our Vision">
                 <div className="about-two-col">
                     <div className="about-text-col">
                         <h2 className="section-label">OUR VISION</h2>
@@ -204,7 +289,7 @@ function AboutUs() {
                         <div
                             className="about-img-placeholder"
                             aria-label="Our vision image"
-                            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80')" }}
+                            style={{ backgroundImage: `url(${designerImg})` }}
                         />
                     </div>
                 </div>
@@ -219,20 +304,23 @@ function AboutUs() {
                     <p>Committed experts eager to revolutionize education using innovative technology.</p>
                 </div>
                 <div className="works-grid">
-                    {topWorks.map((work) => (
-                        <article key={work.id} className="work-card">
-                            <div
-                                className="work-card-img"
-                                aria-label={`${work.title} project image`}
-                                style={{ backgroundImage: `url('${work.img}')` }}
-                            />
-                            <div className="work-card-body">
-                                <h3>{work.title}</h3>
-                                <p>{work.description}</p>
-                                <a href={work.link} className="work-card-btn" role="button">Visit</a>
-                            </div>
-                        </article>
-                    ))}
+                    {content.topWorks.map((work) => {
+                        const workImg = imageMap[work.imgKey] ?? work.imgKey
+                        return (
+                            <article key={work.id} className="work-card">
+                                <div
+                                    className="work-card-img"
+                                    aria-label={`${work.title} project image`}
+                                    style={{ backgroundImage: `url('${workImg}')` }}
+                                />
+                                <div className="work-card-body">
+                                    <h3>{work.title}</h3>
+                                    <p>{work.description}</p>
+                                    <a href={work.link} className="work-card-btn" role="button">Visit</a>
+                                </div>
+                            </article>
+                        )
+                    })}
                 </div>
             </section>
 
@@ -265,7 +353,7 @@ function AboutUs() {
                     </div>
                     <div className="ceo-img-wrap">
                         <img
-                            src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80"
+                            src={designerImg}
                             alt="Jethro Mark Da'ar – CEO of Afresh Centre"
                             className="ceo-img"
                         />
@@ -292,7 +380,7 @@ function AboutUs() {
                         <button
                             className="team-nav-btn"
                             onClick={next}
-                            disabled={centreIdx === teamMembers.length - 1}
+                            disabled={centreIdx === content.teamMembers.length - 1}
                             aria-label="Next team member"
                         >
                             &#8594;
@@ -301,10 +389,11 @@ function AboutUs() {
                 </div>
 
                 <div className="team-carousel" aria-live="polite">
-                    {teamMembers.map((member, idx) => {
+                    {content.teamMembers.map((member, idx) => {
                         const offset = idx - centreIdx
                         const isCentre = offset === 0
                         const isVisible = Math.abs(offset) <= 2
+                        const memberImg = imageMap[member.imgKey] ?? member.imgKey
                         return (
                             <article
                                 key={member.id}
@@ -313,7 +402,7 @@ function AboutUs() {
                                 aria-hidden={!isVisible}
                             >
                                 <div className="team-card-img-wrap">
-                                    <img src={member.img} alt={member.name} className="team-card-img" />
+                                    <img src={memberImg} alt={member.name} className="team-card-img" />
                                 </div>
                                 <div className="team-card-body">
                                     <h3>{member.name}</h3>
@@ -333,7 +422,7 @@ function AboutUs() {
                 <div className="join-inner">
                     <div className="join-img-wrap">
                         <img
-                            src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&q=80"
+                            src={joinUsImg}
                             alt="Join the AfrESH team"
                             className="join-img"
                         />
@@ -359,8 +448,7 @@ function AboutUs() {
                 <div className="footer-content">
                     <section className="footer-brand-col">
                         <div className="footer-brand-row">
-                            <span className="footer-mark" aria-hidden="true">afr</span>
-                            <h3 className="footer-brand">afresh</h3>
+                            <img src={afreshLogoImg} alt="AfrESH logo" className="footer-logo-img" />
                         </div>
                         <p>Delivering quality support built with dependable workflows and practical service standards.</p>
                     </section>

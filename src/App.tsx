@@ -1,8 +1,6 @@
-import AboutUs from './Component/AboutUs'
-import './App.css'
-
+import AboutUs from './Component/AboutUs';
 function App() {
-  return <AboutUs />
+  return <AboutUs />;
 }
 
-export default App
+export default App;
