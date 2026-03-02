@@ -50,12 +50,17 @@ body {
 .about-hero::after {
     content: '';
     position: absolute;
-    left: -2%;
+    inset: 0;
+    z-index: 0;
+}
+
+.about-hero-wave {
+    position: absolute;
+    left: 0;
     bottom: -1px;
-    width: 104%;
-    height: 90px;
-    background: var(--page-bg);
-    clip-path: ellipse(55% 100% at 50% 100%);
+    width: 100%;
+    height: 120px;
+    fill: var(--page-bg);
     z-index: 1;
 }
 
@@ -65,6 +70,7 @@ body {
     background:
         radial-gradient(circle at 20% 10%, rgba(246, 128, 20, 0.15), transparent 34%),
         linear-gradient(to bottom, rgba(8, 18, 28, 0.55), rgba(8, 18, 28, 0.45));
+    z-index: 0;
 }
 
 .about-topbar,
@@ -696,6 +702,7 @@ body {
     width: 220px;
     background: #fff;
     border-radius: 18px;
+    border-bottom-left-radius: 0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     transition: transform 0.45s cubic-bezier(0.34, 1.3, 0.64, 1),

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { fetchTeams } from '../api/teams'
 import cbrillianceImg from '../assets/images/cbrilliance.jpg'
 import knowristImg from '../assets/images/knowrist.jpg'
 import josCityImg from '../assets/images/joscity.jpg'
@@ -163,7 +164,7 @@ function AboutUs() {
 
     useEffect(() => {
         let isActive = true
-        const fetchContent = async () => {
+        const fetchAbout = async () => {
             try {
                 const res = await fetch('/data/about.json', { cache: 'no-store' })
                 if (!res.ok) return
@@ -172,15 +173,34 @@ function AboutUs() {
                     ? data.heroTitle
                     : defaultHeroTitle
                 const topWorks = Array.isArray(data.topWorks) ? data.topWorks : defaultTopWorks
-                const teamMembers = Array.isArray(data.teamMembers) ? data.teamMembers : defaultTeamMembers
                 if (!isActive) return
-                setContent({ heroTitle, topWorks, teamMembers })
-                setCentreIdx(getFeaturedIndex(teamMembers))
+                setContent((prev) => ({ ...prev, heroTitle, topWorks }))
             } catch {
                 /* fall back to defaults */
             }
         }
-        fetchContent()
+        const fetchTeamsData = async () => {
+            try {
+                const teams = await fetchTeams()
+                if (!teams.length) return
+                const mapped = teams.map((member, idx) => ({
+                    id: member.id ?? `${member.name ?? 'member'}-${idx}`,
+                    name: member.name ?? 'Team Member',
+                    role: member.role ?? 'Team',
+                    roleColor: '#f68014',
+                    bio: member.bio ?? '',
+                    imgKey: member.image_url ?? member.id ?? '',
+                    featured: idx === 0,
+                }))
+                if (!isActive) return
+                setContent((prev) => ({ ...prev, teamMembers: mapped }))
+                setCentreIdx(getFeaturedIndex(mapped))
+            } catch {
+                /* fall back to defaults */
+            }
+        }
+        fetchAbout()
+        fetchTeamsData()
         return () => {
             isActive = false
         }
@@ -198,6 +218,9 @@ function AboutUs() {
       ══════════════════════════════ */}
             <header className="about-hero" aria-label="About Us hero">
                 <div className="about-hero-overlay" />
+                <svg className="about-hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,62 C200,118 380,122 560,96 C740,70 900,34 1080,38 C1240,42 1340,62 1440,70 L1440,120 L0,120 Z" />
+                </svg>
                 <div className="about-topbar">
                     <div className="about-logo">
                         <img src={afreshLogoImg} alt="AfrESH logo" className="about-logo-img" />
