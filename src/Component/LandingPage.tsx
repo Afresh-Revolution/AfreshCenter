@@ -400,82 +400,93 @@ function LandingPage() {
           </div>
         </div>
       </section>
-      {/* GET STARTED NOW banner (exact from first screenshot)  */}
-      <section className="getstarted-banner container">
-        <h2>GET STARTED NOW</h2>
-        <div style={{ fontSize: "24px", fontWeight: 300 }}>Get Started</div>
-        <div className="btn-ghost">→</div>
-      </section>
-
-      {/* Get in Touch with Us (contact form + details from screenshot)  */}
+      {/* Get in Touch with Us */}
       <section className="contact-section">
-        <div className="container contact-grid">
-          <div className="contact-info">
+        <div className="container contact-wrap">
+          <div className="contact-form-panel">
             <h3>Get in Touch with Us</h3>
-            <div className="info-line">
-              <i className="fas fa-phone"></i> +35866970742
-            </div>
-            <div className="info-line">
-              <i className="fas fa-envelope"></i> jewishmail.com
-            </div>
-            <div className="info-line">
-              <i className="fas fa-map-pin"></i> No. 23344 at Jerusalem,
-              nunubanot.gov.il · Palestinian Israel
-            </div>
-            <div className="social-icons">
-              <i className="fab fa-facebook"></i>{" "}
-              <i className="fab fa-twitter"></i>{" "}
-              <i className="fab fa-instagram"></i>{" "}
-              <i className="fab fa-linkedin"></i>
-            </div>
-            <div
-              style={{
-                marginTop: "30px",
-                fontSize: "14px",
-                background: "#ffffff20",
-                padding: "20px",
-                borderRadius: "24px",
-              }}>
-              <strong>JEWISH EXILES IN BABYLONIA</strong>
-              <br />2 KIS, 24-10-30; 25-8-12 AR: 5:20-34 6:00K - 9:15 EDR: 2:59;
-              8:17
-              <br />
-              City Mousaiah peak · Jewish exiles' route
-            </div>
-          </div>
-          <div className="form-box">
             <div className="form-row">
               <div className="input-group">
                 <label>Name</label>
-                <input type="text" placeholder="Your name" />
+                <input type="text" placeholder="Enter name" />
               </div>
               <div className="input-group">
                 <label>Email</label>
-                <input type="email" placeholder="Email" />
+                <input type="email" placeholder="Enter Email" />
               </div>
             </div>
             <div className="form-row">
               <div className="input-group">
                 <label>Phone Number</label>
-                <input type="text" placeholder="Enter Number" />
+                <input type="text" placeholder="Enter number" />
               </div>
               <div className="input-group">
                 <label>Subject</label>
-                <input type="text" placeholder="Subject" />
+                <input type="text" placeholder="Enter Subject" />
               </div>
             </div>
             <div className="input-group">
               <label>Message</label>
-              <textarea placeholder="Message"></textarea>
+              <textarea placeholder="Write your message"></textarea>
             </div>
             <button className="submit-btn">Submit</button>
-            <div className="tiny-note">
-              +35866970742 · jewishmail.com · No. 23344 Jerusalem
+
+            <div className="contact-meta">
+              <div className="contact-chip">
+                <i className="fas fa-phone"></i>
+                <span>+35866970742</span>
+              </div>
+              <div className="contact-chip">
+                <i className="fas fa-envelope"></i>
+                <span>jewishmail.com</span>
+              </div>
+              <div className="contact-chip">
+                <i className="fas fa-map-pin"></i>
+                <span>No 2344 oil airport roundabout, Jos Plateau</span>
+              </div>
             </div>
+
+            <div className="contact-social">
+              <p>Follow our social media</p>
+              <div className="social-row">
+                <button type="button" aria-label="Facebook">
+                  <i className="fab fa-facebook-f"></i>
+                </button>
+                <button type="button" aria-label="Twitter">
+                  <i className="fab fa-twitter"></i>
+                </button>
+                <button type="button" aria-label="Instagram">
+                  <i className="fab fa-instagram"></i>
+                </button>
+                <button type="button" aria-label="LinkedIn">
+                  <i className="fab fa-linkedin-in"></i>
+                </button>
+                <button type="button" aria-label="YouTube">
+                  <i className="fab fa-youtube"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="contact-map-panel">
+            <iframe
+              title="Afresh location map"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=35.13%2C31.73%2C35.30%2C31.84&layer=mapnik&marker=31.778%2C35.235"></iframe>
           </div>
         </div>
       </section>
 
+      {/* GET STARTED NOW */}
+      <section className="getstarted-banner">
+        <div className="container getstarted-inner">
+          <h2>GET STARTED NOW</h2>
+          <button className="getstarted-btn" type="button">
+            Get Started
+          </button>
+        </div>
+      </section>
       {/* footer with extra details  */}
       <footer className="footer">
         <div>© AfRESH – innovation hub</div>
@@ -490,6 +501,7 @@ function LandingPage() {
 }
 
 export default LandingPage;
+
 
 
 
