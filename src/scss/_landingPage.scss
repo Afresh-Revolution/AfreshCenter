@@ -54,29 +54,42 @@
           .about-photo { width: 150px; height: 200px; }
           .about-count-badge { width: 108px; height: 108px; }
           .about-count-number { font-size: 34px; }
+          .service-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 700px; }
+          .team-header { align-items: center; }
+          .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .team-card-featured { transform: none; }
+        }
+        @media (max-width: 560px) {
+          .service-cards { grid-template-columns: 1fr; }
+          .team-header { flex-direction: column; align-items: center; text-align: center; }
+          .team-grid { grid-template-columns: 1fr; }
         }
         /* services preview (exactly from screenshot: six cards, view all) */
-        .services-preview { padding: 50px 32px 70px; background: #f9fbfd; }
-        .section-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; color: #0b2d3b; }
-        .section-sub { color: #3f5465; margin-bottom: 48px; font-size: 18px; }
-        .service-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 40px; }
-        .service-card { background: white; border-radius: 28px; padding: 32px 24px; box-shadow: 0 8px 24px rgba(0,30,20,0.05); border: 1px solid #e6edf2; transition: all 0.25s; }
-        .service-card:hover { box-shadow: 0 20px 30px -8px rgba(20,70,40,0.15); transform: translateY(-4px); }
-        .service-icon { font-size: 42px; margin-bottom: 18px; color: #266b50; }
-        .service-card h3 { font-size: 24px; margin-bottom: 12px; color: #0d3b2f; }
-        .service-card p { color: #3f4f5e; margin-bottom: 22px; line-height: 1.6; }
-        .learn-more { font-weight: 600; color: #1e6f5c; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid transparent; }
-        .learn-more:hover { border-bottom-color: #1e6f5c; }
-        .view-all { text-align: right; font-size: 18px; font-weight: 600; margin-top: 20px; cursor: pointer; color: #2a5c4b; }
-        .view-all i { margin-left: 8px; }
+        .services-preview { padding: 48px 32px 54px; background: #f4f4f4; }
+        .section-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; color: #0b2d3b; text-align: center; }
+        .section-sub { color: #3f5465; margin-bottom: 24px; font-size: 14px; text-align: center; }
+        .service-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 0 auto 14px; max-width: 960px; }
+        .service-card { background: #fff; border-radius: 12px; padding: 10px 10px 12px; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08); border: 1px solid #eceff2; }
+        .service-card-image { width: 100%; height: 124px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: block; }
+        .service-card h3 { font-size: 12px; margin-bottom: 6px; color: #1f2e45; font-weight: 700; }
+        .service-card p { color: #6f7782; margin-bottom: 10px; line-height: 1.3; font-size: 10px; }
+        .service-learn-btn { width: 100%; border: 0; border-radius: 8px; background: #f7941d; color: #fff; font-size: 10px; font-weight: 600; padding: 8px 10px; cursor: pointer; }
+        .service-learn-btn:hover { background: #e98712; }
+        .view-all { text-align: center; margin-top: 12px; }
+        .view-all-btn { border: 0; border-radius: 8px; background: #f7941d; color: #fff; font-size: 10px; font-weight: 600; padding: 8px 20px; cursor: pointer; }
         /* meet our team */
-        .team-section { padding: 70px 32px; background: white; }
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 40px; }
-        .team-card { background: #f7fbfe; border-radius: 24px; padding: 30px 20px; text-align: center; transition: 0.2s; border: 1px solid #dfecf0; }
-        .team-card h4 { font-size: 20px; margin: 16px 0 4px; color: #0f3a2c; }
-        .team-role { color: #3d5f6e; font-size: 14px; font-weight: 500; margin-bottom: 12px; }
-        .team-desc { font-size: 14px; color: #2d4a5a; margin-top: 8px; }
-        .view-all-team { margin-top: 48px; text-align: center; font-weight: 600; color: #1b6b53; cursor: pointer; font-size: 18px; }
+        .team-section { padding: 44px 24px 58px; background: #ebebeb; }
+        .team-header { max-width: 1040px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+        .team-nav-actions { display: flex; align-items: center; gap: 10px; }
+        .team-nav-btn { width: 36px; height: 36px; border-radius: 50%; border: 0; background: #fff; color: #6f7782; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); cursor: pointer; font-size: 14px; }
+        .team-grid { max-width: 1040px; margin: 18px auto 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+        .team-card { background: #f7f8fb; border-radius: 10px; overflow: hidden; border: 1px solid #dde4ea; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); }
+        .team-card-featured { transform: translateY(-6px); }
+        .team-card-image { width: 100%; height: 140px; object-fit: cover; display: block; }
+        .team-card-content { padding: 8px 10px 10px; }
+        .team-card h4 { font-size: 11px; margin: 0 0 4px; color: #162635; font-weight: 700; }
+        .team-role { color: #f7941d; font-size: 9px; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
+        .team-desc { font-size: 9px; color: #606a76; line-height: 1.35; }
         /* top works (from screenshot) */
         .topworks { background: #f2f7f9; padding: 60px 32px; }
         .works-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }

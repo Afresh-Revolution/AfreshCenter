@@ -7,6 +7,15 @@ import popsLogo from "../assets/images/pops 1.png";
 import knowristLogo from "../assets/images/knowrist 1.png";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
+import serviceImage1 from "../assets/images/Image 1.png";
+import serviceImage2 from "../assets/images/Image 2.png";
+import serviceImage3 from "../assets/images/Image 3.png";
+import serviceImage4 from "../assets/images/Image 4.png";
+import serviceImage5 from "../assets/images/Image 5.png";
+import serviceImage6 from "../assets/images/Image 6.png";
+import blessingImage from "../assets/images/BlessingWilliams.jpg";
+import jethroImage from "../assets/images/JethroMD.jpg";
+import williamImage from "../assets/images/WilliamsBosw.jpg";
 
 function LandingPage() {
   const affiliatedCompanies = [
@@ -15,6 +24,79 @@ function LandingPage() {
     { name: "GeniusWave", logo: gwaveLogo },
     { name: "Popswit", logo: popsLogo },
     { name: "Knowrist", logo: knowristLogo },
+  ];
+
+  const serviceItems = [
+    {
+      title: "FrontEnd Development",
+      description:
+        "Software development services customization to design, code, test and deploy web applications.",
+      image: serviceImage1,
+    },
+    {
+      title: "Hardware",
+      description:
+        "Software development services customization to design, code, test and deploy hardware systems.",
+      image: serviceImage2,
+    },
+    {
+      title: "UI/UX Design",
+      description:
+        "Software development services customization to design, code, test and deploy user interface applications.",
+      image: serviceImage3,
+    },
+    {
+      title: "Cyber security",
+      description:
+        "Software development services customization to design, code, test and deploy cybersecurity solutions.",
+      image: serviceImage4,
+    },
+    {
+      title: "Graphics Design",
+      description:
+        "Software development services customization to design, code, test and deploy graphic designs.",
+      image: serviceImage5,
+    },
+    {
+      title: "Media",
+      description:
+        "Software development services customization to design, code, test and deploy multimedia applications.",
+      image: serviceImage6,
+    },
+  ];
+
+  const teamMembers = [
+    {
+      name: "Felix Nwachukwu",
+      role: "Hardware Manager",
+      bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
+      image: jethroImage,
+    },
+    {
+      name: "Blessing Adukuchili",
+      role: "Administrative Manager",
+      bio: "Leads administrative operations, documentation, scheduling, and internal process coordination.",
+      image: blessingImage,
+    },
+    {
+      name: "Jethro Mark Da'ar",
+      role: "Chief Executive Officer (CEO)",
+      bio: "Drives strategic growth, innovation, and partnerships while leading long-term company direction.",
+      image: jethroImage,
+      featured: true,
+    },
+    {
+      name: "Dominic Ray Nanjwan",
+      role: "General Manager",
+      bio: "Coordinates day-to-day execution across teams to deliver results and maintain operational excellence.",
+      image: jethroImage,
+    },
+    {
+      name: "William Bosworth",
+      role: "Software Manager",
+      bio: "Leads software architecture, delivery standards, and continuous engineering improvements.",
+      image: williamImage,
+    },
   ];
 
   return (
@@ -104,122 +186,62 @@ function LandingPage() {
         <div className="container">
           <h2 className="section-title">Our Services</h2>
           <div className="service-cards">
-            <div className="service-card">
-              <div className="service-icon">
-                <i className="fas fa-code"></i>
-              </div>
-              <h3>FrontEnd Development</h3>
-              <p>
-                Software development services customization to design, code,
-                test and deploy web applications.
-              </p>
-              <span className="learn-more">Learn More →</span>
-            </div>
-            <div className="service-card">
-              <div className="service-icon">
-                <i className="fas fa-microchip"></i>
-              </div>
-              <h3>Hardware</h3>
-              <p>
-                Software development services customization to design, code,
-                test and deploy hardware systems.
-              </p>
-              <span className="learn-more">Learn More →</span>
-            </div>
-            <div className="service-card">
-              <div className="service-icon">
-                <i className="fas fa-paint-brush"></i>
-              </div>
-              <h3>UI/UX Design</h3>
-              <p>
-                Software development services customization to design, code,
-                test and deploy user interface applications.
-              </p>
-              <span className="learn-more">Learn More →</span>
-            </div>
-            <div className="service-card">
-              <div className="service-icon">
-                <i className="fas fa-shield-alt"></i>
-              </div>
-              <h3>Cyber security</h3>
-              <p>
-                Software development services customization to design, code,
-                test and deploy cybersecurity solutions.
-              </p>
-              <span className="learn-more">Learn More →</span>
-            </div>
-            <div className="service-card">
-              <div className="service-icon">
-                <i className="fas fa-pencil-ruler"></i>
-              </div>
-              <h3>Graphics Design</h3>
-              <p>
-                Software development services customization to design, code,
-                test and deploy graphic designs.
-              </p>
-              <span className="learn-more">Learn More →</span>
-            </div>
-            <div className="service-card">
-              <div className="service-icon">
-                <i className="fas fa-video"></i>
-              </div>
-              <h3>Media</h3>
-              <p>
-                Software development services customization to design, code,
-                test and deploy multimedia applications.
-              </p>
-              <span className="learn-more">Learn More →</span>
-            </div>
+            {serviceItems.map((service) => (
+              <article className="service-card" key={service.title}>
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="service-card-image"
+                />
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+                <button className="service-learn-btn" type="button">
+                  Learn More
+                </button>
+              </article>
+            ))}
           </div>
           <div className="view-all">
-            View all <i className="fas fa-arrow-right"></i>
+            <button className="view-all-btn" type="button">
+              View all
+            </button>
           </div>
         </div>
       </section>
-
       {/* Meet Our Team  */}
       <section className="team-section container">
-        <h2 className="section-title">Meet Our Team</h2>
-        <div className="section-sub">
-          Dedicated professionals passionate about transforming education
-          through technology.
+        <div className="team-header">
+          <div>
+            <h2 className="section-title">Meet Our Team</h2>
+            <div className="section-sub">
+              Dedicated professionals passionate about transforming education
+              through technology.
+            </div>
+          </div>
+          <div className="team-nav-actions">
+            <button className="team-nav-btn" type="button" aria-label="Previous team member">
+              &larr;
+            </button>
+            <button className="team-nav-btn" type="button" aria-label="Next team member">
+              &rarr;
+            </button>
+          </div>
         </div>
         <div className="team-grid">
-          <div className="team-card">
-            <h4>John ...</h4>
-            <div className="team-role">education expert</div>
-            <div className="team-desc">
-              10+ years in education, edtech strategist.
-            </div>
-          </div>
-          <div className="team-card">
-            <h4>Blessing Adokuchi</h4>
-            <div className="team-role">software engineer</div>
-            <div className="team-desc">
-              5+ years Java, Python, e‑learning platforms.
-            </div>
-          </div>
-          <div className="team-card">
-            <h4>Jethro Mark Da'ar</h4>
-            <div className="team-role">mobile developer</div>
-            <div className="team-desc">React Native, Firebase, 3+ years.</div>
-          </div>
-          <div className="team-card">
-            <h4>Dominic Ray Narayan</h4>
-            <div className="team-role">enterprise dev</div>
-            <div className="team-desc">Spring Boot, MongoDB, 2+ years.</div>
-          </div>
-          <div className="team-card">
-            <h4>William Bosworth</h4>
-            <div className="team-role">web developer</div>
-            <div className="team-desc">
-              Node.js, MySQL, e‑commerce specialist.
-            </div>
-          </div>
+          {teamMembers.map((member) => (
+            <article
+              className={`team-card${member.featured ? " team-card-featured" : ""}`}
+              key={member.name}>
+              <img src={member.image} alt={member.name} className="team-card-image" />
+              <div className="team-card-content">
+                <h4>{member.name}</h4>
+                <div className="team-role">{member.role}</div>
+                <div className="team-desc">{member.bio}</div>
+              </div>
+            </article>
+          ))}
         </div>
-        <div className="view-all-team">View all →</div>
       </section>
-
       {/* Our Top Works (exact replica with all items from screenshot)  */}
       <section className="topworks">
         <div className="container">
@@ -387,3 +409,5 @@ function LandingPage() {
 }
 
 export default LandingPage;
+
+
