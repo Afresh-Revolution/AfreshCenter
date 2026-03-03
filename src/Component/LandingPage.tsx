@@ -1,17 +1,20 @@
 // LandingPage.jsx
-import "./LandingPage.css";
 import heroBackground from "../assets/images/Background-Image.png";
 import afLogo from "../assets/images/af 1.png";
 import cbLogo from "../assets/images/cb 1.png";
 import gwaveLogo from "../assets/images/gwave 1.png";
 import popsLogo from "../assets/images/pops 1.png";
+import knowristLogo from "../assets/images/knowrist 1.png";
+import aboutImageLeft from "../assets/images/Image-Box-1.png";
+import aboutImageRight from "../assets/images/Image-Box-2.png";
 
 function LandingPage() {
   const affiliatedCompanies = [
-    { name: "Afresh", logo: afLogo },
     { name: "CBrilliance", logo: cbLogo },
+    { name: "Afresh", logo: afLogo },
     { name: "GeniusWave", logo: gwaveLogo },
     { name: "Popswit", logo: popsLogo },
+    { name: "Knowrist", logo: knowristLogo },
   ];
 
   return (
@@ -81,16 +84,16 @@ function LandingPage() {
             </p>
             <span className="read-more-link">Read More →</span>
           </div>
-          <div className="about-stats">
-            <div className="stat-item">
-              <span className="stat-number">10+</span> <div>years impact</div>
+          <div className="about-visual">
+            <div className="about-photo about-photo-left">
+              <img src={aboutImageLeft} alt="Afresh team collaboration" />
             </div>
-            <div className="stat-item">
-              <span className="stat-number">120+</span>{" "}
-              <div>startups launched</div>
+            <div className="about-count-badge">
+              <span className="about-count-number">100+</span>
+              <span className="about-count-text">Completed Projects</span>
             </div>
-            <div className="stat-item">
-              <span className="stat-number">5k+</span> <div>youth trained</div>
+            <div className="about-photo about-photo-right">
+              <img src={aboutImageRight} alt="Afresh team member" />
             </div>
           </div>
         </div>
