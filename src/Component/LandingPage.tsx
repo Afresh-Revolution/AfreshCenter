@@ -17,6 +17,11 @@ import serviceImage6 from "../assets/images/Image 6.png";
 import blessingImage from "../assets/images/BlessingWilliams.jpg";
 import jethroImage from "../assets/images/JethroMD.jpg";
 import williamImage from "../assets/images/WilliamsBosw.jpg";
+import ourWork1 from "../assets/images/our-woks-1.png";
+import ourWork2 from "../assets/images/our-woks-2.png";
+import ourWork3 from "../assets/images/our-woks-3.png";
+import olaImage from "../assets/images/Ola.png";
+import samLightImage from "../assets/images/Sam-light.png";
 
 function LandingPage() {
   const affiliatedCompanies = [
@@ -134,6 +139,26 @@ function LandingPage() {
       bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
       image: jethroImage,
     },
+  ];
+
+  const topWorkTiles = [
+    { type: "image", title: "vann", image: ourWork1 },
+    { type: "text", title: "consectet", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod temp." },
+    { type: "image", title: "delivery", image: ourWork2 },
+    { type: "textHighlight", title: "7.9%", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do." },
+    { type: "text", title: "voluptat", body: "to be welcomed and every pain in certain." },
+    { type: "image", title: "sos", image: ourWork3 },
+  ];
+
+  const whyChoosePoints = [
+    "But I must explain to you how all this nonsense",
+    "Quo Voluptas Fugi",
+    "Lorem ipsum",
+    "Lorem ipsum is simply dummy text of the printing and typesetting",
+    "Lorem ipsum is simply dummy text of the printing and type",
+    "Lorem ipsum dolor sit amet",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, and do",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   ];
 
   const visibleTeamCards = 5;
@@ -309,83 +334,72 @@ function LandingPage() {
           </div>
         </div>
       </section>
-      {/* Our Top Works (exact replica with all items from screenshot)  */}
+      {/* Our Top Works */}
       <section className="topworks">
-        <div className="container">
+        <div className="container topworks-container">
           <div className="works-header">
             <h2>Our Top Works</h2>
-            <span style={{ color: "#1b5e4a" }}>
-              Committed experts eager to revolutionize education using
-              innovative technology.
-            </span>
+            <span>Committed experts eager to revolutionize education using innovative technology.</span>
           </div>
-          <div className="works-grid">
-            <div className="work-item">
-              <span className="badge">1</span>
-              <h3>vann</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit …</p>
+          <div className="works-mosaic">
+            {topWorkTiles.map((tile, idx) => (
+              <article
+                key={`${tile.title}-${idx}`}
+                className={`works-tile works-tile-${tile.type}`}>
+                {tile.type === "image" ? (
+                  <img src={tile.image} alt={tile.title} className="works-tile-image" />
+                ) : (
+                  <>
+                    <h3>{tile.title}</h3>
+                    <p>{tile.body}</p>
+                  </>
+                )}
+              </article>
+            ))}
+          </div>
+
+          <div className="why-choose-wrap">
+            <div className="why-choose-copy">
+              <h3>Why Choose us?</h3>
+              <p>
+                Conversely, we may reject the allure of fleeting pleasures that can mislead and
+                desensitize individuals. We believe in making choices that prioritize long-term
+                well-being over momentary satisfaction, ensuring that our clients can navigate
+                challenges with foresight and resilience.
+              </p>
+              <ul>
+                {whyChoosePoints.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
             </div>
-            <div className="work-item">
-              <span className="badge">2</span>
-              <h3>consectetur</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit …</p>
-            </div>
-            <div className="work-item">
-              <span className="badge">3</span>
-              <h3>voluptat</h3>
-              <p>to be welcomed and every pain in certain.</p>
-            </div>
-            <div className="work-item">
-              <span className="badge">4</span>
-              <h3>sos</h3>
-              <p>mattis te the principle of selection hi majest.</p>
+            <div className="why-choose-image-wrap">
+              <img src={olaImage} alt="Why choose us" className="why-choose-image" />
             </div>
           </div>
-          {/* Why Choose us? block exactly from screenshot  */}
-          <div className="why-choose">
-            <h3 style={{ fontSize: "32px", marginBottom: "16px" }}>
-              Why Choose us?
-            </h3>
-            <p>
-              Conversely, we firmly reject the allure of fleeting pleasures that
-              can mislead and commoditize individuals. We believe in making
-              choices that prioritize long-term well-being over momentary
-              satisfaction, ensuring that our clients can navigate challenges
-              with foresight and resilience.
-            </p>
-            <ul>
-              <li>But I must explain to you how all this nonsense</li>
-              <li>Quo Voulustas Null</li>
-              <li>Lorem ipsum</li>
-              <li>
-                Lorem ipsum is simply dummy text of the printing and typesetting
-              </li>
-              <li>Lorem ipsum is simply dummy text of the printing and type</li>
-              <li>Lorem ipsum dolor sit amet</li>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-            </ul>
-          </div>
-          {/* Testimonials card with Samuel Light  */}
-          <div className="testimonial-card">
-            <p>
-              "At our tech hub, we embrace innovation and creativity, ensuring
-              that every challenge is met with a solution. Our team is dedicated
-              to providing exceptional service, making it easy for you to
-              navigate the complexities of technology. With us, you can explore
-              endless possibilities without any obstacles."
-            </p>
-            <div className="testimonial-author">
-              <div className="author-img">SL</div>
-              <div>
-                <strong>Samuel Light</strong>
-                <br />
-                Full stack Dev
+
+          <div className="testimonial-panel">
+            <div className="testimonial-profile-card">
+              <img src={samLightImage} alt="Samuel Light" className="testimonial-profile-image" />
+              <h4>Samuel Light</h4>
+              <p>Full stack Dev</p>
+              <div className="testimonial-mini-nav">
+                <button type="button" aria-label="Previous testimonial">&larr;</button>
+                <button type="button" aria-label="Next testimonial">&rarr;</button>
               </div>
+            </div>
+            <div className="testimonial-copy">
+              <h3>Testimonials</h3>
+              <p>
+                At our tech hub, we embrace innovation and creativity, ensuring that every challenge
+                is met with a solution. Our team is dedicated to providing exceptional service,
+                making it easy for you to navigate the complexities of technology. With us, you can
+                explore endless possibilities without any compromise in your setup.
+              </p>
             </div>
           </div>
         </div>
       </section>
-
       {/* GET STARTED NOW banner (exact from first screenshot)  */}
       <section className="getstarted-banner container">
         <h2>GET STARTED NOW</h2>
@@ -476,5 +490,6 @@ function LandingPage() {
 }
 
 export default LandingPage;
+
 
 
