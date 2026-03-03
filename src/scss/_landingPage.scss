@@ -29,7 +29,7 @@
         .affiliated h4 { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; color: #4a5c6c; margin-bottom: 24px; }
         .brand-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; align-items: center; }
         .brand-item { display: flex; align-items: center; justify-content: center; min-width: 110px; }
-        .brand-item img { max-height: 48px; max-width: 140px; width: auto; height: auto; object-fit: contain; opacity: 0.88; transition: opacity 0.2s ease; }
+        .brand-item img { max-height: 48px; max-width: 140px; width: auto; height: auto; -o-object-fit: contain; object-fit: contain; opacity: 0.88; transition: opacity 0.2s ease; }
         .brand-item img:hover { opacity: 1; }
         /* about section */
         .about { background: #ffffff; padding: 70px 32px; }
@@ -41,7 +41,7 @@
         .read-more-link:hover { border-bottom-color: #1e6f5c; }
         .about-visual { flex: 1 1 360px; min-width: 280px; max-width: 460px; display: grid; grid-template-columns: 1fr 1fr; align-items: center; position: relative; }
         .about-photo { width: 180px; height: 240px; border-radius: 120px; overflow: hidden; box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12); background: #f2f2f2; }
-        .about-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .about-photo img { width: 100%; height: 100%; -o-object-fit: cover; object-fit: cover; display: block; }
         .about-photo-left { justify-self: start; }
         .about-photo-right { justify-self: end; margin-top: 18px; }
         .about-count-badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 128px; height: 128px; border-radius: 50%; background: #fff; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; }
@@ -73,7 +73,7 @@
         .section-sub { color: #3f5465; margin-bottom: 24px; font-size: 14px; text-align: center; }
         .service-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 0 auto 14px; max-width: 960px; }
         .service-card { background: #fff; border-radius: 12px; padding: 10px 10px 12px; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08); border: 1px solid #eceff2; }
-        .service-card-image { width: 100%; height: 124px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: block; }
+        .service-card-image { width: 100%; height: 124px; -o-object-fit: cover; object-fit: cover; border-radius: 8px; margin-bottom: 10px; display: block; }
         .service-card h3 { font-size: 12px; margin-bottom: 6px; color: #1f2e45; font-weight: 700; }
         .service-card p { color: #6f7782; margin-bottom: 10px; line-height: 1.3; font-size: 10px; }
         .service-learn-btn { width: 100%; border: 0; border-radius: 8px; background: #f7941d; color: #fff; font-size: 10px; font-weight: 600; padding: 8px 10px; cursor: pointer; }
@@ -91,7 +91,7 @@
         .team-slider-track { --team-step: calc((100% - 40px) / 5 + 10px); display: flex; gap: 10px; transition: transform 0.35s ease; will-change: transform; }
         .team-card { position: relative; flex: 0 0 calc((100% - 40px) / 5); transform: none; opacity: 1; z-index: auto; background: #f7f8fb; border-radius: 10px; overflow: hidden; border: 1px solid #dde4ea; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); }
         .team-card-featured { transform: translateY(-6px); }
-        .team-card-image { width: 100%; height: 140px; object-fit: cover; display: block; }
+        .team-card-image { width: 100%; height: 140px; -o-object-fit: cover; object-fit: cover; display: block; }
         .team-card-content { padding: 8px 10px 10px; }
         .team-card h4 { font-size: 11px; margin: 0 0 4px; color: #162635; font-weight: 700; }
         .team-role { color: #f7941d; font-size: 9px; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
@@ -104,7 +104,7 @@
         .works-header span { font-size: 12px; color: #6d7682; }
         .works-mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
         .works-tile { border-radius: 12px; overflow: hidden; background: #fff; border: 1px solid #dfe5ea; min-height: 110px; }
-        .works-tile-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .works-tile-image { width: 100%; height: 100%; -o-object-fit: cover; object-fit: cover; display: block; }
         .works-tile-text { padding: 14px 12px; }
         .works-tile-text h3 { font-size: 16px; color: #1c2430; margin-bottom: 8px; text-transform: lowercase; }
         .works-tile-text p { font-size: 11px; color: #606a76; line-height: 1.4; }
@@ -118,10 +118,10 @@
         .why-choose-copy li { font-size: 11px; color: #616b76; margin-bottom: 8px; position: relative; padding-left: 18px; }
         .why-choose-copy li::before { content: ""; position: absolute; left: 0; top: 4px; width: 8px; height: 8px; border: 1.5px solid #f39a12; border-radius: 50%; }
         .why-choose-image-wrap { border-radius: 20px; overflow: hidden; box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14); }
-        .why-choose-image { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 360px; }
+        .why-choose-image { width: 100%; height: 100%; -o-object-fit: cover; object-fit: cover; display: block; min-height: 360px; }
         .testimonial-panel { margin-top: 40px; background: #f5f5f5; border-radius: 14px; padding: 20px; display: grid; grid-template-columns: 220px 1fr; gap: 20px; align-items: center; }
         .testimonial-profile-card { background: #fff; border-radius: 14px; padding: 14px; text-align: center; border: 1px solid #e3e8ec; }
-        .testimonial-profile-image { width: 82px; height: 82px; border-radius: 50%; object-fit: cover; margin: 0 auto 10px; display: block; }
+        .testimonial-profile-image { width: 82px; height: 82px; border-radius: 50%; -o-object-fit: cover; object-fit: cover; margin: 0 auto 10px; display: block; }
         .testimonial-profile-card h4 { font-size: 19px; color: #141d28; margin-bottom: 4px; }
         .testimonial-profile-card p { font-size: 14px; color: #717a85; margin-bottom: 12px; }
         .testimonial-mini-nav { display: flex; justify-content: center; gap: 8px; }
@@ -140,7 +140,7 @@
         }
 /* contact / get in touch */
         .contact-section { background: #efefef; padding: 36px 24px 12px; }
-        .contact-wrap { display: grid; grid-template-columns: 1.3fr 0.9fr; gap: 0; max-width: 1120px; border-radius: 14px; overflow: hidden; margin: 0 auto; border: 1px solid #2d5563; }
+        .contact-wrap { display: grid; grid-template-columns: 1.3fr 0.9fr; gap: 0; max-width: 1120px; border-radius: 14px; overflow: hidden; margin: 0 auto; border: 1px solid #2d5563;  padding: 0}
         .contact-form-panel { background: #10344a; color: #f1f6f8; padding: 26px 24px 20px; }
         .contact-form-panel h3 { text-align: center; font-size: 40px; margin-bottom: 18px; }
         .contact-form-panel .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px; }
@@ -161,29 +161,31 @@
         .contact-map-panel { background: #e8dcc5; min-height: 480px; }
         .contact-map-panel iframe { width: 100%; height: 100%; border: 0; min-height: 480px; display: block; }
         /* get started now */
-        .getstarted-banner { position: relative; background: #f4f4f4; margin-top: 36px; padding: 96px 24px 108px; overflow: hidden; min-height: 290px; }
+        .getstarted-banner { position: relative; background: #f4f4f4; margin-top: 36px; padding: 96px 24px 108px; overflow: hidden; min-height: 300px; }
         .getstarted-banner::before {
           content: "";
           position: absolute;
-          left: 18px;
-          bottom: 16px;
-          width: 150px;
-          height: 185px;
+          left: -14px;
+          bottom: -10px;
+          width: 214px;
+          height: 248px;
           background: #efd2a6;
-          opacity: 0.8;
-          clip-path: polygon(0 100%, 28% 16%, 55% 28%, 30% 100%);
+          opacity: 0.72;
+          -webkit-clip-path: polygon(4% 100%, 30% 38%, 66% 50%, 45% 100%);
+                  clip-path: polygon(4% 100%, 30% 38%, 66% 50%, 45% 100%);
         }
         .getstarted-banner::after {
           content: "";
           position: absolute;
-          right: 26px;
-          top: 8px;
-          width: 178px;
-          height: 246px;
+          right: -12px;
+          top: -16px;
+          width: 226px;
+          height: 316px;
           background: #f39811;
-          clip-path: polygon(58% 0, 86% 0, 63% 42%, 100% 42%, 42% 100%, 20% 100%, 40% 60%, 8% 60%);
+          -webkit-clip-path: polygon(56% 0, 88% 0, 66% 37%, 100% 37%, 48% 100%, 20% 100%, 42% 58%, 8% 58%);
+                  clip-path: polygon(56% 0, 88% 0, 66% 37%, 100% 37%, 48% 100%, 20% 100%, 42% 58%, 8% 58%);
         }
-        .getstarted-inner { position: relative; z-index: 1; text-align: center; }
+        .getstarted-inner { position: relative; z-index: 1; text-align: center;}
         .getstarted-inner h2 { font-size: 58px; color: #141b24; margin-bottom: 18px; letter-spacing: -0.4px; }
         .getstarted-btn { border: 0; border-radius: 8px; background: #f39811; color: #fff; padding: 9px 28px; font-size: 12px; cursor: pointer; }
         .getstarted-btn:hover { background: #de8300; }
@@ -193,8 +195,8 @@
           .contact-meta { grid-template-columns: 1fr; }
           .contact-form-panel .form-row { grid-template-columns: 1fr; }
           .getstarted-banner { padding: 70px 20px 82px; min-height: 240px; }
-          .getstarted-banner::before { width: 110px; height: 130px; left: 6px; bottom: 8px; }
-          .getstarted-banner::after { width: 130px; height: 180px; right: 8px; top: 6px; }
+          .getstarted-banner::before { width: 142px; height: 160px; left: -12px; bottom: -8px; -webkit-clip-path: polygon(6% 100%, 30% 38%, 66% 50%, 45% 100%); clip-path: polygon(6% 100%, 30% 38%, 66% 50%, 45% 100%); }
+          .getstarted-banner::after { width: 152px; height: 210px; right: -14px; top: -6px; -webkit-clip-path: polygon(56% 0, 88% 0, 66% 37%, 100% 37%, 48% 100%, 20% 100%, 42% 58%, 8% 58%); clip-path: polygon(56% 0, 88% 0, 66% 37%, 100% 37%, 48% 100%, 20% 100%, 42% 58%, 8% 58%); }
           .getstarted-inner h2 { font-size: 44px; }
         }
         /* footer */
