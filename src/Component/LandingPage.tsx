@@ -473,7 +473,7 @@ function LandingPage() {
               title="Afresh location map"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=35.13%2C31.73%2C35.30%2C31.84&layer=mapnik&marker=31.778%2C35.235"></iframe>
+              src="https://www.google.com/maps?q=Jos,+Plateau,+Nigeria&z=12&output=embed&hl=en"></iframe>
           </div>
         </div>
       </section>
