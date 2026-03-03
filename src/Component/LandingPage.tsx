@@ -1,4 +1,5 @@
 // LandingPage.jsx
+import { useState } from "react";
 import heroBackground from "../assets/images/Background-Image.png";
 import afLogo from "../assets/images/af 1.png";
 import cbLogo from "../assets/images/cb 1.png";
@@ -63,6 +64,30 @@ function LandingPage() {
         "Software development services customization to design, code, test and deploy multimedia applications.",
       image: serviceImage6,
     },
+    {
+      title: "Media",
+      description:
+        "Software development services customization to design, code, test and deploy multimedia applications.",
+      image: serviceImage2,
+    },
+    {
+      title: "Media",
+      description:
+        "Software development services customization to design, code, test and deploy multimedia applications.",
+      image: serviceImage1,
+    },
+    {
+      title: "Media",
+      description:
+        "Software development services customization to design, code, test and deploy multimedia applications.",
+      image: serviceImage3,
+    },
+    {
+      title: "Media",
+      description:
+        "Software development services customization to design, code, test and deploy multimedia applications.",
+      image: serviceImage4,
+    }
   ];
 
   const teamMembers = [
@@ -97,7 +122,33 @@ function LandingPage() {
       bio: "Leads software architecture, delivery standards, and continuous engineering improvements.",
       image: williamImage,
     },
+    {
+      name: "Felix Nwachukwu",
+      role: "Hardware Manager",
+      bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
+      image: jethroImage,
+    },
+    {
+      name: "Felix Nwachukwu",
+      role: "Hardware Manager",
+      bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
+      image: jethroImage,
+    },
   ];
+
+  const visibleTeamCards = 5;
+  const [teamStartIndex, setTeamStartIndex] = useState(0);
+  const maxTeamStartIndex = Math.max(0, teamMembers.length - visibleTeamCards);
+  const canSlidePrev = teamStartIndex > 0;
+  const canSlideNext = teamStartIndex < maxTeamStartIndex;
+
+  const handleTeamPrev = () => {
+    setTeamStartIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleTeamNext = () => {
+    setTeamStartIndex((prev) => Math.min(maxTeamStartIndex, prev + 1));
+  };
 
   return (
     <div className="app">
@@ -219,18 +270,33 @@ function LandingPage() {
             </div>
           </div>
           <div className="team-nav-actions">
-            <button className="team-nav-btn" type="button" aria-label="Previous team member">
+            <button
+              className="team-nav-btn"
+              type="button"
+              aria-label="Previous team member"
+              onClick={handleTeamPrev}
+              disabled={!canSlidePrev}>
               &larr;
             </button>
-            <button className="team-nav-btn" type="button" aria-label="Next team member">
+            <button
+              className="team-nav-btn"
+              type="button"
+              aria-label="Next team member"
+              onClick={handleTeamNext}
+              disabled={!canSlideNext}>
               &rarr;
             </button>
           </div>
         </div>
-        <div className="team-grid">
-          {teamMembers.map((member) => (
+        <div className="team-slider-viewport">
+          <div
+            className="team-slider-track"
+            style={{
+              transform: `translateX(calc(-${teamStartIndex} * var(--team-step)))`,
+            }}>
+            {teamMembers.map((member, idx) => (
             <article
-              className={`team-card${member.featured ? " team-card-featured" : ""}`}
+              className={`team-card${idx === teamStartIndex + 2 ? " team-card-featured" : ""}`}
               key={member.name}>
               <img src={member.image} alt={member.name} className="team-card-image" />
               <div className="team-card-content">
@@ -239,7 +305,8 @@ function LandingPage() {
                 <div className="team-desc">{member.bio}</div>
               </div>
             </article>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
       {/* Our Top Works (exact replica with all items from screenshot)  */}
