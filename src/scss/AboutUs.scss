@@ -18,10 +18,12 @@ body {
 }
 
 .about-page {
+    --page-bg: #ffffff;
     min-height: 100vh;
     background: var(--page-bg);
     color: var(--text-dark);
-    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-family: 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-style: normal;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
@@ -38,45 +40,16 @@ body {
     margin: 0 auto;
     min-height: 420px;
     color: #fff;
-    background-image:
-        linear-gradient(rgba(15, 20, 28, 0.65), rgba(15, 20, 28, 0.65)),
-        url('../assets/images/corporategroup.jpg');
+    background-image: url('../assets/images/corporategroup.jpg');
     background-size: cover;
-    background-position: center top;
+    background-position: center 22%;
+    background-repeat: no-repeat;
     overflow: hidden;
 }
 
-/* wavy bottom edge */
-.about-hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-}
-
-.about-hero-wave {
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 100%;
-    height: 120px;
-    fill: var(--page-bg);
-    z-index: 1;
-}
-
-.about-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 10%, rgba(246, 128, 20, 0.15), transparent 34%),
-        linear-gradient(to bottom, rgba(8, 18, 28, 0.55), rgba(8, 18, 28, 0.45));
-    z-index: 0;
-}
-
-.about-topbar,
-.about-hero-content {
+.about-topbar {
     position: relative;
-    z-index: 2;
+    z-index: 3;
 }
 
 /* ── Navbar ── */
@@ -189,16 +162,24 @@ body {
 
 /* ── Hero headline ── */
 .about-hero-content {
+    position: absolute;
+    inset: 0;
     max-width: 700px;
-    margin: 60px auto 0;
-    padding: 0 24px 90px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    z-index: 2;
 }
 
 .about-hero-content h1 {
     margin: 0;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
     font-size: clamp(2rem, 4vw, 2.8rem);
     font-weight: 700;
+    font-style: normal;
     line-height: 1.2;
     color: #fff;
 }
@@ -207,9 +188,13 @@ body {
    INTRO BLOCK
 ═══════════════════════════════════════════════ */
 .about-intro {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 48px auto 0;
-    padding: 0 32px 56px;
+    padding: 0 20px 56px;
+    background: #ffffff;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-weight: 400;
+    font-style: normal;
     text-align: justify;
     line-height: 1.75;
     font-size: 0.97rem;
@@ -257,8 +242,10 @@ body {
 
 .section-label {
     margin: 0 0 8px;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
     font-size: 1.15rem;
-    font-weight: 800;
+    font-weight: 600;
+    font-style: normal;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--text-dark);
@@ -266,7 +253,10 @@ body {
 
 .about-text-col p {
     margin: 0;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
     font-size: 0.91rem;
+    font-weight: 400;
+    font-style: normal;
     line-height: 1.72;
     color: #3a464f;
 }
@@ -288,7 +278,7 @@ body {
    OUR TOP WORKS
 ═══════════════════════════════════════════════ */
 .about-works {
-    background: #f7f9fb;
+    background: #ffffff;
     padding: 64px 32px;
     border-top: 1px solid var(--line);
 }
@@ -300,15 +290,20 @@ body {
 
 .works-header h2 {
     margin: 0 0 8px;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
     font-size: clamp(1.4rem, 2.8vw, 2rem);
-    font-weight: 800;
+    font-weight: 600;
+    font-style: normal;
     color: var(--text-dark);
     letter-spacing: -0.02em;
 }
 
 .works-header p {
     margin: 0;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
     font-size: 0.93rem;
+    font-weight: 400;
+    font-style: normal;
     color: var(--muted);
 }
 
@@ -575,7 +570,9 @@ body {
 .ceo-heading {
     margin: 0;
     font-size: clamp(1.3rem, 2.4vw, 1.75rem);
-    font-weight: 800;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-weight: 600;
+    font-style: normal;
     color: var(--text-dark);
     line-height: 1.25;
     letter-spacing: -0.02em;
@@ -584,7 +581,9 @@ body {
 .ceo-name {
     margin: 0;
     font-size: 0.88rem;
-    font-weight: 800;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-weight: 600;
+    font-style: normal;
     color: var(--brand-orange);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -592,7 +591,10 @@ body {
 
 .ceo-text p:not(.ceo-name) {
     margin: 0;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
     font-size: 0.9rem;
+    font-weight: 400;
+    font-style: normal;
     line-height: 1.75;
     color: #3a464f;
     text-align: justify;
@@ -805,11 +807,15 @@ body {
     height: 100%;
     object-fit: cover;
     object-position: top center;
+    transform: translateY(-4%);
     display: block;
 }
 
 .join-text {
     padding: 64px 72px 64px 60px;
+    font-family: 'Inter', 'Quicksand', 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-weight: 400;
+    font-style: normal;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -818,7 +824,7 @@ body {
 .join-text h2 {
     margin: 0;
     font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 800;
+    font-weight: 700;
     color: var(--text-dark);
     letter-spacing: -0.02em;
 }
@@ -889,6 +895,10 @@ body {
 }
 
 @media (max-width: 640px) {
+    .about-hero {
+        background-position: center 32%;
+    }
+
     .about-topbar {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto auto;
@@ -904,7 +914,8 @@ body {
     }
 
     .about-intro {
-        padding-inline: 20px;
+        max-width: 100%;
+        padding-inline: 14px;
     }
 
     /* CEO */
