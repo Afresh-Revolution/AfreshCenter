@@ -209,8 +209,19 @@ function LandingPage() {
           </p>
           <div className="btn-group">
             <button className="btn btn-primary">Learn more</button>
-            <button className="btn btn-outline">Join us</button>
+            <button className="btn btn-outline">Wailin</button>
           </div>
+        </div>
+        <div className="hero-social">
+          <a href="#" aria-label="Facebook">
+            f
+          </a>
+          <a href="#" aria-label="X">
+            x
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            in
+          </a>
         </div>
       </section>
 

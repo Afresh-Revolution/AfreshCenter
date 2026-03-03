@@ -14,16 +14,21 @@
         .nav-links span { cursor: pointer; font-size: 16px; transition: 0.15s; }
         .nav-links span:hover { color: #2d6a4f; }
         /* hero */
-        .hero { background-color: #f0f7fa; background-position: center; background-repeat: no-repeat; background-size: cover; padding: 60px 32px; border-radius: 0 0 40px 40px; }
-        .hero-content { max-width: 800px; margin: 0 auto; text-align: center; }
-        .hero h1 { font-size: 52px; font-weight: 800; line-height: 1.2; background: linear-gradient(135deg, #0b2545, #2d6a4f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 24px; }
-        .hero p { font-size: 20px; color: #2c3e50; max-width: 700px; margin: 0 auto 32px; }
+        .hero { position: relative; background-color: #f0f7fa; background-position: center; background-repeat: no-repeat; background-size: cover; padding: 60px 32px; border-radius: 0 0 40px 40px; overflow: hidden; }
+        .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6, 16, 30, 0.74), rgba(6, 16, 30, 0.78)); }
+        .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; text-align: center; }
+        .hero h1 { font-size: 52px; font-weight: 800; line-height: 1.2; color: #f39811; margin-bottom: 18px; letter-spacing: 0.2px; }
+        .hero p { font-size: 20px; color: #f2f5f8; max-width: 700px; margin: 0 auto 26px; }
         .btn-group { display: flex; gap: 20px; justify-content: center; }
         .btn { padding: 14px 38px; border-radius: 60px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; font-size: 16px; }
-        .btn-primary { background: #1f3a4b; color: white; box-shadow: 0 6px 14px rgba(0,40,30,0.2); }
-        .btn-primary:hover { background: #14302e; transform: translateY(-2px); }
-        .btn-outline { background: transparent; border: 2px solid #1f3a4b; color: #1f3a4b; }
-        .btn-outline:hover { background: #1f3a4b10; }
+        .hero .btn { padding: 10px 26px; border-radius: 8px; font-size: 12px; letter-spacing: 0.1px; }
+        .hero .btn-primary { background: #f39811; color: white; box-shadow: 0 4px 10px rgba(243, 152, 17, 0.35); }
+        .hero .btn-primary:hover { background: #e48800; transform: translateY(-2px); }
+        .hero .btn-outline { background: transparent; border: 1px solid #f39811; color: #f7a72b; }
+        .hero .btn-outline:hover { background: rgba(243, 152, 17, 0.12); }
+        .hero-social { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 2; display: flex; flex-direction: column; gap: 14px; }
+        .hero-social a { color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; line-height: 1; opacity: 0.92; }
+        .hero-social a:hover { color: #f7a72b; }
         /* affiliated companies */
         .affiliated { padding: 40px 32px 20px; text-align: center; }
         .affiliated h4 { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; color: #4a5c6c; margin-bottom: 24px; }
@@ -202,4 +207,3 @@
         /* footer */
         .footer { padding: 40px 32px; background: #f1f7f5; color: #1d3a42; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; }
         .footer .jewish-ref { font-size: 13px; opacity: 0.7; font-family: monospace; }
-
