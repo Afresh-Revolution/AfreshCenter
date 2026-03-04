@@ -22,6 +22,7 @@ import ourWork2 from "../assets/images/our-woks-2.png";
 import ourWork3 from "../assets/images/our-woks-3.png";
 import olaImage from "../assets/images/Ola.png";
 import samLightImage from "../assets/images/Sam-light.png";
+import { SiteFooter, SiteNavbar } from "./SharedLayout";
 
 function LandingPage() {
   const affiliatedCompanies = [
@@ -92,7 +93,7 @@ function LandingPage() {
       description:
         "Software development services customization to design, code, test and deploy multimedia applications.",
       image: serviceImage4,
-    }
+    },
   ];
 
   const teamMembers = [
@@ -143,10 +144,22 @@ function LandingPage() {
 
   const topWorkTiles = [
     { type: "image", title: "vann", image: ourWork1 },
-    { type: "text", title: "consectet", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod temp." },
+    {
+      type: "text",
+      title: "consectet",
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod temp.",
+    },
     { type: "image", title: "delivery", image: ourWork2 },
-    { type: "textHighlight", title: "7.9%", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do." },
-    { type: "text", title: "voluptat", body: "to be welcomed and every pain in certain." },
+    {
+      type: "textHighlight",
+      title: "7.9%",
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.",
+    },
+    {
+      type: "text",
+      title: "voluptat",
+      body: "to be welcomed and every pain in certain.",
+    },
     { type: "image", title: "sos", image: ourWork3 },
   ];
 
@@ -176,29 +189,16 @@ function LandingPage() {
   };
 
   return (
-    <div className="app">
+    <div className="landingPage">
       {/* Navbar (exact from screenshot)  */}
-      <nav className="navbar">
-        <div className="logo">AfRESH</div>
-        <div className="nav-links">
-          <span>HOME</span>
-          <span>ABOUT</span>
-          <span>SERVICES</span>
-          <span>CONTACT US</span>
-        </div>
-        <div style={{ fontSize: "20px", color: "#1f4d3a" }}>
-          <i className="fas fa-bars"></i>
-        </div>
-      </nav>
+      <SiteNavbar />
 
       {/* Hero (exact copy)  */}
-      <section
+      <header
         className="hero"
         style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `url(${heroBackground})`
+         
         }}>
         <div className="hero-content">
           <h1>EMPOWERING AFRICA THROUGH INNOVATION AND CREATIVITY</h1>
@@ -223,7 +223,7 @@ function LandingPage() {
             in
           </a>
         </div>
-      </section>
+      </header>
 
       {/* Our Affiliated Companies  */}
       <section className="affiliated">
@@ -331,16 +331,20 @@ function LandingPage() {
               transform: `translateX(calc(-${teamStartIndex} * var(--team-step)))`,
             }}>
             {teamMembers.map((member, idx) => (
-            <article
-              className={`team-card${idx === teamStartIndex + 2 ? " team-card-featured" : ""}`}
-              key={member.name}>
-              <img src={member.image} alt={member.name} className="team-card-image" />
-              <div className="team-card-content">
-                <h4>{member.name}</h4>
-                <div className="team-role">{member.role}</div>
-                <div className="team-desc">{member.bio}</div>
-              </div>
-            </article>
+              <article
+                className={`team-card${idx === teamStartIndex + 2 ? " team-card-featured" : ""}`}
+                key={member.name}>
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="team-card-image"
+                />
+                <div className="team-card-content">
+                  <h4>{member.name}</h4>
+                  <div className="team-role">{member.role}</div>
+                  <div className="team-desc">{member.bio}</div>
+                </div>
+              </article>
             ))}
           </div>
         </div>
@@ -350,7 +354,10 @@ function LandingPage() {
         <div className="container topworks-container">
           <div className="works-header">
             <h2>Our Top Works</h2>
-            <span>Committed experts eager to revolutionize education using innovative technology.</span>
+            <span>
+              Committed experts eager to revolutionize education using
+              innovative technology.
+            </span>
           </div>
           <div className="works-mosaic">
             {topWorkTiles.map((tile, idx) => (
@@ -358,7 +365,11 @@ function LandingPage() {
                 key={`${tile.title}-${idx}`}
                 className={`works-tile works-tile-${tile.type}`}>
                 {tile.type === "image" ? (
-                  <img src={tile.image} alt={tile.title} className="works-tile-image" />
+                  <img
+                    src={tile.image}
+                    alt={tile.title}
+                    className="works-tile-image"
+                  />
                 ) : (
                   <>
                     <h3>{tile.title}</h3>
@@ -373,10 +384,11 @@ function LandingPage() {
             <div className="why-choose-copy">
               <h3>Why Choose us?</h3>
               <p>
-                Conversely, we may reject the allure of fleeting pleasures that can mislead and
-                desensitize individuals. We believe in making choices that prioritize long-term
-                well-being over momentary satisfaction, ensuring that our clients can navigate
-                challenges with foresight and resilience.
+                Conversely, we may reject the allure of fleeting pleasures that
+                can mislead and desensitize individuals. We believe in making
+                choices that prioritize long-term well-being over momentary
+                satisfaction, ensuring that our clients can navigate challenges
+                with foresight and resilience.
               </p>
               <ul>
                 {whyChoosePoints.map((point) => (
@@ -385,27 +397,41 @@ function LandingPage() {
               </ul>
             </div>
             <div className="why-choose-image-wrap">
-              <img src={olaImage} alt="Why choose us" className="why-choose-image" />
+              <img
+                src={olaImage}
+                alt="Why choose us"
+                className="why-choose-image"
+              />
             </div>
           </div>
 
           <div className="testimonial-panel">
             <div className="testimonial-profile-card">
-              <img src={samLightImage} alt="Samuel Light" className="testimonial-profile-image" />
+              <img
+                src={samLightImage}
+                alt="Samuel Light"
+                className="testimonial-profile-image"
+              />
               <h4>Samuel Light</h4>
               <p>Full stack Dev</p>
               <div className="testimonial-mini-nav">
-                <button type="button" aria-label="Previous testimonial">&larr;</button>
-                <button type="button" aria-label="Next testimonial">&rarr;</button>
+                <button type="button" aria-label="Previous testimonial">
+                  &larr;
+                </button>
+                <button type="button" aria-label="Next testimonial">
+                  &rarr;
+                </button>
               </div>
             </div>
             <div className="testimonial-copy">
               <h3>Testimonials</h3>
               <p>
-                At our tech hub, we embrace innovation and creativity, ensuring that every challenge
-                is met with a solution. Our team is dedicated to providing exceptional service,
-                making it easy for you to navigate the complexities of technology. With us, you can
-                explore endless possibilities without any compromise in your setup.
+                At our tech hub, we embrace innovation and creativity, ensuring
+                that every challenge is met with a solution. Our team is
+                dedicated to providing exceptional service, making it easy for
+                you to navigate the complexities of technology. With us, you can
+                explore endless possibilities without any compromise in your
+                setup.
               </p>
             </div>
           </div>
@@ -499,20 +525,9 @@ function LandingPage() {
         </div>
       </section>
       {/* footer with extra details  */}
-      <footer className="footer">
-        <div>© AfRESH – innovation hub</div>
-        <div className="jewish-ref">⚲ Mousaiah peak · 2 KIS 24-10-30</div>
-        <div>
-          Follow our social media <i className="fab fa-facebook"></i>{" "}
-          <i className="fab fa-instagram"></i>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
 
 export default LandingPage;
-
-
-
-
