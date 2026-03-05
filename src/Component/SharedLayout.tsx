@@ -13,7 +13,7 @@ type SiteNavbarProps = {
   ctaLabel?: string
 }
 
-export function SiteNavbar({ ctaLabel = 'Book A Meeting' }: SiteNavbarProps) {
+export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
   return (
     <nav className="site-navbar-wrap">
       <div className="site-navbar">
