@@ -1,324 +1,438 @@
-// Services page – all styles scoped under .services-page
-$services-orange: #ff6b00;
-$services-orange-hover: #e55a00;
-$services-text: #333;
-$services-text-dark: #1a1a2e;
-$services-muted: #555;
-$services-muted-light: #666;
-$services-nav: #ccc;
-$services-modal-bg: rgba(0, 0, 0, 0.6);
-$services-close: #aaa;
+// Services page – aligned with Contact: :root + full viewport coverage
+$brand-orange: #f68014;
+$brand-orange-hover: #e07010;
+$modal-bg: rgba(0, 0, 0, 0.6);
+$close-color: #aaa;
 
-.services-page {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: $services-text;
-  line-height: 1.6;
-  box-sizing: border-box;
+:root {
+    --brand-orange: #f68014;
+    --deep-blue: #0b2f45;
+    --text-dark: #1d2730;
+    --muted: #6d7780;
+    --surface: #ffffff;
+    --line: #e8edf2;
+    --page-bg: #f3f5f7;
+}
 
-  *,
-  *::before,
-  *::after {
-    box-sizing: inherit;
-  }
-
-  // ── Header ──
-  .services-header {
-    padding: 15px 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    a {
-      display: block;
-      text-decoration: none;
-    }
-  }
-
-  .logo-img {
-    height: 40px;
-    width: auto;
-    display: block;
-    object-fit: contain;
-  }
-
-  nav ul {
-    display: flex;
-    list-style: none;
-    gap: 30px;
-    align-items: center;
+html,
+body {
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
-  }
-
-  nav ul li a {
-    color: $services-nav;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.3s;
-
-    &:hover {
-      color: white;
-    }
-
-    &.active {
-      color: white;
-    }
-
-    &.btn-schedule {
-      background: $services-orange;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background 0.3s;
-
-      &:hover {
-        background: $services-orange-hover;
-        color: white;
-      }
-    }
-  }
-
-  // ── Hero ──
-  .hero {
-    position: relative;
-    height: 550px;
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-      url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600') center/cover;
-    background-position: center 20%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding-top: 70px;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -100px;
-      left: -10%;
-      right: -10%;
-      height: 200px;
-      background: white;
-      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-    }
-
-    h1 {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      color: white;
-      font-size: 48px;
-      font-weight: 700;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-  }
-
-  // ── Description ──
-  .description {
-    text-align: center;
-    padding: 40px 50px;
-    max-width: 900px;
-    margin: 0 auto;
-    font-size: 15px;
-    color: $services-muted;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  // ── Services grid ──
-  .services-section {
-    padding: 20px 50px 60px;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .service-card {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-    background: white;
-
-    &:hover {
-      transform: translateY(-5px);
-    }
-
-    img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      display: block;
-    }
-  }
-
-  .service-content {
-    padding: 20px;
-    text-align: center;
-
-    h3 {
-      margin: 0 0 10px;
-      font-size: 16px;
-      font-weight: 600;
-      color: $services-text-dark;
-    }
-
-    p {
-      margin: 0 0 15px;
-      font-size: 13px;
-      color: $services-muted-light;
-      line-height: 1.5;
-    }
-  }
-
-  .btn-learn {
-    background: $services-orange;
-    color: white;
-    padding: 10px 30px;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.3s;
-
-    &:hover {
-      background: $services-orange-hover;
-    }
-  }
-
-  // ── Modal ──
-  .modal {
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
     width: 100%;
-    height: 100%;
-    background-color: $services-modal-bg;
+    min-height: 100%;
+}
+
+.services-page {
+
+    min-height: 100vh;
+    background: var(--page-bg);
+    color: var(--text-dark);
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    overflow-x: hidden;
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 10% 16px;
-    overflow-y: auto;
-  }
-
-  .modal-content {
-    position: relative;
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
-    margin: auto;
-
-    h2 {
-      margin: 0 0 15px;
-      color: $services-text-dark;
-      font-size: 1.5rem;
-    }
-
-    p {
-      margin: 0 0 20px;
-      color: $services-muted-light;
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-  }
-
-  .modal .close {
-    position: absolute;
-    top: 12px;
-    right: 16px;
-    color: $services-close;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    background: none;
-    border: none;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin: 0;
     padding: 0;
-    line-height: 1;
-    font-family: inherit;
-    transition: color 0.2s;
 
-    &:hover {
-      color: $services-orange;
+    *,
+    *::before,
+    *::after {
+        box-sizing: inherit;
     }
-  }
+
+    // ── Hero (full-width like Contact, wavy bottom) ──
+    .services-hero {
+        position: relative;
+        width: 100%;
+        min-height: 460px;
+        color: #fff;
+        background-image:
+            linear-gradient(135deg, rgba(7, 16, 27, 0.85), rgba(13, 29, 45, 0.65)),
+            url('../assets/images/Group%2031.png');
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+    }
+
+    .services-hero::after {
+        content: '';
+        position: absolute;
+        left: -2%;
+        bottom: -1px;
+        width: 104%;
+        height: 100px;
+        background: var(--page-bg);
+        clip-path: polygon(0 27%,
+                10% 53%,
+                18% 69%,
+                29% 81%,
+                36% 85.3%,
+                40.2% 85.2%,
+                50% 82%,
+                64% 74%,
+                78% 61%,
+                90% 54%,
+                100% 50%,
+                100% 100%,
+                0 100%);
+        z-index: 1;
+    }
+
+    .services-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 20% 10%, rgba(246, 128, 20, 0.18), transparent 34%),
+            linear-gradient(to bottom, rgba(8, 18, 28, 0.66), rgba(8, 18, 28, 0.55));
+        z-index: 0;
+    }
+
+    .services-topbar,
+    .services-hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .services-topbar {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px 24px;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .services-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+
+        a {
+            display: block;
+            text-decoration: none;
+        }
+    }
+
+    .services-logo-img {
+        height: 34px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+    }
+
+    .services-logo-fallback {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #fff;
+        letter-spacing: 0.02em;
+    }
+
+    .services-nav {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 20px;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+
+        a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+
+        li {
+            position: relative;
+            padding-bottom: 4px;
+
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 2px;
+                background: $brand-orange;
+                opacity: 0;
+                transform: scaleX(0.6);
+                transition: opacity 0.2s ease, transform 0.2s ease;
+            }
+
+            &:hover::after,
+            &.is-active::after {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+
+            &.is-active a {
+                opacity: 1;
+            }
+        }
+    }
+
+    .services-cta {
+        background: $brand-orange;
+        color: #fff;
+        border-radius: 4px;
+        padding: 8px 18px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        justify-self: end;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: $brand-orange-hover;
+            color: #fff;
+        }
+    }
+
+    .services-hero-content {
+        max-width: 700px;
+        margin: 86px auto 0;
+        padding: 0 24px 54px;
+        text-align: center;
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            color: #fff;
+        }
+    }
+
+    // ── Main content: fills viewport height, full-width page with centered content ──
+    .services-main {
+        flex: 1;
+
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        padding-bottom: 48px;
+        box-sizing: border-box;
+    }
+
+    .description {
+        margin-top: 40px;
+        padding: 0 0 24px;
+        text-align: justify;
+        line-height: 1.75;
+        font-size: 0.97rem;
+        color: var(--text-dark);
+
+        p {
+            margin: 0 0 6px;
+        }
+    }
+
+    .services-section {
+        padding: 0;
+        width: 100%;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .service-card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        background: white;
+
+        &:hover {
+            transform: translateY(-5px);
+        }
+
+        img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    .service-content {
+        padding: 16px;
+        text-align: center;
+
+        h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        p {
+            margin: 0 0 15px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+    }
+
+    .btn-learn {
+        background: $brand-orange;
+        color: white;
+        padding: 10px 30px;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.3s;
+
+        &:hover {
+            background: $brand-orange-hover;
+        }
+    }
+
+    // ── Modal ──
+    .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: $modal-bg;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 10% 16px;
+        overflow-y: auto;
+    }
+
+    .modal-content {
+        position: relative;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        margin: auto;
+
+        h2 {
+            margin: 0 0 15px;
+            color: var(--text-dark);
+            font-size: 1.5rem;
+        }
+
+        p {
+            margin: 0 0 20px;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+    }
+
+    .modal .close {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        color: $close-color;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        line-height: 1;
+        font-family: inherit;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $brand-orange;
+        }
+    }
 }
 
 // ── Responsive ──
+@media (max-width: 1024px) {
+    .services-page .services-main {
+        width: min(1180px, calc(100% - 32px));
+        gap: 24px;
+    }
+
+    .services-page .services-hero-content {
+        margin-top: 70px;
+        padding-inline: 16px;
+    }
+}
+
 @media (max-width: 992px) {
-  .services-page .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    .services-page .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
-  .services-page .services-header {
-    padding: 15px 20px;
-  }
-
-  .services-page nav ul {
-    gap: 15px;
-    font-size: 13px;
-  }
-
-  .services-page .services-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .services-page .hero {
-    height: 400px;
-    padding-top: 60px;
-
-    h1 {
-      font-size: 36px;
+    .services-page .services-topbar {
+        padding: 12px 16px;
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
-  }
 
-  .services-page .description {
-    padding: 30px 24px;
-  }
+    .services-page .services-nav {
+        gap: 12px;
+        font-size: 0.75rem;
+    }
 
-  .services-page .services-section {
-    padding: 20px 24px 48px;
-  }
+    .services-page .services-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .services-page .services-main {
+        width: min(1180px, calc(100% - 32px));
+        padding-bottom: 32px;
+    }
+
+    .services-page .services-hero {
+        min-height: 380px;
+    }
+
+    .services-page .services-hero-content {
+        margin-top: 60px;
+        padding: 0 16px 40px;
+    }
+
+    .services-page .services-hero-content h1 {
+        font-size: clamp(1.75rem, 4vw, 2.2rem);
+    }
+
+    .services-page .description {
+        padding: 0 0 20px;
+    }
 }
 
-@media (max-width: 600px) {
-  .services-page nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
+@media (max-width: 480px) {
+    .services-page .services-main {
+        width: calc(100% - 24px);
+        padding-bottom: 24px;
+    }
 
-  .services-page .services-header {
-    flex-direction: column;
-    gap: 12px;
-  }
+    .services-page .services-hero-content {
+        margin-top: 50px;
+        padding-bottom: 42px;
+    }
+
+    .services-page .services-hero::after {
+        height: 80px;
+    }
 }

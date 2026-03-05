@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Footer from './Footer'
+import afreshLogoImg from '../assets/images/AfreshLogo.png'
 import '../scss/Services.scss'
 
 type ServiceItem = {
@@ -48,37 +48,44 @@ function Services() {
     if (e.target === e.currentTarget) closeModal()
   }
 
+  const handleModalContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
   return (
     <main className="services-page">
-      <header className="services-header">
-        <div className="logo">
-          <Link to="/">
-            <img src="/AFRESH%20LOGO%201.png" alt="Afresh Logo" className="logo-img" />
-          </Link>
+      <header className="services-hero" aria-label="Our Services hero">
+        <div className="services-hero-overlay" />
+        <div className="services-topbar">
+          <div className="services-logo">
+            <Link to="/" aria-label="Afresh home">
+              <img src={afreshLogoImg} alt="AfrESH logo" className="services-logo-img" />
+            </Link>
+          </div>
+          <nav aria-label="Primary navigation">
+            <ul className="services-nav">
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/about">About</Link></li>
+              <li className="is-active"><Link to="/services">Services</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
+            </ul>
+          </nav>
+          <Link to="/contact" className="services-cta">Afresh Academy</Link>
         </div>
-        <nav>
-          <ul>
-            <li><Link to="/">HOME</Link></li>
-            <li><Link to="/about">ABOUT</Link></li>
-            <li><Link to="/services" className="active">SERVICES</Link></li>
-            <li><Link to="/contact">CONTACT US</Link></li>
-            <li><Link to="/contact" className="btn-schedule">Schedule Consult</Link></li>
-          </ul>
-        </nav>
+        <div className="services-hero-content">
+          <h1>Our Services</h1>
+        </div>
       </header>
 
-      <section className="hero">
-        <h1>Our Services</h1>
-      </section>
+      <div className="services-main">
+        <section className="description">
+          <p>
+            At AFrESH Center (Africa Focused Revolutionary Entrepreneurial Support Hub), we provide integrated solutions across technology, media, sports, and entertainment — designed to empower entrepreneurs, businesses, and talents across Africa.
+          </p>
+        </section>
 
-      <section className="description">
-        <p>
-          At AFrESH Center (Africa Focused Revolutionary Entrepreneurial Support Hub), we provide integrated solutions across technology, media, sports, and entertainment — designed to empower entrepreneurs, businesses, and talents across Africa.
-        </p>
-      </section>
-
-      <section className="services-section">
-        <div className="services-grid">
+        <section className="services-section">
+          <div className="services-grid">
           {servicesData.map((service) => (
             <article key={service.id} className="service-card">
               <img src={service.image} alt={service.alt} />
@@ -95,10 +102,9 @@ function Services() {
               </div>
             </article>
           ))}
-        </div>
-      </section>
-
-      <Footer />
+          </div>
+        </section>
+      </div>
 
       {modalOpen && (
         <div
@@ -109,7 +115,7 @@ function Services() {
           aria-describedby="modalDesc"
           onClick={handleBackdropClick}
         >
-          <div className="modal-content">
+          <div className="modal-content" onClick={handleModalContentClick}>
             <button
               type="button"
               className="close"
