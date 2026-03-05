@@ -217,6 +217,7 @@ function AboutUs() {
           HERO
       ══════════════════════════════ */}
             <header className="about-hero" aria-label="About Us hero">
+                <div className="about-overlay" />
                 <div className="about-topbar">
                     <div className="about-logo">
                         <img src={afreshLogoImg} alt="AfrESH logo" className="about-logo-img" />
@@ -234,6 +235,17 @@ function AboutUs() {
                 <div className="about-hero-content">
                     <h1>{content.heroTitle}</h1>
                 </div>
+                <svg
+                    className="about-hero-wave"
+                    viewBox="0 0 1440 60"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M0,35 C240,58 480,5 720,35 C960,58 1200,5 1440,35 L1440,60 L0,60 Z"
+                        fill="#ffffff"
+                    />
+                </svg>
             </header>
 
             {/* ══════════════════════════════
