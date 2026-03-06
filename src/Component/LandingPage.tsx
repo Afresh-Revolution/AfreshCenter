@@ -296,8 +296,8 @@ function LandingPage() {
         </div>
       </section>
       {/* Meet Our Team  */}
-      <section className="team-section container">
-        <div className="team-header">
+      <section className="lp-team-section container">
+        <div className="lp-team-header">
           <div>
             <h2 className="section-title">Meet Our Team</h2>
             <div className="section-sub">
@@ -305,9 +305,9 @@ function LandingPage() {
               through technology.
             </div>
           </div>
-          <div className="team-nav-actions">
+          <div className="lp-team-nav-actions">
             <button
-              className="team-nav-btn"
+              className="lp-team-nav-btn"
               type="button"
               aria-label="Previous team member"
               onClick={handleTeamPrev}
@@ -315,7 +315,7 @@ function LandingPage() {
               &larr;
             </button>
             <button
-              className="team-nav-btn"
+              className="lp-team-nav-btn"
               type="button"
               aria-label="Next team member"
               onClick={handleTeamNext}
@@ -324,25 +324,25 @@ function LandingPage() {
             </button>
           </div>
         </div>
-        <div className="team-slider-viewport">
+        <div className="lp-team-slider-viewport">
           <div
-            className="team-slider-track"
+            className="lp-team-slider-track"
             style={{
-              transform: `translateX(calc(-${teamStartIndex} * var(--team-step)))`,
+              transform: `translateX(calc(-${teamStartIndex} * var(--lp-team-step)))`,
             }}>
             {teamMembers.map((member, idx) => (
               <article
-                className={`team-card${idx === teamStartIndex + 2 ? " team-card-featured" : ""}`}
-                key={member.name}>
+                className={`lp-team-card${idx === teamStartIndex + 2 ? " lp-team-card-featured" : ""}`}
+                key={`${member.name}-${idx}`}>
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="team-card-image"
+                  className="lp-team-card-image"
                 />
-                <div className="team-card-content">
+                <div className="lp-team-card-content">
                   <h4>{member.name}</h4>
-                  <div className="team-role">{member.role}</div>
-                  <div className="team-desc">{member.bio}</div>
+                  <div className="lp-team-role">{member.role}</div>
+                  <div className="lp-team-desc">{member.bio}</div>
                 </div>
               </article>
             ))}

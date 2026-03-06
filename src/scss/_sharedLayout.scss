@@ -59,6 +59,7 @@
   letter-spacing: 0.08em;
 }
 
+
 .site-nav a {
   color: #fff;
   text-decoration: none;
@@ -110,6 +111,8 @@
   margin: 0 0 12px;
   font-size: 0.95rem;
   color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .site-footer-brand-row {
@@ -139,31 +142,76 @@
   font-size: 0.88rem;
 }
 
-.site-footer-contact a {
+.site-footer-links a {
   color: #dbe5ec;
   text-decoration: none;
 }
 
-.site-footer-contact a:hover {
+.site-footer-links a:hover,
+.site-footer-links a.active {
   color: #fff;
 }
 
-.site-footer-social {
-  display: flex;
-  gap: 10px;
+.site-footer-link-placeholder {
+  color: #dbe5ec;
+  cursor: default;
 }
 
-.site-footer-social span {
+/* Contact Us: icon circle #ff8901 + white text */
+.site-footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.site-footer-icon {
+  flex-shrink: 0;
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #1e3a50;
+  background: #ff8901;
   color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 700;
+}
+
+.site-footer-contact a,
+.site-footer-contact-text {
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.site-footer-contact a:hover {
+  color: #dbe5ec;
+}
+
+/* Follow Us: same orange circles, horizontal row */
+.site-footer-social {
+  display: flex;
+  gap: 12px;
+}
+
+.site-footer-social-link {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ff8901;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.site-footer-social-link:hover {
+  background: #e67a01;
+  color: #fff;
+  transform: scale(1.05);
 }
 
 @media (max-width: 900px) {
