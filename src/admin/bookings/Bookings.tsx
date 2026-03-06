@@ -24,7 +24,7 @@ export function Bookings() {
       try {
         const data = await fetchBookings();
         if (!isActive) return;
-        const mapped: BookingDetail[] = data.map((booking, idx) => {
+        const mapped: BookingDetail[] = data.map((booking) => {
           const dateValue = booking.scheduled_at ?? booking.created_at ?? '';
           const dateObj = dateValue ? new Date(dateValue) : null;
           const date = dateObj ? dateObj.toISOString().slice(0, 10) : '';

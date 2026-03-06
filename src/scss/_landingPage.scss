@@ -1,5 +1,5 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #fcfcfc; color: #141414; line-height: 1.5; }
+        body { font-family: 'Inter'; background-color: #fcfcfc; color: #141414; line-height: 1.5; }
         /* main container for react simulation – we treat it as the root */
         #root { max-width: 1440px; margin: 0 auto; background: white; box-shadow: 0 0 30px rgba(0,0,0,0.02); }
         /* SCSS-like naming / structure – but plain CSS for brevity, following the exact design */
@@ -27,14 +27,14 @@
         .affiliated { padding: 40px 32px 20px; text-align: center; }
         .affiliated h4 { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; color: #4a5c6c; margin-bottom: 24px; }
         .brand-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; align-items: center; }
-        .brand-item { display: flex; align-items: center; justify-content: center; min-width: 110px; }
+        .brand-item { display: flex; align-items: center; justify-content: center; min-width: 110px; cursor: pointer; }
         .brand-item img { max-height: 48px; max-width: 140px; width: auto; height: auto; -o-object-fit: contain; object-fit: contain; opacity: 0.88; transition: opacity 0.2s ease; }
         .brand-item img:hover { opacity: 1; }
         /* about section */
         .about { background: #ffffff; padding: 70px 32px; }
         .about-grid { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
         .about-text { flex: 1 1 420px; min-width: 280px; }
-        .about-text h2 { font-size: 42px; font-weight: 700; margin-bottom: 24px; color: #0f2a37; }
+        .about-text h2 { font-size: 42px; font-weight: 700; margin-bottom: 24px; color: #0A0A0A; }
         .about-text p { font-size: 18px; color: #2f4858; margin-bottom: 24px; max-width: 650px; }
         .read-more-link { color: #1e6f5c; font-weight: 600; text-decoration: none; font-size: 18px; border-bottom: 2px solid transparent; transition: 0.2s; cursor: pointer; }
         .read-more-link:hover { border-bottom-color: #1e6f5c; }
@@ -63,7 +63,7 @@
         }
         /* services preview (exactly from screenshot: six cards, view all) */
         .services-preview { padding: 48px 32px 54px; background: #f4f4f4; }
-        .section-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; color: #0b2d3b; text-align: center; }
+        .section-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; color: #000000; text-align: center; }
         .section-sub { color: #3f5465; margin-bottom: 24px; font-size: 14px; text-align: center; }
         .service-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 0 auto 14px; max-width: 960px; }
         .service-card { background: #fff; border-radius: 12px; padding: 10px 10px 12px; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08); border: 1px solid #eceff2; }
