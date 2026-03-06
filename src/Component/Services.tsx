@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import afreshLogoImg from '../assets/images/AfreshLogo.png'
 import servicesHeroImg from '../assets/images/Group 31.png'
 import { SiteFooter } from './SharedLayout'
 import '../scss/Services.scss'
