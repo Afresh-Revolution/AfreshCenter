@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import afreshLogoImg from '../assets/images/AfreshLogo.png'
+import servicesHeroImg from '../assets/images/Group 31.png'
+import { SiteFooter } from './SharedLayout'
 import '../scss/Services.scss'
+import { SiteNavbar } from './SharedLayout'
 
 type ServiceItem = {
   id: string
@@ -54,9 +57,9 @@ function Services() {
 
   return (
     <main className="services-page">
-      <header className="services-hero" aria-label="Our Services hero">
+      <header className="services-hero" aria-label="Our Services hero" style={{ backgroundImage: `url(${servicesHeroImg})` }}>
         <div className="services-hero-overlay" />
-        <div className="services-topbar">
+        {/* <div className="services-topbar">
           <div className="services-logo">
             <Link to="/" aria-label="Afresh home">
               <img src={afreshLogoImg} alt="AfrESH logo" className="services-logo-img" />
@@ -71,7 +74,8 @@ function Services() {
             </ul>
           </nav>
           <Link to="/contact" className="services-cta">Afresh Academy</Link>
-        </div>
+        </div> */}
+        <SiteNavbar />
         <div className="services-hero-content">
           <h1>Our Services</h1>
         </div>
@@ -132,6 +136,8 @@ function Services() {
           </div>
         </div>
       )}
+      
+      <SiteFooter />
     </main>
   )
 }
