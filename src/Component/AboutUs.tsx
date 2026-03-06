@@ -11,7 +11,10 @@ import blessingImg from '../assets/images/BlessingWilliams.jpg'
 import jethroImg from '../assets/images/JethroMD.jpg'
 import dominicImg from '../assets/images/DominicRay.JPG'
 import williamImg from '../assets/images/WilliamsBosw.jpg'
+import olaImg from '../assets/images/Ola.png'
+import samImg from '../assets/images/Sam-light.png'
 
+import { SiteFooter, SiteNavbar } from './SharedLayout'
 type TopWork = {
     id: string
     title: string
@@ -48,6 +51,8 @@ const imageMap: Record<string, string> = {
     jethro: jethroImg,
     dominic: dominicImg,
     william: williamImg,
+    ola: olaImg,
+    sam: samImg,
 }
 
 const getFeaturedIndex = (members: TeamMember[]) => {
@@ -57,32 +62,32 @@ const getFeaturedIndex = (members: TeamMember[]) => {
 
 const defaultHeroTitle = 'About Us'
 
-/* ── Top Works data ── */
+/* â”€â”€ Top Works data â”€â”€ */
 const defaultTopWorks: TopWork[] = [
     {
         id: 'cbrilliance',
         title: 'Cbrilliance',
-        description: 'Software development involves collaboration to design, code, test, and maintain user‑friendly applications.',
+        description: 'Software development involves collaboration to design, code, test, and maintain userâ€‘friendly applications.',
         link: '#',
         imgKey: 'cbrilliance',
     },
     {
         id: 'joscity',
         title: 'JosCity',
-        description: 'Software development involves collaboration to design, code, test, and maintain user‑friendly applications.',
+        description: 'Software development involves collaboration to design, code, test, and maintain userâ€‘friendly applications.',
         link: '#',
         imgKey: 'joscity',
     },
     {
         id: 'knowrist',
         title: 'Knowrist',
-        description: 'Software development involves collaboration to design, code, test, and maintain user‑friendly applications.',
+        description: 'Software development involves collaboration to design, code, test, and maintain userâ€‘friendly applications.',
         link: '#',
         imgKey: 'knowrist',
     },
 ]
 
-/* ── Team members data ── */
+/* â”€â”€ Team members data â”€â”€ */
 const defaultTeamMembers: TeamMember[] = [
     {
         id: 'felix',
@@ -105,7 +110,7 @@ const defaultTeamMembers: TeamMember[] = [
         name: "Jethro Mark Da'ar",
         role: 'Chief Executive Officer (CEO)',
         roleColor: '#f68014',
-        bio: 'Leads the overall vision, strategic direction, and growth of the company. Oversees major partnerships, financial decisions, and long‑term development initiatives.',
+        bio: 'Leads the overall vision, strategic direction, and growth of the company. Oversees major partnerships, financial decisions, and longâ€‘term development initiatives.',
         imgKey: 'jethro',
         featured: true,
     },
@@ -125,42 +130,36 @@ const defaultTeamMembers: TeamMember[] = [
         bio: 'Leads software architecture, system design, and technical innovation across all company platforms.',
         imgKey: 'william',
     },
+    {
+        id: 'ola',
+        name: 'Ola Adeyemi',
+        role: 'Creative Director',
+        roleColor: '#f68014',
+        bio: 'Drives brand identity and visual storytelling across all Afresh Centre platforms.',
+        imgKey: 'ola',
+    },
+    {
+        id: 'sam',
+        name: 'Samuel Bright',
+        role: 'Business Development',
+        roleColor: '#f68014',
+        bio: 'Identifies growth opportunities and manages strategic partnerships to expand Afresh Centre’s reach.',
+        imgKey: 'sam',
+    },
 ]
 
-/* ── Inline SVG icons ── */
-const PhoneIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-)
+/* â”€â”€ Inline SVG icons â”€â”€ */
 
-const EmailIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="2" y="4" width="20" height="16" rx="2" />
-        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-    </svg>
-)
-
-const LocationIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
-        <circle cx="12" cy="10" r="3" />
-    </svg>
-)
-
-const quickLinks = ['Home', 'About', 'Services', 'Support', 'Account']
-
-/* ─────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    COMPONENT
-───────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function AboutUs() {
     const [content, setContent] = useState<AboutContent>({
         heroTitle: defaultHeroTitle,
         topWorks: defaultTopWorks,
         teamMembers: defaultTeamMembers,
     })
-    /* carousel: centre index (CEO is default centre = index 2) */
-    const [centreIdx, setCentreIdx] = useState(() => getFeaturedIndex(defaultTeamMembers))
+    /* carousel: startIdx is initialised below after totalMembers is known */
 
     useEffect(() => {
         let isActive = true
@@ -182,7 +181,10 @@ function AboutUs() {
         const fetchTeamsData = async () => {
             try {
                 const teams = await fetchTeams()
-                if (!teams.length) return
+                // Carousel shows 5 at a time and needs at least 7 to slide; keep defaults if API returns fewer
+                const MIN_FOR_CAROUSEL = 7
+                if (!teams.length || teams.length < MIN_FOR_CAROUSEL) return
+                const midIdx = Math.floor((teams.length - 1) / 2)
                 const mapped = teams.map((member, idx) => ({
                     id: member.id ?? `${member.name ?? 'member'}-${idx}`,
                     name: member.name ?? 'Team Member',
@@ -190,11 +192,10 @@ function AboutUs() {
                     roleColor: '#f68014',
                     bio: member.bio ?? '',
                     imgKey: member.image_url ?? member.id ?? '',
-                    featured: idx === 0,
+                    featured: idx === midIdx,
                 }))
                 if (!isActive) return
                 setContent((prev) => ({ ...prev, teamMembers: mapped }))
-                setCentreIdx(getFeaturedIndex(mapped))
             } catch {
                 /* fall back to defaults */
             }
@@ -206,32 +207,75 @@ function AboutUs() {
         }
     }, [])
 
-    const maxIdx = Math.max(0, content.teamMembers.length - 1)
-    const prev = () => setCentreIdx((i) => Math.max(0, i - 1))
-    const next = () => setCentreIdx((i) => Math.min(maxIdx, i + 1))
+    // Carousel: show 5 cards with the featured card centered (index 2),
+    // and allow every member (first..last) to become the featured card via wrap-around navigation.
+    const VISIBLE = 5
+    const FEAT_POS = 2
+    const CLONES = VISIBLE
+
+    const members = content.teamMembers
+    const totalMembers = members.length
+    const cloneCount = Math.min(CLONES, totalMembers)
+
+    const loopMembers =
+        totalMembers > 0
+            ? [
+                ...members.slice(-cloneCount),
+                ...members,
+                ...members.slice(0, cloneCount),
+            ]
+            : []
+
+    const minFeaturedIdx = cloneCount
+    const maxFeaturedIdx = cloneCount + totalMembers - 1
+
+    const [disableTrackTransition, setDisableTrackTransition] = useState(false)
+    const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(() => minFeaturedIdx + getFeaturedIndex(members))
+
+    useEffect(() => {
+        if (!totalMembers) return
+        const idx = getFeaturedIndex(members)
+        setDisableTrackTransition(true)
+        setLoopFeaturedIndex(minFeaturedIdx + idx)
+    }, [members, minFeaturedIdx, totalMembers])
+
+    useEffect(() => {
+        if (!disableTrackTransition) return
+        const raf = window.requestAnimationFrame(() => setDisableTrackTransition(false))
+        return () => window.cancelAnimationFrame(raf)
+    }, [disableTrackTransition])
+
+    const prev = () => {
+        if (!totalMembers) return
+        setLoopFeaturedIndex((i) => i - 1)
+    }
+    const next = () => {
+        if (!totalMembers) return
+        setLoopFeaturedIndex((i) => i + 1)
+    }
+
+    const handleTrackTransitionEnd = () => {
+        if (!totalMembers) return
+        let idx = loopFeaturedIndex
+        if (idx < minFeaturedIdx) idx += totalMembers
+        if (idx > maxFeaturedIdx) idx -= totalMembers
+        if (idx !== loopFeaturedIndex) {
+            setDisableTrackTransition(true)
+            setLoopFeaturedIndex(idx)
+        }
+    }
+
+    const startIdx = loopFeaturedIndex - FEAT_POS
 
     return (
         <main className="about-page">
+            <SiteNavbar />
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           HERO
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <header className="about-hero" aria-label="About Us hero">
-                <div className="about-overlay" />
-                <div className="about-topbar">
-                    <div className="about-logo">
-                        <img src={afreshLogoImg} alt="AfrESH logo" className="about-logo-img" />
-                    </div>
-                    <nav aria-label="Primary navigation">
-                        <ul className="about-nav">
-                            <li>Home</li>
-                            <li className="is-active">About</li>
-                            <li>Services</li>
-                            <li>Contact Us</li>
-                        </ul>
-                    </nav>
-                    <button className="about-cta" type="button">Afresh Academy</button>
-                </div>
+                <div className="about-hero-overlay" />
                 <div className="about-hero-content">
                     <h1>{content.heroTitle}</h1>
                 </div>
@@ -248,9 +292,9 @@ function AboutUs() {
                 </svg>
             </header>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           INTRO
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="about-intro" aria-label="Introduction">
                 <p>
                     Afresh centre is a dynamic innovation hub committed to empowering Africa's next generation of entrepreneurs,
@@ -266,16 +310,16 @@ function AboutUs() {
                 </p>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR STORY
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="about-section about-section--light about-section--soft" aria-label="Our Story">
                 <div className="about-two-col">
                     <div className="about-text-col">
                         <h2 className="section-label">OUR STORY</h2>
-                        <p>What started as a passion for innovation and creativity grew into a multi‑sector platform combining technology, media, sports, and entertainment.</p>
+                        <p>What started as a passion for innovation and creativity grew into a multiâ€‘sector platform combining technology, media, sports, and entertainment.</p>
                         <p>We believe Africa is filled with untapped potential, and with the right tools, guidance, and exposure, that potential can transform communities and industries.</p>
-                        <p>AfrESH — Africa Focused Revolutionary Entrepreneurial Support Hub — represents our commitment to revolutionizing how entrepreneurs and talents are supported. Every service we offer is designed to empower, elevate, and create lasting impact.</p>
+                        <p>AfrESH â€” Africa Focused Revolutionary Entrepreneurial Support Hub â€” represents our commitment to revolutionizing how entrepreneurs and talents are supported. Every service we offer is designed to empower, elevate, and create lasting impact.</p>
                         <p>Our journey is just beginning, and we are driven by one mission: to build a future where African innovation leads globally.</p>
                     </div>
                     <div className="about-img-col">
@@ -288,9 +332,9 @@ function AboutUs() {
                 </div>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR MISSION
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="about-section about-section--light" aria-label="Our Mission">
                 <div className="about-two-col about-two-col--reversed">
                     <div className="about-img-col">
@@ -307,9 +351,9 @@ function AboutUs() {
                 </div>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR VISION
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="about-section about-section--light about-section--soft" aria-label="Our Vision">
                 <div className="about-two-col">
                     <div className="about-text-col">
@@ -326,9 +370,9 @@ function AboutUs() {
                 </div>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR TOP WORKS
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="about-works" aria-label="Our Top Works">
                 <div className="works-header">
                     <h2>Our Top Works</h2>
@@ -355,9 +399,9 @@ function AboutUs() {
                 </div>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           INTRODUCING OUR CEO
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="ceo-section" aria-label="Introducing Our CEO">
                 <div className="ceo-inner">
                     <div className="ceo-text">
@@ -365,9 +409,9 @@ function AboutUs() {
                         <p className="ceo-name">JETHRO MARK DA'AR</p>
                         <p>
                             As the CEO of Afresh Centre, I have consistently resisted the allure of fleeting pleasures that can divert
-                            attention and dampen spirits. My commitment lies in nurturing choices that prioritize long‑term wellness
+                            attention and dampen spirits. My commitment lies in nurturing choices that prioritize longâ€‘term wellness
                             not only empowers our clients but also equips them with the insight and resilience needed to tackle life's
-                            challenges head‑on.
+                            challenges headâ€‘on.
                         </p>
                         <p>
                             At Afresh Centre, we believe that true fulfillment comes from making informed decisions that contribute to
@@ -378,23 +422,23 @@ function AboutUs() {
                         <p>
                             Our mission is to create a supportive environment where clients can explore their potential and develop
                             strategies for enduring success. We provide resources and guidance that inspire personal development,
-                            ensuring that our clients are well‑prepared to navigate obstacles. Together, we strive to build a
-                            community that values long‑term wellness and empowers each individual to thrive.
+                            ensuring that our clients are wellâ€‘prepared to navigate obstacles. Together, we strive to build a
+                            community that values longâ€‘term wellness and empowers each individual to thrive.
                         </p>
                     </div>
                     <div className="ceo-img-wrap">
                         <img
                             src={designerImg}
-                            alt="Jethro Mark Da'ar – CEO of Afresh Centre"
+                            alt="Jethro Mark Da'ar â€“ CEO of Afresh Centre"
                             className="ceo-img"
                         />
                     </div>
                 </div>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           MEET OUR TEAM
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="team-section" aria-label="Meet Our Team">
                 <div className="team-header">
                     <h2>Meet Our Team</h2>
@@ -402,16 +446,16 @@ function AboutUs() {
                     <div className="team-nav-btns">
                         <button
                             className="team-nav-btn"
+                            type="button"
                             onClick={prev}
-                            disabled={centreIdx === 0}
                             aria-label="Previous team member"
                         >
                             &#8592;
                         </button>
                         <button
                             className="team-nav-btn"
+                            type="button"
                             onClick={next}
-                            disabled={centreIdx === content.teamMembers.length - 1}
                             aria-label="Next team member"
                         >
                             &#8594;
@@ -419,36 +463,42 @@ function AboutUs() {
                     </div>
                 </div>
 
-                <div className="team-carousel" aria-live="polite">
-                    {content.teamMembers.map((member, idx) => {
-                        const offset = idx - centreIdx
-                        const isCentre = offset === 0
-                        const isVisible = Math.abs(offset) <= 2
-                        const memberImg = imageMap[member.imgKey] ?? member.imgKey
-                        return (
-                            <article
-                                key={member.id}
-                                className={`team-card ${isCentre ? 'team-card--featured' : ''} ${!isVisible ? 'team-card--hidden' : ''}`}
-                                style={{ '--offset': offset } as React.CSSProperties}
-                                aria-hidden={!isVisible}
-                            >
-                                <div className="team-card-img-wrap">
-                                    <img src={memberImg} alt={member.name} className="team-card-img" />
-                                </div>
-                                <div className="team-card-body">
-                                    <h3>{member.name}</h3>
-                                    <p className="team-card-role">{member.role}</p>
-                                    <p className="team-card-bio">{member.bio}</p>
-                                </div>
-                            </article>
-                        )
-                    })}
+                <div
+                    className="team-carousel"
+                    aria-live="polite"
+                    style={{ ['--start-idx']: startIdx } as React.CSSProperties}
+                >
+                    <div
+                        className="team-track"
+                        onTransitionEnd={handleTrackTransitionEnd}
+                        style={disableTrackTransition ? { transition: 'none' } : undefined}
+                    >
+                        {loopMembers.map((member, index) => {
+                            const isFeatured = index === loopFeaturedIndex
+                            const memberImg = imageMap[member.imgKey] ?? member.imgKey
+                            return (
+                                <article
+                                    key={`${member.id}-${index}`}
+                                    className={`team-card${isFeatured ? ' team-card--featured' : ''}`}
+                                >
+                                    <div className="team-card-img-wrap">
+                                        <img src={memberImg} alt={member.name} className="team-card-img" />
+                                    </div>
+                                    <div className="team-card-body">
+                                        <h3>{member.name}</h3>
+                                        <p className="team-card-role">{member.role}</p>
+                                        <p className="team-card-bio">{member.bio}</p>
+                                    </div>
+                                </article>
+                            )
+                        })}
+                    </div>
                 </div>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           JOIN US
-      ══════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <section className="join-section" aria-label="Join Us">
                 <div className="join-inner">
                     <div className="join-img-wrap">
@@ -461,8 +511,8 @@ function AboutUs() {
                     <div className="join-text">
                         <h2>Join Us</h2>
                         <p>
-                            Don't just consume technology—create it! At Afresh Centre, we empower the next generation of African
-                            tech leaders through comprehensive training, mentorship, and hands‑on experience.
+                            Don't just consume technologyâ€”create it! At Afresh Centre, we empower the next generation of African
+                            tech leaders through comprehensive training, mentorship, and handsâ€‘on experience.
                         </p>
                         <p>
                             Are you ready to elevate your skills and shape the future of technology? Join us, and let's grow
@@ -472,59 +522,16 @@ function AboutUs() {
                 </div>
             </section>
 
-            {/* ══════════════════════════════
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           FOOTER
-      ══════════════════════════════ */}
-            <footer className="about-footer">
-                <div className="footer-content">
-                    <section className="footer-brand-col">
-                        <div className="footer-brand-row">
-                            <img src={afreshLogoImg} alt="AfrESH logo" className="footer-logo-img" />
-                        </div>
-                        <p>Delivering quality support built with dependable workflows and practical service standards.</p>
-                    </section>
-
-                    <section className="footer-col">
-                        <h4>Quick Links</h4>
-                        <ul className="footer-links">
-                            {quickLinks.map((link) => (
-                                <li key={link}>{link}</li>
-                            ))}
-                        </ul>
-                    </section>
-
-                    <section className="footer-col footer-contact">
-                        <h4>Contact Us</h4>
-                        <ul className="footer-contact-list">
-                            <li>
-                                <span className="footer-icon" aria-hidden="true"><PhoneIcon /></span>
-                                <a href="tel:+2349088424461">+234 908 842 4461</a>
-                            </li>
-                            <li>
-                                <span className="footer-icon" aria-hidden="true"><EmailIcon /></span>
-                                <a href="mailto:info@afresh.com">info@afresh.com</a>
-                            </li>
-                            <li>
-                                <span className="footer-icon" aria-hidden="true"><LocationIcon /></span>
-                                <span>423 Park Ave, Suite 200</span>
-                            </li>
-                        </ul>
-                    </section>
-
-                    <section className="footer-col footer-follow">
-                        <h4>Follow Us</h4>
-                        <div className="social-row" aria-label="Social links">
-                            <span aria-label="Facebook">f</span>
-                            <span aria-label="LinkedIn">in</span>
-                            <span aria-label="X">x</span>
-                            <span aria-label="Instagram">ig</span>
-                        </div>
-                    </section>
-                </div>
-            </footer>
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+            <SiteFooter />
 
         </main>
     )
 }
 
 export default AboutUs
+
+
+
