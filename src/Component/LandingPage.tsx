@@ -1,5 +1,5 @@
 // LandingPage.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import heroBackground from "../assets/images/Background-Image.png";
 import afLogo from "../assets/images/af 1.png";
 import cbLogo from "../assets/images/cb 1.png";
@@ -174,11 +174,26 @@ function LandingPage() {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   ];
 
-  const visibleTeamCards = 5;
+  const [isMobileTeam, setIsMobileTeam] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 900 : false
+  );
+  const visibleTeamCards = isMobileTeam ? 2 : 5;
   const [teamStartIndex, setTeamStartIndex] = useState(0);
   const maxTeamStartIndex = Math.max(0, teamMembers.length - visibleTeamCards);
   const canSlidePrev = teamStartIndex > 0;
   const canSlideNext = teamStartIndex < maxTeamStartIndex;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileTeam(window.innerWidth <= 900);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    setTeamStartIndex((prev) => Math.min(prev, maxTeamStartIndex));
+  }, [maxTeamStartIndex]);
 
   const handleTeamPrev = () => {
     setTeamStartIndex((prev) => Math.max(0, prev - 1));

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const navItems = [
@@ -14,8 +15,22 @@ type SiteNavbarProps = {
 }
 
 export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 900) {
+        setMenuOpen(false)
+      }
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  const closeMenu = () => setMenuOpen(false)
+
   return (
-    <nav className="site-navbar-wrap">
+    <nav className={`site-navbar-wrap${menuOpen ? ' menu-open' : ''}`}>
       <div className="site-navbar">
         <div className="site-logo">
           <span className="site-mark" aria-hidden="true">
@@ -23,7 +38,7 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
           </span>
           <span className="site-logo-text">afresh</span>
         </div>
-        <nav aria-label="Primary navigation">
+        <nav className="site-nav-wrap" aria-label="Primary navigation">
           <ul className="site-nav">
             {navItems.map((item) => (
               <li key={item.label}>
@@ -37,6 +52,28 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
         <button className="site-cta" type="button">
           {ctaLabel}
         </button>
+        <button
+          type="button"
+          className="site-menu-toggle"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+      <div className={`site-mobile-menu${menuOpen ? ' open' : ''}`}>
+        <ul>
+          {navItems.map((item) => (
+            <li key={`mobile-${item.label}`}>
+              <NavLink to={item.to} end={item.to === '/'} onClick={closeMenu}>
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </nav>
   )
