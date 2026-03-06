@@ -17,7 +17,7 @@ body {
   min-height: 100vh;
   background: var(--page-bg);
   color: var(--text-dark);
-  font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+  font-family: 'Inter';
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -46,7 +46,20 @@ body {
   width: 104%;
   height: 100px;
   background: var(--page-bg);
-  clip-path: polygon(0 27%,
+  -webkit-clip-path: polygon(0 27%,
+      10% 53%,
+      18% 69%,
+      29% 81%,
+      36% 85.3%,
+      40.2% 85.2%,
+      50% 82%,
+      64% 74%,
+      78% 61%,
+      90% 54%,
+      100% 50%,
+      100% 100%,
+      0 100%);
+          clip-path: polygon(0 27%,
       10% 53%,
       18% 69%,
       29% 81%,
@@ -194,6 +207,22 @@ body {
   color: var(--text-dark);
   transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
   font-family: inherit;
+}
+
+.field input::-webkit-input-placeholder, .field textarea::-webkit-input-placeholder {
+  color: #b0bac3;
+}
+
+.field input::-moz-placeholder, .field textarea::-moz-placeholder {
+  color: #b0bac3;
+}
+
+.field input:-ms-input-placeholder, .field textarea:-ms-input-placeholder {
+  color: #b0bac3;
+}
+
+.field input::-ms-input-placeholder, .field textarea::-ms-input-placeholder {
+  color: #b0bac3;
 }
 
 .field input::placeholder,
@@ -617,7 +646,17 @@ body {
 
   .contact-hero::after {
     height: 110px;
-    clip-path: polygon(0 66%,
+    -webkit-clip-path: polygon(0 66%,
+        12% 62%,
+        26% 67%,
+        42% 74%,
+        58% 76%,
+        74% 69%,
+        88% 58%,
+        100% 52%,
+        100% 100%,
+        0 100%);
+            clip-path: polygon(0 66%,
         12% 62%,
         26% 67%,
         42% 74%,
