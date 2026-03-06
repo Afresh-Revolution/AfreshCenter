@@ -1,0 +1,281 @@
+.digital-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 40px;
+  gap: 40px;
+  background: linear-gradient(to right, #1a1a1a 50%, #2a2a2a 100%);
+  min-height: 600px;
+}
+
+.digital-content {
+  flex: 1;
+  color: white;
+  max-width: 500px;
+}
+
+.back-link {
+  display: inline-block;
+  color: #ff9500;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.back-link:hover {
+  color: #fff;
+}
+
+.digital-text h1 {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  color: white;
+}
+
+.digital-text p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #cccccc;
+  margin: 0;
+}
+
+.digital-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.digital-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Main Content Area */
+.digital-main {
+  display: flex;
+  gap: 40px;
+  padding: 60px 40px;
+  background-color: #f8f9fa;
+}
+
+.digital-main-content {
+  flex: 1;
+}
+
+.digital-sidebar {
+  width: 320px;
+}
+
+/* Sections */
+section {
+  background: white;
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+/* Overview Section */
+.overview-section p {
+  color: #666;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+/* Key Features Section */
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #666;
+  font-size: 14px;
+}
+
+.feature-icon {
+  color: #ff9500;
+  font-size: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* Benefits Section */
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  color: #666;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.benefits-list li:last-child {
+  border-bottom: none;
+}
+
+.benefit-icon {
+  color: #4caf50;
+  font-weight: bold;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* What You'll Get Section */
+.deliverables-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.deliverables-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  color: #666;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.deliverables-list li:last-child {
+  border-bottom: none;
+}
+
+.deliverable-icon {
+  color: #ff9500;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Sidebar */
+.ready-section,
+.need-help-section {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.ready-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 15px 0;
+}
+
+.ready-section p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+}
+
+.cta-button {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #ff9500;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #e68a00;
+}
+
+.need-help-section h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 10px 0;
+}
+
+.need-help-section p {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 10px 0;
+}
+
+.contact-info {
+  font-size: 12px;
+  color: #333;
+}
+
+.contact-info a {
+  color: #ff9500;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .digital-container {
+    flex-direction: column;
+    padding: 40px 20px;
+    min-height: auto;
+  }
+
+  .digital-text h1 {
+    font-size: 36px;
+  }
+
+  .digital-text p {
+    font-size: 14px;
+  }
+
+  .digital-main {
+    flex-direction: column;
+    padding: 40px 20px;
+  }
+
+  .digital-sidebar {
+    width: 100%;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  section {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  section h2 {
+    font-size: 20px;
+  }
+}
