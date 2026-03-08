@@ -183,14 +183,14 @@ function LandingPage() {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   ];
 
-  const VISIBLE = 5;
-  const FEAT_POS = 2;
-  const CLONES = VISIBLE;
-
   const getFeaturedIndex = () => {
     const idx = teamMembers.findIndex((member) => member.featured);
     return idx >= 0 ? idx : 0;
   };
+
+  const VISIBLE = 5;
+  const FEAT_POS = 2;
+  const CLONES = VISIBLE;
 
   const totalMembers = teamMembers.length;
   const cloneCount = Math.min(CLONES, totalMembers);
@@ -210,21 +210,9 @@ function LandingPage() {
   const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(
     () => minFeaturedIdx + getFeaturedIndex()
   );
-
-  useEffect(() => {
-    if (!totalMembers) return;
-    const idx = getFeaturedIndex();
-    setDisableTrackTransition(true);
-    setLoopFeaturedIndex(minFeaturedIdx + idx);
-  }, [minFeaturedIdx, totalMembers]);
-
-  useEffect(() => {
-    if (!disableTrackTransition) return;
-    const raf = window.requestAnimationFrame(() =>
-      setDisableTrackTransition(false)
-    );
-    return () => window.cancelAnimationFrame(raf);
-  }, [disableTrackTransition]);
+  const [isMobileTeam, setIsMobileTeam] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 900 : false
+  );
 
   const handleTeamPrev = () => {
     if (!totalMembers) return;
@@ -248,6 +236,25 @@ function LandingPage() {
   };
 
   const startIdx = loopFeaturedIndex - FEAT_POS;
+  const activeIdx =
+    totalMembers > 0
+      ? ((loopFeaturedIndex - minFeaturedIdx) % totalMembers + totalMembers) % totalMembers
+      : -1;
+  const activeMember = activeIdx >= 0 ? teamMembers[activeIdx] : null;
+
+  useEffect(() => {
+    if (!disableTrackTransition) return;
+    const raf = window.requestAnimationFrame(() =>
+      setDisableTrackTransition(false)
+    );
+    return () => window.cancelAnimationFrame(raf);
+  }, [disableTrackTransition]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileTeam(window.innerWidth <= 900);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="landingPage">
@@ -383,18 +390,18 @@ function LandingPage() {
         </div>
 
         <div
-          className="team-carousel"
+          className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
           aria-live="polite"
           style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
           <div
             className="team-track"
             onTransitionEnd={handleTeamTrackTransitionEnd}
             style={disableTrackTransition ? { transition: "none" } : undefined}>
-            {loopMembers.map((member, index) => {
-              const isFeatured = index === loopFeaturedIndex;
+            {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
+              const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
               return (
                 <article
-                  key={`${member.id}-${index}`}
+                  key={`${member.id}-${idx}`}
                   className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
                   <div className="team-card-img-wrap">
                     <img src={member.image} alt={member.name} className="team-card-img" />

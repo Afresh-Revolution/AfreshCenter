@@ -213,7 +213,7 @@
         .getstarted-btn { border: 0; border-radius: 8px; background: #f39811; color: #fff; padding: 9px 28px; font-size: 12px; cursor: pointer; }
         .getstarted-btn:hover { background: #de8300; }
         @media (max-width: 900px) {
-          .contact-wrap { grid-template-columns: 1fr; }
+          .contact-wrap { grid-template-columns: 1fr;  }
           .contact-map-panel, .contact-map-panel iframe { min-height: 300px; }
           .contact-meta { grid-template-columns: 1fr; }
           .contact-form-panel .form-row { grid-template-columns: 1fr; }
@@ -221,4 +221,115 @@
           .getstarted-banner::before { width: 142px; height: 160px; left: -12px; bottom: -8px; -webkit-clip-path: polygon(6% 100%, 30% 38%, 66% 50%, 45% 100%); clip-path: polygon(6% 100%, 30% 38%, 66% 50%, 45% 100%); }
           .getstarted-banner::after { width: 152px; height: 210px; right: -14px; top: -6px; -webkit-clip-path: polygon(56% 0, 88% 0, 66% 37%, 100% 37%, 48% 100%, 20% 100%, 42% 58%, 8% 58%); clip-path: polygon(56% 0, 88% 0, 66% 37%, 100% 37%, 48% 100%, 20% 100%, 42% 58%, 8% 58%); }
           .getstarted-inner h2 { font-size: 44px; }
+        }
+
+        @media (max-width: 768px) {
+          .container { padding: 0; }
+          .contact-wrap {  padding: 0; }
+          .hero { padding: 42px 18px; border-radius: 0 0 26px 26px; }
+          .hero h1 { font-size: 34px; margin-bottom: 12px; }
+          .hero p { font-size: 15px; margin-bottom: 18px; }
+          .hero .btn { padding: 9px 18px; font-size: 11px; }
+          .hero-social { right: 10px; gap: 10px; }
+
+          .affiliated { padding: 28px 16px 10px; }
+          .affiliated h4 { font-size: 14px; letter-spacing: 1.1px; }
+          .brand-item img { max-height: 36px; max-width: 110px; }
+
+          .about { padding: 38px 12px; }
+          .about-text h2 { font-size: 30px; margin-bottom: 12px; }
+          .about-text p { font-size: 14px; margin-bottom: 14px; }
+          .read-more-link { font-size: 14px; }
+          .about-photo { width: 138px; height: 188px; }
+          .about-count-number { font-size: 28px; }
+          .about-count-text { font-size: 10px; }
+
+          .services-preview { padding: 30px 12px 34px; }
+          .section-title { font-size: 30px; margin-bottom: 12px; }
+          .service-cards { grid-template-columns: 1fr; max-width: 430px; gap: 14px; }
+          .service-card-image { height: 144px; }
+          .service-card h3 { font-size: 13px; }
+          .service-card p { font-size: 11px; line-height: 1.4; }
+          .service-learn-btn, .view-all-btn { font-size: 11px; }
+
+          .team-section { padding: 0 14px; }
+          .team-header { padding-right: 0; }
+          .team-header .section-title { font-size: 30px; }
+          .team-header .section-sub { font-size: 11px; }
+          .team-nav-actions { position: static; transform: none; justify-content: center; margin-top: 10px; }
+          .team-slider-track { --team-step: calc((100% - 10px) / 2 + 10px); }
+          .team-card { flex-basis: calc((100% - 10px) / 2); }
+          .team-card h4 { font-size: 10px; }
+          .team-role, .team-desc { font-size: 8px; }
+
+          .works-header h2 { font-size: 30px; }
+          .works-header span { font-size: 11px; }
+          .why-choose-copy h3 { font-size: 28px; }
+          .testimonial-copy h3 { font-size: 28px; }
+          .testimonial-profile-card h4 { font-size: 16px; }
+          .testimonial-profile-card p, .testimonial-copy p { font-size: 12px; }
+
+          .contact-form-panel h3 { font-size: 30px; }
+          .contact-form-panel .input-group label,
+          .contact-form-panel .input-group input,
+          .contact-form-panel .input-group textarea { font-size: 11px; }
+          .contact-chip { font-size: 10px; }
+
+          .getstarted-inner h2 { font-size: 36px; }
+        }
+
+        @media (max-width: 560px) {
+          .hero h1 { font-size: 27px; }
+          .hero p { font-size: 13px; }
+          .btn-group { gap: 10px; }
+          .hero-social { display: none; }
+
+          .section-title, .works-header h2, .why-choose-copy h3, .testimonial-copy h3 { font-size: 24px; }
+          .about-text h2 { font-size: 24px; }
+          .about-text p, .why-choose-copy p, .testimonial-copy p { font-size: 12px; }
+          .about-photo { width: 120px; height: 164px; }
+          .about-count-badge { width: 90px; height: 90px; }
+          .about-count-number { font-size: 22px; }
+          .about-count-text { font-size: 9px; }
+
+          .team-slider-track { gap: 8px; --team-step: calc((100% - 8px) / 2 + 8px); }
+          .team-card { flex-basis: calc((100% - 8px) / 2); }
+          .team-card-image { height: 110px; }
+          .team-card-content { padding: 6px 7px 8px; }
+          .team-nav-btn { width: 30px; height: 30px; font-size: 12px; }
+
+          .works-mosaic { grid-template-columns: 1fr; gap: 10px; }
+          .testimonial-panel { padding: 14px; gap: 12px; }
+          .contact-form-panel h3 { font-size: 24px; }
+          .getstarted-inner h2 { font-size: 30px; }
+        }
+
+        @media (max-width: 380px) {
+          .container { padding: 0 10px; }
+          .hero { padding: 34px 10px; }
+          .hero h1 { font-size: 22px; }
+          .hero p { font-size: 12px; }
+          .hero .btn { font-size: 10px; padding: 8px 12px; }
+
+          .affiliated h4 { font-size: 12px; }
+          .about-text h2, .section-title, .works-header h2, .why-choose-copy h3, .testimonial-copy h3 { font-size: 20px; }
+          .about-text p, .works-header span, .why-choose-copy p, .testimonial-copy p { font-size: 11px; }
+
+          .service-card { padding: 8px; }
+          .service-card-image { height: 120px; }
+          .service-card h3 { font-size: 12px; }
+          .service-card p { font-size: 10px; }
+
+          .team-section { padding: 26px 8px 34px; }
+          .team-slider-viewport { margin-top: 12px; }
+          .team-slider-track { gap: 6px; --team-step: calc((100% - 6px) / 2 + 6px); }
+          .team-card { flex-basis: calc((100% - 6px) / 2); border-radius: 8px; }
+          .team-card-image { height: 88px; }
+          .team-card h4 { font-size: 8.5px; }
+          .team-role, .team-desc { font-size: 7px; }
+
+          .contact-form-panel { padding: 18px 12px; }
+          .contact-form-panel h3 { font-size: 20px; }
+          .getstarted-inner h2 { font-size: 24px; }
+          .getstarted-btn { font-size: 10px; padding: 8px 16px; }
         }

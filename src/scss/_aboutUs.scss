@@ -495,35 +495,21 @@ body {
 
 /* ── Viewport: clips cards at both page edges (like Figma) ── */
 .team-carousel {
-    /*
-     * vw-based sizing guarantees exactly 5 cards fill the viewport
-     * regardless of screen width — cards 6 & 7 are always off-screen.
-     *
-     *   --cw   = 18vw  (non-featured card width)
-     *   --gap  = 1.5vw
-     *   --step = 19.5vw  (--cw + --gap)
-     *   --init = -48vw   = -(2 * 19.5vw + 9vw)  → centres member[2]
-     *
-     * At any viewport: member[5] centre = 50vw + 3*19.5vw = 108.5vw (off-screen)
-     */
     --cw: clamp(200px, 18vw, 300px);
-    /* responsive gap; keeps breathing room but won't explode on ultrawide */
     --gap: clamp(12px, 2.4vw, 28px);
     --step: calc(var(--cw) + var(--gap));
     --init: calc(-1 * (2 * var(--step) + (var(--cw) / 2)));
     --feature-scale: 1.2;
     --feature-lift: clamp(14px, 3vw, 28px);
-
     position: relative;
     width: 100%;
     overflow: hidden;
-    /* clips cards 6 & 7 outside the viewport */
+    overflow: hidden;
     padding-top: clamp(2px, 1vw, 10px);
     padding-bottom: 0;
     min-height: clamp(420px, 38vw, 680px);
 }
 
-/* ── Sliding track: all members always in DOM ── */
 .team-track {
     position: absolute;
     left: 50%;
@@ -531,19 +517,15 @@ body {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
-    /* all cards share the same bottom edge */
     gap: var(--gap);
     transform: translateX(calc(var(--init) - var(--start-idx) * var(--step)));
     transition: transform 0.35s ease-out;
 }
 
-/* ── Base card ── */
 .team-card {
     flex: 0 0 var(--cw);
     height: clamp(340px, 26vw, 520px);
-    /* scales with card width */
     background: #fff;
-    /* top-left, top-right, bottom-right curved; bottom-left square */
     border-radius: 18px 18px 18px 0;
     box-shadow: none;
     overflow: hidden;
@@ -552,17 +534,14 @@ body {
     transition: transform 0.35s ease-out;
 }
 
-/* ── Featured (centre) card — elevated ── */
 .team-card--featured {
     transform: translateY(calc(-1 * var(--feature-lift))) scale(var(--feature-scale));
     transform-origin: center bottom;
     box-shadow: none;
-    border-radius: 18px 18px 18px 0;
     position: relative;
     z-index: 2;
 }
 
-/* ── Photo ── */
 .team-card-img-wrap {
     width: 100%;
     overflow: hidden;
@@ -575,14 +554,19 @@ body {
     object-fit: cover;
     object-position: top center;
     display: block;
+    filter: blur(1.8px);
+    transition: filter 0.3s ease;
 }
 
-/* ── Text body — all text always visible ── */
+.team-card--featured .team-card-img {
+    filter: none;
+}
+
 .team-card-body {
-    padding: 12px 14px 16px;
+    padding: 14px 16px 18px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
 
 .team-card-body h3 {
@@ -607,7 +591,6 @@ body {
     font-size: 0.72rem;
     line-height: 1.55;
     color: var(--muted);
-    /* Clamp to 4 lines so every non-featured card body looks identical */
     display: -webkit-box;
     -webkit-line-clamp: 4;
     line-clamp: 4;
@@ -615,11 +598,47 @@ body {
     overflow: hidden;
 }
 
-/* Featured card: show all bio text */
 .team-card--featured .team-card-bio {
+    display: block;
     -webkit-line-clamp: unset;
     line-clamp: unset;
+}
+
+.team-carousel--single {
+    max-width: min(92vw, 430px);
+    margin: 0 auto;
+    overflow: visible;
+    min-height: 0;
+    padding-top: 0;
+}
+
+.team-carousel--single .team-track {
+    position: static;
+    left: auto;
+    bottom: auto;
     display: block;
+    transform: none;
+    transition: none;
+}
+
+.team-carousel--single .team-card {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+}
+
+.team-carousel--single .team-card--featured {
+    transform: none;
+}
+
+.team-carousel--single .team-card-img {
+    aspect-ratio: 4 / 3;
+}
+
+.team-carousel--single .team-card-bio {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
 }
 
 /* -----------------------------------------------
@@ -713,14 +732,13 @@ body {
     aspect-ratio: 16 / 9;
   }
 
-    /* Team carousel */
-    .team-carousel {
-        --cw: min(58vw, 360px);
-        --gap: 16px;
-        --feature-scale: 1.12;
-        --feature-lift: 18px;
-        min-height: 560px;
-    }
+  .team-carousel {
+    --cw: min(58vw, 360px);
+    --gap: 16px;
+    --feature-scale: 1.12;
+    --feature-lift: 18px;
+    min-height: 560px;
+  }
 
     .team-nav-btns {
         position: static;
@@ -793,5 +811,9 @@ body {
         --feature-scale: 1.06;
         --feature-lift: 14px;
         min-height: 500px;
+    }
+
+    .team-card {
+        height: clamp(300px, 76vw, 420px);
     }
 }

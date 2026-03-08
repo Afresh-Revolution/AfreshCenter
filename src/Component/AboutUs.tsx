@@ -159,7 +159,6 @@ function AboutUs() {
         topWorks: defaultTopWorks,
         teamMembers: defaultTeamMembers,
     })
-    /* carousel: startIdx is initialised below after totalMembers is known */
 
     useEffect(() => {
         let isActive = true
@@ -231,6 +230,9 @@ function AboutUs() {
 
     const [disableTrackTransition, setDisableTrackTransition] = useState(false)
     const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(() => minFeaturedIdx + getFeaturedIndex(members))
+    const [isMobileTeam, setIsMobileTeam] = useState(
+        typeof window !== 'undefined' ? window.innerWidth <= 900 : false
+    )
 
     useEffect(() => {
         if (!totalMembers) return
@@ -244,6 +246,12 @@ function AboutUs() {
         const raf = window.requestAnimationFrame(() => setDisableTrackTransition(false))
         return () => window.cancelAnimationFrame(raf)
     }, [disableTrackTransition])
+
+    useEffect(() => {
+        const handleResize = () => setIsMobileTeam(window.innerWidth <= 900)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     const prev = () => {
         if (!totalMembers) return
@@ -266,6 +274,11 @@ function AboutUs() {
     }
 
     const startIdx = loopFeaturedIndex - FEAT_POS
+    const activeIdx =
+        totalMembers > 0
+            ? ((loopFeaturedIndex - minFeaturedIdx) % totalMembers + totalMembers) % totalMembers
+            : -1
+    const activeMember = activeIdx >= 0 ? members[activeIdx] : null
 
     return (
         <main className="about-page">
@@ -464,7 +477,7 @@ function AboutUs() {
                 </div>
 
                 <div
-                    className="team-carousel"
+                    className={`team-carousel${isMobileTeam ? ' team-carousel--single' : ''}`}
                     aria-live="polite"
                     style={{ ['--start-idx']: startIdx } as React.CSSProperties}
                 >
@@ -473,16 +486,19 @@ function AboutUs() {
                         onTransitionEnd={handleTrackTransitionEnd}
                         style={disableTrackTransition ? { transition: 'none' } : undefined}
                     >
-                        {loopMembers.map((member, index) => {
-                            const isFeatured = index === loopFeaturedIndex
-                            const memberImg = imageMap[member.imgKey] ?? member.imgKey
+                        {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
+                            const isFeatured = isMobileTeam || idx === loopFeaturedIndex
                             return (
                                 <article
-                                    key={`${member.id}-${index}`}
+                                    key={`${member.id}-${idx}`}
                                     className={`team-card${isFeatured ? ' team-card--featured' : ''}`}
                                 >
                                     <div className="team-card-img-wrap">
-                                        <img src={memberImg} alt={member.name} className="team-card-img" />
+                                        <img
+                                            src={imageMap[member.imgKey] ?? member.imgKey}
+                                            alt={member.name}
+                                            className="team-card-img"
+                                        />
                                     </div>
                                     <div className="team-card-body">
                                         <h3>{member.name}</h3>
