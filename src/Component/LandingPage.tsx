@@ -1,5 +1,6 @@
 // LandingPage.jsx
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import heroBackground from "../assets/images/Background-Image.png";
 import afLogo from "../assets/images/af 1.png";
 import cbLogo from "../assets/images/cb 1.png";
@@ -9,11 +10,7 @@ import knowristLogo from "../assets/images/knowrist 1.png";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
 import serviceImage1 from "../assets/images/Image 1.png";
-import serviceImage2 from "../assets/images/Image 2.png";
-import serviceImage3 from "../assets/images/Image 3.png";
-import serviceImage4 from "../assets/images/Image 4.png";
-import serviceImage5 from "../assets/images/Image 5.png";
-import serviceImage6 from "../assets/images/Image 6.png";
+import { fetchPublicServices, getServiceImageUrl, type ServiceItem } from "../api/services";
 import blessingImage from "../assets/images/BlessingWilliams.jpg";
 import jethroImage from "../assets/images/JethroMD.jpg";
 import williamImage from "../assets/images/WilliamsBosw.jpg";
@@ -35,68 +32,18 @@ function LandingPage() {
     { name: "Knowrist", logo: knowristLogo },
   ];
 
-  const serviceItems = [
-    {
-      title: "FrontEnd Development",
-      description:
-        "Software development services customization to design, code, test and deploy web applications.",
-      image: serviceImage1,
-    },
-    {
-      title: "Hardware",
-      description:
-        "Software development services customization to design, code, test and deploy hardware systems.",
-      image: serviceImage2,
-    },
-    {
-      title: "UI/UX Design",
-      description:
-        "Software development services customization to design, code, test and deploy user interface applications.",
-      image: serviceImage3,
-    },
-    {
-      title: "Cyber security",
-      description:
-        "Software development services customization to design, code, test and deploy cybersecurity solutions.",
-      image: serviceImage4,
-    },
-    {
-      title: "Graphics Design",
-      description:
-        "Software development services customization to design, code, test and deploy graphic designs.",
-      image: serviceImage5,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage6,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage2,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage1,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage3,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage4,
-    },
-  ];
+  const [landingServices, setLandingServices] = useState<ServiceItem[]>([]);
+  const SERVICES_PREVIEW_COUNT = 6;
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchPublicServices()
+      .then((list) => {
+        if (!cancelled) setLandingServices(list);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   const teamMembers = [
     {
@@ -277,7 +224,7 @@ function LandingPage() {
           </p>
           <div className="btn-group">
             <button className="btn btn-primary">Learn more</button>
-            <button className="btn btn-outline">Wailin</button>
+            <Link to="/wailin" className="btn btn-outline">Wailin</Link>
           </div>
         </div>
         <div className="hero-social">
@@ -336,30 +283,34 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Our Services (exact 6 cards)  */}
+      {/* Our Services — fetched from API, links to /services and detail  */}
       <section className="services-preview">
         <div className="container">
           <h2 className="section-title">Our Services</h2>
           <div className="service-cards">
-            {serviceItems.map((service) => (
-              <article className="service-card" key={service.title}>
+            {landingServices.slice(0, SERVICES_PREVIEW_COUNT).map((service) => (
+              <article className="service-card" key={service.id}>
                 <img
-                  src={service.image}
+                  src={getServiceImageUrl(service.image) ?? serviceImage1}
                   alt={service.title}
                   className="service-card-image"
+                  onError={(e) => {
+                    const el = e.currentTarget;
+                    if (el.src !== serviceImage1) el.src = serviceImage1;
+                  }}
                 />
                 <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <button className="service-learn-btn" type="button">
+                <p>{service.description || "Contact us for more details about this service."}</p>
+                <Link to={`/services?id=${service.id}`} className="service-learn-btn">
                   Learn More
-                </button>
+                </Link>
               </article>
             ))}
           </div>
           <div className="view-all">
-            <button className="view-all-btn" type="button">
+            <Link to="/services" className="view-all-btn">
               View all
-            </button>
+            </Link>
           </div>
         </div>
       </section>

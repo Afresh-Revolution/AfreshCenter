@@ -107,7 +107,7 @@ const FooterLocationIcon = () => (
 
 const contactItems: { href?: string; icon: React.ReactNode; label: string }[] = [
   { href: 'tel:+03586907042', icon: <FooterPhoneIcon />, label: '+03586907042' },
-  { href: 'mailto:joy@gmail.com', icon: <FooterEmailIcon />, label: 'JOY@GMAIL.COM' },
+  { href: 'mailto:afreshcenter@gmail.com', icon: <FooterEmailIcon />, label: 'afreshcenter@gmail.com' },
   { icon: <FooterLocationIcon />, label: 'N0-2344 OIL AIRPORT ROUNDABOUT JOS, PLATEAU STATE' },
 ]
 

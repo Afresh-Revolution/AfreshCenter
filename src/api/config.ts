@@ -1,14 +1,19 @@
 /**
  * Backend API base URL from environment.
  * Set VITE_API_URL in .env (e.g. https://afreshcenter-logic.onrender.com).
- * Used by client, services, and any other API modules.
+ * In development, defaults to http://localhost:5000 so API and image URLs (e.g. /uploads/...) work.
  */
+const DEFAULT_DEV_API = 'http://localhost:5000';
+
 export function getApiBase(): string {
   const env = import.meta.env.VITE_API_URL;
   if (typeof env === 'string' && env.length > 0) {
     return env.replace(/\/$/, '');
   }
-  return ''; // dev: same origin; Vite can proxy /api to backend
+  if (import.meta.env.DEV) {
+    return DEFAULT_DEV_API;
+  }
+  return '';
 }
 
 export const API_BASE = getApiBase();
