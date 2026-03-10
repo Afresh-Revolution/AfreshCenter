@@ -1,4 +1,7 @@
-import './Contact.css'
+import { useState } from 'react'
+import { sendContact } from '../api/contact'
+import { SiteFooter, SiteNavbar } from './SharedLayout'
+// import '../scss/Contact.scss'
 
 const PhoneIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -56,28 +59,47 @@ const contactItems: ContactItem[] = [
   },
 ]
 
-const quickLinks = ['Home', 'About', 'Services', 'Support', 'Account']
-
 function Contact() {
+  const [form, setForm] = useState({
+    firstName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  })
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
+
+  const handleChange = (field: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((prev) => ({ ...prev, [field]: event.target.value }))
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setStatus('sending')
+    setStatusMessage('')
+    const response = await sendContact({
+      name: form.firstName.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+    })
+    if (response.success) {
+      setStatus('success')
+      setStatusMessage(response.message ?? 'Message sent successfully.')
+      setForm({ firstName: '', email: '', phone: '', subject: '', message: '' })
+    } else {
+      setStatus('error')
+      setStatusMessage(response.message ?? 'Failed to send message.')
+    }
+  }
+
   return (
     <main className="contact-page">
+      <SiteNavbar />
       <header className="contact-hero" aria-label="Contact page hero">
         <div className="hero-overlay" />
-        <div className="hero-topbar">
-          <div className="hero-logo">
-            <span className="hero-mark" aria-hidden="true">afr</span>
-            <span className="hero-logo-text">afresh</span>
-          </div>
-          <nav aria-label="Primary navigation">
-            <ul className="hero-nav">
-              <li>Home</li>
-              <li>About</li>
-              <li>Services</li>
-              <li>Contact Us</li>
-            </ul>
-          </nav>
-          <button className="hero-cta" type="button">Book A Meeting</button>
-        </div>
         <div className="hero-content">
           <h1>Contact Us</h1>
           <p>
@@ -95,35 +117,80 @@ function Contact() {
             <h2>Send Us a Message</h2>
             <p className="card-subtitle">Fill out the form below and our team will get back to you within 24 hours.</p>
           </div>
-          <form onSubmit={(event) => event.preventDefault()}>
+          <form onSubmit={handleSubmit}>
             <div className="form-grid">
               <div className="field">
                 <label htmlFor="firstName">First Name</label>
-                <input id="firstName" name="firstName" type="text" placeholder="John" />
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  placeholder="John"
+                  value={form.firstName}
+                  onChange={handleChange('firstName')}
+                  required
+                />
               </div>
               <div className="field">
                 <label htmlFor="email">Email Address</label>
-                <input id="email" name="email" type="email" placeholder="john@example.com" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="john@example.com"
+                  value={form.email}
+                  onChange={handleChange('email')}
+                  required
+                />
               </div>
               <div className="field">
                 <label htmlFor="phone">Phone Number</label>
-                <input id="phone" name="phone" type="tel" placeholder="+234 908 842 4461" />
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="+234 908 842 4461"
+                  value={form.phone}
+                  onChange={handleChange('phone')}
+                  required
+                />
               </div>
               <div className="field">
                 <label htmlFor="subject">Subject</label>
-                <input id="subject" name="subject" type="text" placeholder="How can we help?" />
+                <input
+                  id="subject"
+                  name="subject"
+                  type="text"
+                  placeholder="How can we help?"
+                  value={form.subject}
+                  onChange={handleChange('subject')}
+                  required
+                />
               </div>
             </div>
             <div className="field field-message">
               <label htmlFor="message">Message</label>
-              <textarea id="message" name="message" rows={6} placeholder="Tell us about your project or inquiry..." />
+              <textarea
+                id="message"
+                name="message"
+                rows={6}
+                placeholder="Tell us about your project or inquiry..."
+                value={form.message}
+                onChange={handleChange('message')}
+                required
+              />
             </div>
-            <button className="submit-btn" type="submit">
+            <button className="submit-btn" type="submit" disabled={status === 'sending'}>
               <span>Send Message</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="btn-arrow">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
+            {status !== 'idle' && (
+              <p className="form-status" role="status" aria-live="polite">
+                {statusMessage}
+              </p>
+            )}
           </form>
         </section>
 
@@ -190,55 +257,7 @@ function Contact() {
         </aside>
       </section>
 
-      <footer className="contact-footer">
-        <div className="footer-content">
-          {/* Brand column */}
-          <section className="footer-brand-col">
-            <div className="footer-brand-row">
-              <span className="footer-mark" aria-hidden="true">afr</span>
-              <h3 className="footer-brand">afresh</h3>
-            </div>
-            <p>Delivering quality support built with dependable workflows and practical service standards.</p>
-          </section>
-
-          <section className="footer-col">
-            <h4>Quick Links</h4>
-            <ul className="footer-links">
-              {quickLinks.map((link) => (
-                <li key={link}>{link}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="footer-col footer-contact">
-            <h4>Contact Us</h4>
-            <ul className="footer-contact-list">
-              <li>
-                <span className="footer-icon" aria-hidden="true"><PhoneIcon /></span>
-                <a href="tel:+2349088424461">+234 908 842 4461</a>
-              </li>
-              <li>
-                <span className="footer-icon" aria-hidden="true"><EmailIcon /></span>
-                <a href="mailto:info@afresh.com">info@afresh.com</a>
-              </li>
-              <li>
-                <span className="footer-icon" aria-hidden="true"><LocationIcon /></span>
-                <span>423 Park Ave, Suite 200</span>
-              </li>
-            </ul>
-          </section>
-
-          <section className="footer-col footer-follow">
-            <h4>Follow Us</h4>
-            <div className="social-row" aria-label="Social links">
-              <span aria-label="Facebook">f</span>
-              <span aria-label="LinkedIn">in</span>
-              <span aria-label="X">x</span>
-              <span aria-label="Instagram">ig</span>
-            </div>
-          </section>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   )
 }

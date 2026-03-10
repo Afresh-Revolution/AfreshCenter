@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Testing
+coverage
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
