@@ -77,6 +77,16 @@ export function AdminLayout() {
             Services
           </NavLink>
           <NavLink
+            to="/admin/team"
+            className={({ isActive }) =>
+              isActive ? "nav-item active" : "nav-item"
+            }
+            onClick={() => setSidebarOpen(false)}
+          >
+            <span className="nav-icon nav-icon-users" aria-hidden />
+            Team
+          </NavLink>
+          <NavLink
             to="/admin/bookings"
             className={({ isActive }) =>
               isActive ? "nav-item active" : "nav-item"

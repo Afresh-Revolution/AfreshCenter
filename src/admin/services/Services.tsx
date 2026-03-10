@@ -44,7 +44,14 @@ export function Services() {
     setPageMessage(null);
     try {
       const list = await fetchServices();
-      setServices(list);
+      const sorted = [...list].sort((a, b) => {
+        const aId = isNaN(Number(a.id)) ? a.id : Number(a.id);
+        const bId = isNaN(Number(b.id)) ? b.id : Number(b.id);
+        if (aId < bId) return -1;
+        if (aId > bId) return 1;
+        return 0;
+      });
+      setServices(sorted);
     } catch {
       setPageMessage({ type: 'error', text: 'Failed to load services.' });
       setServices([]);
