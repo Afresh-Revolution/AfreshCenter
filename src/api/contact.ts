@@ -28,6 +28,8 @@ export async function sendContact(payload: ContactPayload): Promise<ContactRespo
     body: JSON.stringify(payload),
   });
   const data = (await res.json()) as ContactResponse;
+  console.log("Contact details:", data);
+  
   if (!res.ok) {
     return {
       success: false,

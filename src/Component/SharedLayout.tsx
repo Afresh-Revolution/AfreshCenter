@@ -43,7 +43,7 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
           <span className="site-mark" aria-hidden="true">
             afr
           </span>
-          <span className="site-logo-text">afresh</span>
+          <span className="site-logo-text">AfrESH</span>
         </div>
         <nav className="site-nav-wrap" aria-label="Primary navigation">
           <ul className="site-nav">
@@ -151,7 +151,7 @@ export function SiteFooter() {
             <span className="site-mark" aria-hidden="true">
               afr
             </span>
-            <h3>afresh</h3>
+            <h3>AfrESH</h3>
           </div>
           <p>
             Delivering quality support built with dependable workflows and practical
