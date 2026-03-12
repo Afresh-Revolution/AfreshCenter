@@ -43,7 +43,7 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
           <span className="site-mark" aria-hidden="true">
             afr
           </span>
-          <span className="site-logo-text">afresh</span>
+          <span className="site-logo-text">AfrESH</span>
         </div>
         <nav className="site-nav-wrap" aria-label="Primary navigation">
           <ul className="site-nav">

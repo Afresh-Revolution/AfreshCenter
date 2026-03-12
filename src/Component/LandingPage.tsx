@@ -22,6 +22,7 @@ import ourWork3 from "../assets/images/our-woks-3.png";
 import olaImage from "../assets/images/Ola.png";
 import samLightImage from "../assets/images/Sam-light.png";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
+import { sendContact } from "../api/contact";
 
 function LandingPage() {
   const affiliatedCompanies = [
@@ -138,6 +139,17 @@ function LandingPage() {
   const [isMobileTeam, setIsMobileTeam] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 900 : false,
   );
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [contactStatus, setContactStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
+  const [contactStatusMessage, setContactStatusMessage] = useState("");
 
   const handleTeamPrev = () => {
     if (!totalMembers) return;
@@ -181,6 +193,41 @@ function LandingPage() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleContactChange =
+    (field: keyof typeof contactForm) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setContactForm((prev) => ({ ...prev, [field]: event.target.value }));
+    };
+
+  const handleContactSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+    setContactStatus("sending");
+    setContactStatusMessage("");
+    const response = await sendContact({
+      name: contactForm.name.trim(),
+      email: contactForm.email.trim(),
+      phone: contactForm.phone.trim(),
+      subject: contactForm.subject.trim(),
+      message: contactForm.message.trim(),
+    });
+    if (response.success) {
+      setContactStatus("success");
+      setContactStatusMessage(response.message ?? "Message sent successfully.");
+      setContactForm({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } else {
+      setContactStatus("error");
+      setContactStatusMessage(response.message ?? "Failed to send message.");
+    }
+  };
 
   return (
     <div className="landingPage">
@@ -457,33 +504,71 @@ function LandingPage() {
       {/* Get in Touch with Us */}
       <section className="contact-section">
         <div className="container contact-wrap">
-          <div className="contact-form-panel">
+          <form className="contact-form-panel" onSubmit={handleContactSubmit}>
             <h3>Get in Touch with Us</h3>
             <div className="form-row">
               <div className="input-group">
                 <label>Name</label>
-                <input type="text" placeholder="Enter name" />
+                <input
+                  type="text"
+                  placeholder="Enter name"
+                  value={contactForm.name}
+                  onChange={handleContactChange("name")}
+                  required
+                />
               </div>
               <div className="input-group">
                 <label>Email</label>
-                <input type="email" placeholder="Enter Email" />
+                <input
+                  type="email"
+                  placeholder="Enter Email"
+                  value={contactForm.email}
+                  onChange={handleContactChange("email")}
+                  required
+                />
               </div>
             </div>
             <div className="form-row">
               <div className="input-group">
                 <label>Phone Number</label>
-                <input type="text" placeholder="Enter number" />
+                <input
+                  type="text"
+                  placeholder="Enter number"
+                  value={contactForm.phone}
+                  onChange={handleContactChange("phone")}
+                  required
+                />
               </div>
               <div className="input-group">
                 <label>Subject</label>
-                <input type="text" placeholder="Enter Subject" />
+                <input
+                  type="text"
+                  placeholder="Enter Subject"
+                  value={contactForm.subject}
+                  onChange={handleContactChange("subject")}
+                  required
+                />
               </div>
             </div>
             <div className="input-group">
               <label>Message</label>
-              <textarea placeholder="Write your message"></textarea>
+              <textarea
+                placeholder="Write your message"
+                value={contactForm.message}
+                onChange={handleContactChange("message")}
+                required></textarea>
             </div>
-            <button className="submit-btn">Submit</button>
+            <button
+              className="submit-btn"
+              type="submit"
+              disabled={contactStatus === "sending"}>
+              Submit
+            </button>
+            {contactStatus !== "idle" && (
+              <p className="form-status" role="status" aria-live="polite">
+                {contactStatusMessage}
+              </p>
+            )}
 
             <div className="contact-meta">
               <div className="contact-chip">
@@ -520,7 +605,7 @@ function LandingPage() {
                 </button>
               </div>
             </div>
-          </div>
+          </form>
 
           <div className="contact-map-panel">
             <iframe
