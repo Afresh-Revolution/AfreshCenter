@@ -194,6 +194,17 @@ function LandingPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    if (contactStatus === "success" || contactStatus === "error") {
+      const timeout = window.setTimeout(() => {
+        setContactStatus("idle");
+        setContactStatusMessage("");
+      }, 5000);
+      return () => window.clearTimeout(timeout);
+    }
+    return undefined;
+  }, [contactStatus]);
+
   const handleContactChange =
     (field: keyof typeof contactForm) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -256,13 +267,16 @@ function LandingPage() {
         </div>
         <div className="hero-social">
           <a href="#" aria-label="Facebook">
-            f
+            <i className="fab fa-facebook-f" aria-hidden="true" />
           </a>
-          <a href="#" aria-label="X">
-            x
+          <a href="#" aria-label="Twitter">
+            <i className="fab fa-twitter" aria-hidden="true" />
+          </a>
+          <a href="#" aria-label="Instagram">
+            <i className="fab fa-instagram" aria-hidden="true" />
           </a>
           <a href="#" aria-label="LinkedIn">
-            in
+            <i className="fab fa-linkedin-in" aria-hidden="true" />
           </a>
         </div>
       </header>

@@ -20,8 +20,8 @@
         .hero .btn-primary:hover { background: #e48800; transform: translateY(-2px); }
         .hero .btn-outline { background: transparent; border: 1px solid #f39811; color: #f7a72b; }
         .hero .btn-outline:hover { background: rgba(243, 152, 17, 0.12); }
-        .hero-social { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 2; display: flex; flex-direction: column; gap: 14px; }
-        .hero-social a { color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; line-height: 1; opacity: 0.92; }
+        .hero-social { position: absolute; right: 36px; top: 50%; transform: translateY(-50%); z-index: 2; display: flex; flex-direction: column; gap: 14px; }
+        .hero-social a { color: #ffffff; text-decoration: none; font-size: 18px; font-weight: 600; line-height: 1; opacity: 0.92; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; }
         .hero-social a:hover { color: #f7a72b; }
         /* affiliated companies */
         .affiliated { padding: 40px 32px 20px; text-align: center; }
@@ -230,7 +230,7 @@
           .hero h1 { font-size: 34px; margin-bottom: 12px; }
           .hero p { font-size: 15px; margin-bottom: 18px; }
           .hero .btn { padding: 9px 18px; font-size: 11px; }
-          .hero-social { right: 10px; gap: 10px; }
+          .hero-social { right: 22px; gap: 10px; }
 
           .affiliated { padding: 28px 16px 10px; }
           .affiliated h4 { font-size: 14px; letter-spacing: 1.1px; }

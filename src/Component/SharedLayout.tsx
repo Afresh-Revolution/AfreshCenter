@@ -151,7 +151,7 @@ export function SiteFooter() {
             <span className="site-mark" aria-hidden="true">
               afr
             </span>
-            <h3>afresh</h3>
+            <h3>AfrESH</h3>
           </div>
           <p>
             Delivering quality support built with dependable workflows and practical
