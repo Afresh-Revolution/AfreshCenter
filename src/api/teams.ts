@@ -17,6 +17,8 @@ export async function fetchTeams(): Promise<TeamMemberDTO[]> {
     throw new Error("Failed to fetch teams");
   }
   const data = (await res.json()) as TeamMemberDTO[];
+  console.log("Fetched teams:", data);
+  
   return Array.isArray(data) ? data : [];
 }
 
@@ -27,6 +29,10 @@ export async function fetchAdminTeams(): Promise<TeamMemberDTO[]> {
   const data = (await res.json()) as TeamMemberDTO[];
   return Array.isArray(data) ? data : [];
 }
+
+
+
+// meet our team card are duplicates, fix the duplicates issues, while maintaining the cards at the middle of the section in the landing page. and let the featured card stay at the middle of the section as well.
 
 /** Resolve a team member image to a full URL. */
 export function getTeamImageUrl(
@@ -94,6 +100,8 @@ export async function createTeamMember(
     }),
   });
   const data = (await res.json()) as CreateTeamResponse;
+  console.log(data);
+  
   if (!res.ok) {
     return {
       success: false,
