@@ -635,9 +635,9 @@ function LandingPage() {
       <section className="getstarted-banner">
         <div className="container getstarted-inner">
           <h2>GET STARTED NOW</h2>
-          <button className="getstarted-btn" type="button">
+          <Link to="/services" className="getstarted-btn">
             Get Started
-          </button>
+          </Link>
         </div>
       </section>
       {/* footer with extra details  */}
