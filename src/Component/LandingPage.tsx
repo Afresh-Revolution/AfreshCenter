@@ -10,12 +10,12 @@ import knowristLogo from "../assets/images/knowrist 1.png";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
 import serviceImage1 from "../assets/images/Image 1.png";
-import { fetchPublicServices, getServiceImageUrl, type ServiceItem } from "../api/services";
-import blessingImage from "../assets/images/BlessingWilliams.jpg";
-import jethroImage from "../assets/images/JethroMD.jpg";
-import williamImage from "../assets/images/WilliamsBosw.jpg";
-import felixImage from "../assets/images/MrFelix.JPG";
-import dominicImage from "../assets/images/DominicRay.JPG";
+import {
+  fetchPublicServices,
+  getServiceImageUrl,
+  type ServiceItem,
+} from "../api/services";
+import { fetchTeams, getTeamImageUrl, type TeamMemberDTO } from "../api/teams";
 import ourWork1 from "../assets/images/our-woks-1.png";
 import ourWork2 from "../assets/images/our-woks-2.png";
 import ourWork3 from "../assets/images/our-woks-3.png";
@@ -33,70 +33,48 @@ function LandingPage() {
   ];
 
   const [landingServices, setLandingServices] = useState<ServiceItem[]>([]);
+  const [teamMembers, setTeamMembers] = useState<
+    (TeamMemberDTO & { featured?: boolean })[]
+  >([]);
   const SERVICES_PREVIEW_COUNT = 6;
 
   useEffect(() => {
     let cancelled = false;
+
+    // Fetch services
     fetchPublicServices()
       .then((list) => {
         if (!cancelled) setLandingServices(list);
       })
       .catch(() => {});
-    return () => { cancelled = true; };
-  }, []);
 
-  const teamMembers = [
-    {
-      id: "felix",
-      name: "Felix Nwachukwu",
-      role: "Hardware Manager",
-      bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
-      image: felixImage,
-    },
-    {
-      id: "blessing",
-      name: "Blessing Adukuchili",
-      role: "Administrative Manager",
-      bio: "Leads administrative operations, documentation, scheduling, and internal process coordination.",
-      image: blessingImage,
-    },
-    {
-      id: "jethro",
-      name: "Jethro Mark Da'ar",
-      role: "Chief Executive Officer (CEO)",
-      bio: "Drives strategic growth, innovation, and partnerships while leading long-term company direction.",
-      image: jethroImage,
-      featured: true,
-    },
-    {
-      id: "dominic",
-      name: "Dominic Ray Nanjwan",
-      role: "General Manager",
-      bio: "Coordinates day-to-day execution across teams to deliver results and maintain operational excellence.",
-      image: dominicImage,
-    },
-    {
-      id: "william",
-      name: "William Bosworth",
-      role: "Software Manager",
-      bio: "Leads software architecture, delivery standards, and continuous engineering improvements.",
-      image: williamImage,
-    },
-    {
-      id: "ola",
-      name: "Ola Adeyemi",
-      role: "Creative Director",
-      bio: "Drives brand identity and visual storytelling across all Afresh Centre platforms.",
-      image: olaImage,
-    },
-    {
-      id: "sam",
-      name: "Samuel Bright",
-      role: "Business Development",
-      bio: "Identifies growth opportunities and manages strategic partnerships to expand Afresh Centre's reach.",
-      image: samLightImage,
-    },
-  ];
+    // Fetch teams
+    fetchTeams()
+      .then((list) => {
+        if (!cancelled) {
+          // Filter to only visible members and map to include featured property
+          const visibleMembers = list.filter(
+            (m) => m.visible !== false || m.status !== "Inactive",
+          );
+          // Try to find CEO as featured member
+          const featuredIdx = visibleMembers.findIndex(
+            (m) =>
+              m.role?.toLowerCase().includes("ceo") ||
+              m.role?.toLowerCase().includes("chief executive"),
+          );
+          const membersWithFeatured = visibleMembers.map((m, idx) => ({
+            ...m,
+            featured: idx === featuredIdx && featuredIdx >= 0,
+          }));
+          setTeamMembers(membersWithFeatured);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const topWorkTiles = [
     { type: "image", title: "vann", image: ourWork1 },
@@ -155,10 +133,10 @@ function LandingPage() {
 
   const [disableTrackTransition, setDisableTrackTransition] = useState(false);
   const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(
-    () => minFeaturedIdx + getFeaturedIndex()
+    () => minFeaturedIdx + getFeaturedIndex(),
   );
   const [isMobileTeam, setIsMobileTeam] = useState(
-    typeof window !== "undefined" ? window.innerWidth <= 900 : false
+    typeof window !== "undefined" ? window.innerWidth <= 900 : false,
   );
 
   const handleTeamPrev = () => {
@@ -185,14 +163,15 @@ function LandingPage() {
   const startIdx = loopFeaturedIndex - FEAT_POS;
   const activeIdx =
     totalMembers > 0
-      ? ((loopFeaturedIndex - minFeaturedIdx) % totalMembers + totalMembers) % totalMembers
+      ? (((loopFeaturedIndex - minFeaturedIdx) % totalMembers) + totalMembers) %
+        totalMembers
       : -1;
   const activeMember = activeIdx >= 0 ? teamMembers[activeIdx] : null;
 
   useEffect(() => {
     if (!disableTrackTransition) return;
     const raf = window.requestAnimationFrame(() =>
-      setDisableTrackTransition(false)
+      setDisableTrackTransition(false),
     );
     return () => window.cancelAnimationFrame(raf);
   }, [disableTrackTransition]);
@@ -212,8 +191,7 @@ function LandingPage() {
       <header
         className="hero"
         style={{
-          backgroundImage: `url(${heroBackground})`
-         
+          backgroundImage: `url(${heroBackground})`,
         }}>
         <div className="hero-content">
           <h1>EMPOWERING AFRICA THROUGH INNOVATION AND CREATIVITY</h1>
@@ -224,7 +202,9 @@ function LandingPage() {
           </p>
           <div className="btn-group">
             <button className="btn btn-primary">Learn more</button>
-            <Link to="/wailin" className="btn btn-outline">Wailin</Link>
+            <Link to="/wailin" className="btn btn-outline">
+              Wailin
+            </Link>
           </div>
         </div>
         <div className="hero-social">
@@ -300,8 +280,13 @@ function LandingPage() {
                   }}
                 />
                 <h3>{service.title}</h3>
-                <p>{service.description || "Contact us for more details about this service."}</p>
-                <Link to={`/services?id=${service.id}`} className="service-learn-btn">
+                <p>
+                  {service.description ||
+                    "Contact us for more details about this service."}
+                </p>
+                <Link
+                  to={`/services?id=${service.id}`}
+                  className="service-learn-btn">
                   Learn More
                 </Link>
               </article>
@@ -348,14 +333,27 @@ function LandingPage() {
             className="team-track"
             onTransitionEnd={handleTeamTrackTransitionEnd}
             style={disableTrackTransition ? { transition: "none" } : undefined}>
-            {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
+            {(isMobileTeam
+              ? activeMember
+                ? [activeMember]
+                : []
+              : loopMembers
+            ).map((member, idx) => {
               const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
               return (
                 <article
                   key={`${member.id}-${idx}`}
                   className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
                   <div className="team-card-img-wrap">
-                    <img src={member.image} alt={member.name} className="team-card-img" />
+                    <img
+                      src={
+                        member.image_url
+                          ? (getTeamImageUrl(member.image_url) ?? "")
+                          : ""
+                      }
+                      alt={member.name || ""}
+                      className="team-card-img"
+                    />
                   </div>
                   <div className="team-card-body">
                     <h3>{member.name}</h3>
