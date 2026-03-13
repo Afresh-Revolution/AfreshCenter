@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import primaryLogo from '../assets/primary-logo.png';
 import { login } from '../api/client';
 import { setStoredToken, setStoredUser } from '../api/auth';
 
 export function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // If RequireAuth redirected here, it stored the attempted path in state
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/admin';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -26,7 +29,7 @@ export function Login() {
       if (result.success) {
         setStoredToken(result.session.access_token, rememberMe);
         setStoredUser(result.user, rememberMe);
-        navigate('/admin', { replace: true });
+        navigate(from, { replace: true });
         return;
       }
 

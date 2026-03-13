@@ -65,21 +65,19 @@ $close-color: #aaa;
     width: 104%;
     height: 100px;
     background: var(--page-bg);
-    clip-path: polygon(
-      0 27%,
-      10% 53%,
-      18% 69%,
-      29% 81%,
-      36% 85.3%,
-      40.2% 85.2%,
-      50% 82%,
-      64% 74%,
-      78% 61%,
-      90% 54%,
-      100% 50%,
-      100% 100%,
-      0 100%
-    );
+    clip-path: polygon(0 27%,
+        10% 53%,
+        18% 69%,
+        29% 81%,
+        36% 85.3%,
+        40.2% 85.2%,
+        50% 82%,
+        64% 74%,
+        78% 61%,
+        90% 54%,
+        100% 50%,
+        100% 100%,
+        0 100%);
     z-index: 1;
   }
 
@@ -87,11 +85,9 @@ $close-color: #aaa;
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(
-        circle at 20% 10%,
+      radial-gradient(circle at 20% 10%,
         rgba(246, 128, 20, 0.18),
-        transparent 34%
-      ),
+        transparent 34%),
       linear-gradient(to bottom, rgba(8, 18, 28, 0.66), rgba(8, 18, 28, 0.55));
     z-index: 0;
   }
@@ -362,11 +358,9 @@ $close-color: #aaa;
   .service-detail-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(7, 16, 27, 0.85),
-      rgba(13, 29, 45, 0.65)
-    );
+    background: linear-gradient(135deg,
+        rgba(7, 16, 27, 0.85),
+        rgba(13, 29, 45, 0.65));
     z-index: 0;
   }
 
@@ -541,27 +535,190 @@ $close-color: #aaa;
     color: $brand-orange;
   }
 
-    .service-detail-block {
-        margin-bottom: 2rem;
+  .ready-to-get-started-card__help-sub {
+    margin: 0 0 0.5rem;
+    font-size: 0.82rem;
+    color: var(--muted, #6d7780);
+  }
+
+  // ── Inline booking form ──────────────────────────────────────────
+  .rtgs-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .rtgs-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .rtgs-form__label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dark);
+
+    span[aria-hidden] {
+      color: $brand-orange;
+      margin-left: 2px;
+    }
+  }
+
+  .rtgs-form__optional {
+    font-weight: 400;
+    color: var(--muted, #6d7780);
+    font-size: 0.78rem;
+  }
+
+  .rtgs-form__input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #e0e4e8;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+
+    &::placeholder {
+      color: #b0b8c1;
     }
 
-    .service-detail-card {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        padding: 1.5rem;
-
-        h2 {
-            margin: 0 0 1rem;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        h2:first-child:last-child {
-            margin-bottom: 0;
-        }
+    &:focus {
+      border-color: $brand-orange;
+      box-shadow: 0 0 0 3px rgba(255, 137, 1, 0.12);
+      background: #fff;
     }
+  }
+
+  .rtgs-form__textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .rtgs-form__status {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    margin: 0;
+
+    &--success {
+      background: #ecfdf5;
+      color: #15803d;
+    }
+
+    &--error {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    &--sending {
+      color: var(--muted, #6d7780);
+    }
+  }
+
+  .rtgs-form__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+  }
+
+  .rtgs-form__btn {
+    width: 100%;
+    padding: 0.82rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.05s;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &--primary {
+      background: $brand-orange;
+      color: #fff;
+
+      &:hover:not(:disabled) {
+        background: #e57a01;
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+    }
+
+    &--pay {
+      background: $brand-orange;
+      color: #fff;
+
+      &:hover {
+        background: #e57a01;
+      }
+    }
+
+    &--cancel {
+      background: transparent;
+      color: var(--muted, #6d7780);
+      border: 1.5px solid #e0e4e8;
+      font-weight: 500;
+
+      &:hover {
+        background: #f3f5f7;
+        color: var(--text-dark);
+      }
+    }
+  }
+
+  // Slide-in animation for form reveal
+  .rtgs-form-wrap {
+    animation: rtgs-slide-in 0.25s ease both;
+    overflow: hidden;
+  }
+
+  @keyframes rtgs-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+
+  .service-detail-block {
+    margin-bottom: 2rem;
+  }
+
+  .service-detail-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    h2:first-child:last-child {
+      margin-bottom: 0;
+    }
+  }
 
   .service-detail-overview-media {
     margin-bottom: 1rem;

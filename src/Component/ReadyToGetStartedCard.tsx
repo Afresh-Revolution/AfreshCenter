@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { createBooking } from '../api/bookings'
+import { useNavigate } from 'react-router-dom'
 
 const CalendarIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -21,43 +23,235 @@ const EmailIcon = () => (
 )
 
 export type ReadyToGetStartedCardProps = {
-  /** Optional service name for booking context (e.g. pre-fill contact form) */
   serviceName?: string
-  /** CTA button text */
-  buttonText?: string
-  /** Description paragraph */
   description?: string
-  /** Phone number under "Need Help?" */
   phone?: string
-  /** Email under "Need Help?" */
   email?: string
 }
 
 const DEFAULT_DESCRIPTION = 'Book a consultation with our experts to discuss your project requirements and get a customized solution.'
-const DEFAULT_PHONE = '+234 806 123 4567'
+const DEFAULT_PHONE = '+234 908 842 4461'
 const DEFAULT_EMAIL = 'info@afresh.com'
+
+const initialForm = {
+  fullName: '',
+  email: '',
+  phone: '',
+  company: '',
+  projectDetails: '',
+}
 
 export function ReadyToGetStartedCard({
   serviceName,
-  buttonText = 'Book This Service',
   description = DEFAULT_DESCRIPTION,
   phone = DEFAULT_PHONE,
   email = DEFAULT_EMAIL,
 }: ReadyToGetStartedCardProps) {
-  const contactTo = serviceName ? { pathname: '/contact', search: `?service=${encodeURIComponent(serviceName)}` } : '/contact'
+  const navigate = useNavigate()
+  const [formOpen, setFormOpen] = useState(false)
+  const [form, setForm] = useState(initialForm)
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
+  const formRef = useRef<HTMLDivElement>(null)
+
+  // Scroll form into view when it opens
+  useEffect(() => {
+    if (formOpen && formRef.current) {
+      setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50)
+    }
+  }, [formOpen])
+
+  useEffect(() => {
+    if (status === 'success' || status === 'error') {
+      const t = window.setTimeout(() => {
+        setStatus('idle')
+        setStatusMessage('')
+      }, 5000)
+      return () => window.clearTimeout(t)
+    }
+  }, [status])
+
+  const handleChange = (field: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [field]: e.target.value }))
+
+  const handleSubmitBooking = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('sending')
+    setStatusMessage('')
+    const details = [
+      serviceName ? `Service: ${serviceName}` : '',
+      form.projectDetails.trim(),
+    ].filter(Boolean).join('\n')
+    const res = await createBooking({
+      full_name: form.fullName.trim(),
+      email: form.email.trim(),
+      phone_number: form.phone.trim(),
+      company: form.company.trim() || undefined,
+      project_details: details || undefined,
+    })
+    if (res.success) {
+      setStatus('success')
+      setStatusMessage("Booking submitted! We'll be in touch shortly.")
+      setForm(initialForm)
+    } else {
+      setStatus('error')
+      setStatusMessage(res.message ?? 'Something went wrong. Please try again.')
+    }
+  }
+
+  const handlePayNow = () => {
+    const params = new URLSearchParams({
+      ...(serviceName ? { service: serviceName } : {}),
+      ...(form.fullName ? { name: form.fullName } : {}),
+      ...(form.email ? { email: form.email } : {}),
+    })
+    navigate(`/checkout?${params.toString()}`)
+  }
 
   return (
-    <aside className="ready-to-get-started-card" aria-label="Get started and contact">
+    <aside className="ready-to-get-started-card" aria-label="Book this service">
       <h3 className="ready-to-get-started-card__heading">Ready to Get Started?</h3>
       <p className="ready-to-get-started-card__description">{description}</p>
-      <Link to={contactTo} className="ready-to-get-started-card__btn">
-        <span className="ready-to-get-started-card__btn-icon" aria-hidden>
-          <CalendarIcon />
-        </span>
-        {buttonText}
-      </Link>
+
+      {/* ── Book This Service button (visible when form is closed) ── */}
+      {!formOpen && (
+        <button
+          type="button"
+          className="ready-to-get-started-card__btn"
+          onClick={() => setFormOpen(true)}
+        >
+          <span className="ready-to-get-started-card__btn-icon" aria-hidden>
+            <CalendarIcon />
+          </span>
+          Book This Service
+        </button>
+      )}
+
+      {/* ── Booking form (slides in when button clicked) ── */}
+      {formOpen && (
+        <div
+          ref={formRef}
+          className="rtgs-form-wrap"
+          aria-label="Booking form"
+        >
+          <form className="rtgs-form" onSubmit={handleSubmitBooking} noValidate>
+            <div className="rtgs-form__field">
+              <label className="rtgs-form__label" htmlFor="rtgs-fullname">
+                Full Name <span aria-hidden>*</span>
+              </label>
+              <input
+                id="rtgs-fullname"
+                type="text"
+                className="rtgs-form__input"
+                value={form.fullName}
+                onChange={handleChange('fullName')}
+                placeholder="John Doe"
+                required
+                autoFocus
+              />
+            </div>
+
+            <div className="rtgs-form__field">
+              <label className="rtgs-form__label" htmlFor="rtgs-email">
+                Email <span aria-hidden>*</span>
+              </label>
+              <input
+                id="rtgs-email"
+                type="email"
+                className="rtgs-form__input"
+                value={form.email}
+                onChange={handleChange('email')}
+                placeholder="john@example.com"
+                required
+              />
+            </div>
+
+            <div className="rtgs-form__field">
+              <label className="rtgs-form__label" htmlFor="rtgs-phone">
+                Phone Number <span aria-hidden>*</span>
+              </label>
+              <input
+                id="rtgs-phone"
+                type="tel"
+                className="rtgs-form__input"
+                value={form.phone}
+                onChange={handleChange('phone')}
+                placeholder="+234 808 000 0000"
+                required
+              />
+            </div>
+
+            <div className="rtgs-form__field">
+              <label className="rtgs-form__label" htmlFor="rtgs-company">
+                Company <span className="rtgs-form__optional">(Optional)</span>
+              </label>
+              <input
+                id="rtgs-company"
+                type="text"
+                className="rtgs-form__input"
+                value={form.company}
+                onChange={handleChange('company')}
+                placeholder="Your company name"
+              />
+            </div>
+
+            <div className="rtgs-form__field">
+              <label className="rtgs-form__label" htmlFor="rtgs-details">
+                Project Details <span aria-hidden>*</span>
+              </label>
+              <textarea
+                id="rtgs-details"
+                className="rtgs-form__input rtgs-form__textarea"
+                rows={4}
+                value={form.projectDetails}
+                onChange={handleChange('projectDetails')}
+                placeholder="Tell us about your project or requirements..."
+                required
+              />
+            </div>
+
+            {status !== 'idle' && (
+              <p
+                className={`rtgs-form__status rtgs-form__status--${status}`}
+                role="status"
+                aria-live="polite"
+              >
+                {status === 'sending' ? 'Submitting…' : statusMessage}
+              </p>
+            )}
+
+            <div className="rtgs-form__actions">
+              <button
+                type="submit"
+                className="rtgs-form__btn rtgs-form__btn--primary"
+                disabled={status === 'sending'}
+              >
+                {status === 'sending' ? 'Submitting…' : 'Submit Booking'}
+              </button>
+              <button
+                type="button"
+                className="rtgs-form__btn rtgs-form__btn--pay"
+                onClick={handlePayNow}
+              >
+                Pay Now
+              </button>
+              <button
+                type="button"
+                className="rtgs-form__btn rtgs-form__btn--cancel"
+                onClick={() => { setFormOpen(false); setForm(initialForm); setStatus('idle') }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* ── Need Help ── */}
       <div className="ready-to-get-started-card__help">
         <h4 className="ready-to-get-started-card__help-heading">Need Help?</h4>
+        <p className="ready-to-get-started-card__help-sub">Contact our team for more information</p>
         <p className="ready-to-get-started-card__help-item">
           <span className="ready-to-get-started-card__help-icon" aria-hidden><PhoneIcon /></span>
           <a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a>

@@ -24,8 +24,13 @@ export async function fetchTeams(): Promise<TeamMemberDTO[]> {
 
 /** Fetch all team members for admin (includes inactive). */
 export async function fetchAdminTeams(): Promise<TeamMemberDTO[]> {
-  const res = await fetch(`${API_BASE}/api/teams`);
-  if (!res.ok) throw new Error("Failed to fetch teams");
+  const adminUrl = API_BASE ? `${API_BASE}/api/admin/teams` : '/api/admin/teams';
+  let res = await fetch(adminUrl);
+  if (!res.ok && res.status === 404) {
+    const fallbackUrl = API_BASE ? `${API_BASE}/api/teams` : '/api/teams';
+    res = await fetch(fallbackUrl);
+  }
+  if (!res.ok) throw new Error('Failed to fetch teams');
   const data = (await res.json()) as TeamMemberDTO[];
   return Array.isArray(data) ? data : [];
 }
