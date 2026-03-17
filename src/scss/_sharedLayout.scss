@@ -239,6 +239,30 @@
   transform: scale(1.05);
 }
 
+.site-footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  padding: 12px 16px 16px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(219, 229, 236, 0.85);
+}
+
+.site-footer-bottom p {
+  margin: 0;
+}
+
+.site-footer-admin-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-footer-admin-link:hover,
+.site-footer-admin-link:focus-visible {
+  text-decoration: underline;
+}
+
 @media (max-width: 900px) {
   .site-navbar {
     grid-template-columns: auto 1fr auto auto;

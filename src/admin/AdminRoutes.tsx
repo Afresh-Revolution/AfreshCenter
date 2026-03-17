@@ -12,7 +12,6 @@ export function AdminRoutes() {
   return (
     <Routes>
       <Route
-        path="*"
         element={
           <RequireAuth>
             <AdminLayout />

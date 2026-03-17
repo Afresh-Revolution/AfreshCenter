@@ -496,11 +496,11 @@ body {
 /* ── Viewport: clips cards at both page edges (like Figma) ── */
 .team-carousel {
     --cw: clamp(200px, 18vw, 300px);
-    --gap: clamp(12px, 2.4vw, 28px);
+    --gap: clamp(10px, 1.8vw, 20px);
     --step: calc(var(--cw) + var(--gap));
     --init: calc(-1 * (2 * var(--step) + (var(--cw) / 2)));
-    --feature-scale: 1.2;
-    --feature-lift: clamp(14px, 3vw, 28px);
+    --feature-scale: 1.14;
+    --feature-lift: clamp(10px, 2.4vw, 22px);
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -540,6 +540,7 @@ body {
     box-shadow: none;
     position: relative;
     z-index: 2;
+    margin-inline: calc((var(--cw) * (var(--feature-scale) - 1)) / 2);
 }
 
 .team-card-img-wrap {
@@ -563,10 +564,13 @@ body {
 }
 
 .team-card-body {
-    padding: 14px 16px 18px;
+    padding: 10px 14px 12px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
+    filter: blur(1.6px);
+    opacity: 0.6;
+    transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
 .team-card-body h3 {
@@ -604,6 +608,11 @@ body {
     line-clamp: unset;
 }
 
+.team-card--featured .team-card-body {
+    filter: none;
+    opacity: 1;
+}
+
 .team-carousel--single {
     max-width: min(92vw, 430px);
     margin: 0 auto;
@@ -629,6 +638,7 @@ body {
 
 .team-carousel--single .team-card--featured {
     transform: none;
+    margin-inline: 0;
 }
 
 .team-carousel--single .team-card-img {
@@ -734,9 +744,9 @@ body {
 
   .team-carousel {
     --cw: min(58vw, 360px);
-    --gap: 16px;
-    --feature-scale: 1.12;
-    --feature-lift: 18px;
+    --gap: 12px;
+    --feature-scale: 1.1;
+    --feature-lift: 16px;
     min-height: 560px;
   }
 
@@ -776,9 +786,9 @@ body {
 
     .team-carousel {
         --cw: 76vw;
-        --gap: 14px;
-        --feature-scale: 1.08;
-        --feature-lift: 16px;
+        --gap: 10px;
+        --feature-scale: 1.06;
+        --feature-lift: 14px;
         padding-top: 34px;
         min-height: 520px;
     }
@@ -807,9 +817,9 @@ body {
 @media (max-width: 420px) {
     .team-carousel {
         --cw: 84vw;
-        --gap: 12px;
-        --feature-scale: 1.06;
-        --feature-lift: 14px;
+        --gap: 8px;
+        --feature-scale: 1.05;
+        --feature-lift: 12px;
         min-height: 500px;
     }
 

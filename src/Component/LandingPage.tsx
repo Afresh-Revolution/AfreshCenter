@@ -139,6 +139,8 @@ function LandingPage() {
   const [isMobileTeam, setIsMobileTeam] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 900 : false,
   );
+  const [isTeamHovered, setIsTeamHovered] = useState(false);
+  const [teamTickSeed, setTeamTickSeed] = useState(0);
   const [contactForm, setContactForm] = useState({
     name: "",
     email: "",
@@ -154,11 +156,13 @@ function LandingPage() {
   const handleTeamPrev = () => {
     if (!totalMembers) return;
     setLoopFeaturedIndex((i) => i - 1);
+    setTeamTickSeed((s) => s + 1);
   };
 
   const handleTeamNext = () => {
     if (!totalMembers) return;
     setLoopFeaturedIndex((i) => i + 1);
+    setTeamTickSeed((s) => s + 1);
   };
 
   const handleTeamTrackTransitionEnd = () => {
@@ -193,6 +197,14 @@ function LandingPage() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (isMobileTeam || isTeamHovered || totalMembers < 2) return;
+    const id = window.setInterval(() => {
+      setLoopFeaturedIndex((i) => i + 1);
+    }, 6000);
+    return () => window.clearInterval(id);
+  }, [isMobileTeam, isTeamHovered, totalMembers, teamTickSeed]);
 
   useEffect(() => {
     if (contactStatus === "success" || contactStatus === "error") {
@@ -239,6 +251,59 @@ function LandingPage() {
       setContactStatusMessage(response.message ?? "Failed to send message.");
     }
   };
+
+  const testimonials = [
+    {
+      name: "Samuel Light",
+      role: "Full stack Dev",
+      image: samLightImage,
+      quote:
+        "At our tech hub, we embrace innovation and creativity, ensuring that every challenge is met with a solution. Our team is dedicated to providing exceptional service, making it easy for you to navigate the complexities of technology.",
+    },
+    {
+      name: "Ola Adeyemi",
+      role: "Creative Director",
+      image: olaImage,
+      quote:
+        "Afresh Centre helped our team move faster with clearer priorities and better collaboration. The experience felt structured, supportive, and focused on real outcomes.",
+    },
+    {
+      name: "Afresh Team",
+      role: "Product & Strategy",
+      image: aboutImageRight,
+      quote:
+        "We value long-term partnerships built on trust and measurable progress. The process is transparent and the results speak for themselves.",
+    },
+  ];
+
+  const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
+  const totalTestimonials = testimonials.length;
+  const [isTestimonialHovered, setIsTestimonialHovered] = useState(false);
+  const [testimonialTickSeed, setTestimonialTickSeed] = useState(0);
+
+  const handleTestimonialPrev = () => {
+    if (totalTestimonials < 2) return;
+    setActiveTestimonialIndex((i) =>
+      (i - 1 + totalTestimonials) % totalTestimonials,
+    );
+    setTestimonialTickSeed((s) => s + 1);
+  };
+
+  const handleTestimonialNext = () => {
+    if (totalTestimonials < 2) return;
+    setActiveTestimonialIndex((i) => (i + 1) % totalTestimonials);
+    setTestimonialTickSeed((s) => s + 1);
+  };
+
+  const activeTestimonial = testimonials[activeTestimonialIndex];
+
+  useEffect(() => {
+    if (isTestimonialHovered || totalTestimonials < 2) return;
+    const id = window.setInterval(() => {
+      setActiveTestimonialIndex((i) => (i + 1) % totalTestimonials);
+    }, 7000);
+    return () => window.clearInterval(id);
+  }, [isTestimonialHovered, totalTestimonials, testimonialTickSeed]);
 
   return (
     <div className="landingPage">
@@ -389,6 +454,8 @@ function LandingPage() {
         <div
           className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
           aria-live="polite"
+          onMouseEnter={() => setIsTeamHovered(true)}
+          onMouseLeave={() => setIsTeamHovered(false)}
           style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
           <div
             className="team-track"
@@ -483,34 +550,38 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="testimonial-panel">
+          <div
+            className="testimonial-panel"
+            onMouseEnter={() => setIsTestimonialHovered(true)}
+            onMouseLeave={() => setIsTestimonialHovered(false)}>
             <div className="testimonial-profile-card">
               <img
-                src={samLightImage}
-                alt="Samuel Light"
+                src={activeTestimonial.image}
+                alt={activeTestimonial.name}
                 className="testimonial-profile-image"
               />
-              <h4>Samuel Light</h4>
-              <p>Full stack Dev</p>
+              <h4>{activeTestimonial.name}</h4>
+              <p>{activeTestimonial.role}</p>
               <div className="testimonial-mini-nav">
-                <button type="button" aria-label="Previous testimonial">
+                <button
+                  type="button"
+                  aria-label="Previous testimonial"
+                  onClick={handleTestimonialPrev}
+                  disabled={totalTestimonials < 2}>
                   &larr;
                 </button>
-                <button type="button" aria-label="Next testimonial">
+                <button
+                  type="button"
+                  aria-label="Next testimonial"
+                  onClick={handleTestimonialNext}
+                  disabled={totalTestimonials < 2}>
                   &rarr;
                 </button>
               </div>
             </div>
             <div className="testimonial-copy">
               <h3>Testimonials</h3>
-              <p>
-                At our tech hub, we embrace innovation and creativity, ensuring
-                that every challenge is met with a solution. Our team is
-                dedicated to providing exceptional service, making it easy for
-                you to navigate the complexities of technology. With us, you can
-                explore endless possibilities without any compromise in your
-                setup.
-              </p>
+              <p>{activeTestimonial.quote}</p>
             </div>
           </div>
         </div>

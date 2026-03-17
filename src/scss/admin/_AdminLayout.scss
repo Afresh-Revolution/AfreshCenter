@@ -257,10 +257,46 @@
   font-family: inherit;
   flex-shrink: 0;
   transition: background 0.15s;
+  position: relative;
 
   &:hover {
     background: rgba($logout-red, 0.08);
   }
+}
+
+.logout-tooltip {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #111827;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.logout-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #111827;
+}
+
+.logout-link:hover .logout-tooltip,
+.logout-link:focus-visible .logout-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(-2px);
 }
 
 .logout-icon {

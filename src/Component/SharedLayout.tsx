@@ -143,6 +143,8 @@ const socialItems: { href: string; label: string; icon: React.ReactNode }[] = [
 ]
 
 export function SiteFooter() {
+  const currentYear = new Date().getFullYear()
+
   return (
     <footer className="site-footer">
       <div className="site-footer-content">
@@ -202,6 +204,15 @@ export function SiteFooter() {
             ))}
           </div>
         </section>
+      </div>
+      <div className="site-footer-bottom">
+        <p>
+          ALL RIGHT RESERVED
+          <NavLink to="/admin/login" className="site-footer-admin-link" aria-label="Admin login">
+            ©
+          </NavLink>{' '}
+          AfrESH {currentYear}
+        </p>
       </div>
     </footer>
   )
