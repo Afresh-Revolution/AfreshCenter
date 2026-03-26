@@ -1,7 +1,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter'; background-color: #fcfcfc; color: #141414; line-height: 1.5; }
-        /* main container for react simulation – we treat it as the root */
-        #root { max-width: 1440px; margin: 0 auto; background: white; box-shadow: 0 0 30px rgba(0,0,0,0.02); }
+        /* main container */
+        #root { max-width: none; width: 100%; margin: 0; background: transparent; box-shadow: none; }
         /* SCSS-like naming / structure – but plain CSS for brevity, following the exact design */
 
 .landingPage{ width: 100%; }
