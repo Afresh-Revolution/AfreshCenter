@@ -1,6 +1,6 @@
 // LandingPage.jsx
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import heroBackground from "../assets/images/Background-Image.png";
 import afLogo from "../assets/images/af 1.png";
 import cbLogo from "../assets/images/cb 1.png";
@@ -10,14 +10,12 @@ import knowristLogo from "../assets/images/knowrist 1.png";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
 import serviceImage1 from "../assets/images/Image 1.png";
-import serviceImage2 from "../assets/images/Image 2.png";
-import serviceImage3 from "../assets/images/Image 3.png";
-import serviceImage4 from "../assets/images/Image 4.png";
-import serviceImage5 from "../assets/images/Image 5.png";
-import serviceImage6 from "../assets/images/Image 6.png";
+import { fetchPublicServices, getServiceImageUrl, type ServiceItem } from "../api/services";
 import blessingImage from "../assets/images/BlessingWilliams.jpg";
 import jethroImage from "../assets/images/JethroMD.jpg";
 import williamImage from "../assets/images/WilliamsBosw.jpg";
+import felixImage from "../assets/images/MrFelix.JPG";
+import dominicImage from "../assets/images/DominicRay.JPG";
 import ourWork1 from "../assets/images/our-woks-1.png";
 import ourWork2 from "../assets/images/our-woks-2.png";
 import ourWork3 from "../assets/images/our-woks-3.png";
@@ -26,7 +24,6 @@ import samLightImage from "../assets/images/Sam-light.png";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
 
 function LandingPage() {
-  const navigate = useNavigate();
   const affiliatedCompanies = [
     { name: "CBrilliance", logo: cbLogo },
     { name: "Afresh", logo: afLogo },
@@ -35,83 +32,36 @@ function LandingPage() {
     { name: "Knowrist", logo: knowristLogo },
   ];
 
-  const serviceItems = [
-    {
-      title: "FrontEnd Development",
-      description:
-        "Software development services customization to design, code, test and deploy web applications.",
-      image: serviceImage1,
-    },
-    {
-      title: "Hardware",
-      description:
-        "Software development services customization to design, code, test and deploy hardware systems.",
-      image: serviceImage2,
-    },
-    {
-      title: "UI/UX Design",
-      description:
-        "Software development services customization to design, code, test and deploy user interface applications.",
-      image: serviceImage3,
-    },
-    {
-      title: "Cyber security",
-      description:
-        "Software development services customization to design, code, test and deploy cybersecurity solutions.",
-      image: serviceImage4,
-    },
-    {
-      title: "Graphics Design",
-      description:
-        "Software development services customization to design, code, test and deploy graphic designs.",
-      image: serviceImage5,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage6,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage2,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage1,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage3,
-    },
-    {
-      title: "Media",
-      description:
-        "Software development services customization to design, code, test and deploy multimedia applications.",
-      image: serviceImage4,
-    },
-  ];
+  const [landingServices, setLandingServices] = useState<ServiceItem[]>([]);
+  const SERVICES_PREVIEW_COUNT = 6;
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchPublicServices()
+      .then((list) => {
+        if (!cancelled) setLandingServices(list);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   const teamMembers = [
     {
+      id: "felix",
       name: "Felix Nwachukwu",
       role: "Hardware Manager",
       bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
-      image: jethroImage,
+      image: felixImage,
     },
     {
+      id: "blessing",
       name: "Blessing Adukuchili",
       role: "Administrative Manager",
       bio: "Leads administrative operations, documentation, scheduling, and internal process coordination.",
       image: blessingImage,
     },
     {
+      id: "jethro",
       name: "Jethro Mark Da'ar",
       role: "Chief Executive Officer (CEO)",
       bio: "Drives strategic growth, innovation, and partnerships while leading long-term company direction.",
@@ -119,28 +69,32 @@ function LandingPage() {
       featured: true,
     },
     {
+      id: "dominic",
       name: "Dominic Ray Nanjwan",
       role: "General Manager",
       bio: "Coordinates day-to-day execution across teams to deliver results and maintain operational excellence.",
-      image: jethroImage,
+      image: dominicImage,
     },
     {
+      id: "william",
       name: "William Bosworth",
       role: "Software Manager",
       bio: "Leads software architecture, delivery standards, and continuous engineering improvements.",
       image: williamImage,
     },
     {
-      name: "Felix Nwachukwu",
-      role: "Hardware Manager",
-      bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
-      image: jethroImage,
+      id: "ola",
+      name: "Ola Adeyemi",
+      role: "Creative Director",
+      bio: "Drives brand identity and visual storytelling across all Afresh Centre platforms.",
+      image: olaImage,
     },
     {
-      name: "Felix Nwachukwu",
-      role: "Hardware Manager",
-      bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
-      image: jethroImage,
+      id: "sam",
+      name: "Samuel Bright",
+      role: "Business Development",
+      bio: "Identifies growth opportunities and manages strategic partnerships to expand Afresh Centre's reach.",
+      image: samLightImage,
     },
   ];
 
@@ -176,19 +130,78 @@ function LandingPage() {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   ];
 
-  const visibleTeamCards = 5;
-  const [teamStartIndex, setTeamStartIndex] = useState(0);
-  const maxTeamStartIndex = Math.max(0, teamMembers.length - visibleTeamCards);
-  const canSlidePrev = teamStartIndex > 0;
-  const canSlideNext = teamStartIndex < maxTeamStartIndex;
+  const getFeaturedIndex = () => {
+    const idx = teamMembers.findIndex((member) => member.featured);
+    return idx >= 0 ? idx : 0;
+  };
+
+  const VISIBLE = 5;
+  const FEAT_POS = 2;
+  const CLONES = VISIBLE;
+
+  const totalMembers = teamMembers.length;
+  const cloneCount = Math.min(CLONES, totalMembers);
+  const loopMembers =
+    totalMembers > 0
+      ? [
+          ...teamMembers.slice(-cloneCount),
+          ...teamMembers,
+          ...teamMembers.slice(0, cloneCount),
+        ]
+      : [];
+
+  const minFeaturedIdx = cloneCount;
+  const maxFeaturedIdx = cloneCount + totalMembers - 1;
+
+  const [disableTrackTransition, setDisableTrackTransition] = useState(false);
+  const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(
+    () => minFeaturedIdx + getFeaturedIndex()
+  );
+  const [isMobileTeam, setIsMobileTeam] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 900 : false
+  );
 
   const handleTeamPrev = () => {
-    setTeamStartIndex((prev) => Math.max(0, prev - 1));
+    if (!totalMembers) return;
+    setLoopFeaturedIndex((i) => i - 1);
   };
 
   const handleTeamNext = () => {
-    setTeamStartIndex((prev) => Math.min(maxTeamStartIndex, prev + 1));
+    if (!totalMembers) return;
+    setLoopFeaturedIndex((i) => i + 1);
   };
+
+  const handleTeamTrackTransitionEnd = () => {
+    if (!totalMembers) return;
+    let idx = loopFeaturedIndex;
+    if (idx < minFeaturedIdx) idx += totalMembers;
+    if (idx > maxFeaturedIdx) idx -= totalMembers;
+    if (idx !== loopFeaturedIndex) {
+      setDisableTrackTransition(true);
+      setLoopFeaturedIndex(idx);
+    }
+  };
+
+  const startIdx = loopFeaturedIndex - FEAT_POS;
+  const activeIdx =
+    totalMembers > 0
+      ? ((loopFeaturedIndex - minFeaturedIdx) % totalMembers + totalMembers) % totalMembers
+      : -1;
+  const activeMember = activeIdx >= 0 ? teamMembers[activeIdx] : null;
+
+  useEffect(() => {
+    if (!disableTrackTransition) return;
+    const raf = window.requestAnimationFrame(() =>
+      setDisableTrackTransition(false)
+    );
+    return () => window.cancelAnimationFrame(raf);
+  }, [disableTrackTransition]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileTeam(window.innerWidth <= 900);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="landingPage">
@@ -211,7 +224,7 @@ function LandingPage() {
           </p>
           <div className="btn-group">
             <button className="btn btn-primary">Learn more</button>
-            <button className="btn btn-outline">Wailin</button>
+            <Link to="/wailin" className="btn btn-outline">Wailin</Link>
           </div>
         </div>
         <div className="hero-social">
@@ -270,84 +283,88 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Our Services (exact 6 cards)  */}
+      {/* Our Services — fetched from API, links to /services and detail  */}
       <section className="services-preview">
         <div className="container">
           <h2 className="section-title">Our Services</h2>
           <div className="service-cards">
-            {serviceItems.map((service) => (
-              <article className="service-card" key={service.title}>
+            {landingServices.slice(0, SERVICES_PREVIEW_COUNT).map((service) => (
+              <article className="service-card" key={service.id}>
                 <img
-                  src={service.image}
+                  src={getServiceImageUrl(service.image) ?? serviceImage1}
                   alt={service.title}
                   className="service-card-image"
+                  onError={(e) => {
+                    const el = e.currentTarget;
+                    if (el.src !== serviceImage1) el.src = serviceImage1;
+                  }}
                 />
                 <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <button className="service-learn-btn" type="button" onClick={() => navigate('/digital')}>
+                <p>{service.description || "Contact us for more details about this service."}</p>
+                <Link to={`/services?id=${service.id}`} className="service-learn-btn">
                   Learn More
-                </button>
+                </Link>
               </article>
             ))}
           </div>
           <div className="view-all">
-            <button className="view-all-btn" type="button">
+            <Link to="/services" className="view-all-btn">
               View all
-            </button>
+            </Link>
           </div>
         </div>
       </section>
       {/* Meet Our Team  */}
-      <section className="team-section container">
+      <section className="team-section" aria-label="Meet Our Team">
         <div className="team-header">
-          <div>
-            <h2 className="section-title">Meet Our Team</h2>
-            <div className="section-sub">
-              Dedicated professionals passionate about transforming education
-              through technology.
-            </div>
-          </div>
-          <div className="team-nav-actions">
+          <h2>Meet Our Team</h2>
+          <p>
+            Dedicated professionals passionate about transforming education
+            through technology.
+          </p>
+          <div className="team-nav-btns">
             <button
               className="team-nav-btn"
               type="button"
-              aria-label="Previous team member"
               onClick={handleTeamPrev}
-              disabled={!canSlidePrev}>
-              &larr;
+              aria-label="Previous team member">
+              &#8592;
             </button>
             <button
               className="team-nav-btn"
               type="button"
-              aria-label="Next team member"
               onClick={handleTeamNext}
-              disabled={!canSlideNext}>
-              &rarr;
+              aria-label="Next team member">
+              &#8594;
             </button>
           </div>
         </div>
-        <div className="team-slider-viewport">
+
+        <div
+          className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
+          aria-live="polite"
+          style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
           <div
-            className="team-slider-track"
-            style={{
-              transform: `translateX(calc(-${teamStartIndex} * var(--team-step)))`,
-            }}>
-            {teamMembers.map((member, idx) => (
-              <article
-                className={`team-card${idx === teamStartIndex + 2 ? " team-card-featured" : ""}`}
-                key={member.name}>
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="team-card-image"
-                />
-                <div className="team-card-content">
-                  <h4>{member.name}</h4>
-                  <div className="team-role">{member.role}</div>
-                  <div className="team-desc">{member.bio}</div>
-                </div>
-              </article>
-            ))}
+            className="team-track"
+            onTransitionEnd={handleTeamTrackTransitionEnd}
+            style={disableTrackTransition ? { transition: "none" } : undefined}>
+            {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
+              const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
+              return (
+                <article
+                  key={`${member.id}-${idx}`}
+                  className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
+                  <div className="team-card-img-wrap">
+                    <img src={member.image} alt={member.name} className="team-card-img" />
+                  </div>
+                  <div className="team-card-body">
+                    <h3>{member.name}</h3>
+                    <p className="team-card-role">{member.role}</p>
+                    <p className="team-card-bio">{member.bio}</p>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>

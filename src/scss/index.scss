@@ -5,6 +5,7 @@
 @forward "./admin/Login";
 @forward "./landingPage";
 @forward "./sharedLayout";
+@forward "./wailin";
 
 // Admin (variables first, then layout & pages)
 @forward "admin/admin";

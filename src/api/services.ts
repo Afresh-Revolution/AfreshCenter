@@ -8,6 +8,14 @@ export interface ServiceItem {
   totalBookings: number;
   status: 'Active' | 'Inactive';
   visible?: boolean;
+  /** Single image URL/path for card, overview, and hero (uploaded via admin). */
+  image?: string | null;
+  description?: string | null;
+  shortDescription?: string | null;
+  overview?: string | null;
+  keyFeatures?: string[];
+  benefits?: string[];
+  whatYouGet?: string[];
 }
 
 export async function fetchServices(): Promise<ServiceItem[]> {
@@ -16,11 +24,50 @@ export async function fetchServices(): Promise<ServiceItem[]> {
   return res.json();
 }
 
+/** Fetch visible services for the landing page (public). */
+export async function fetchPublicServices(): Promise<ServiceItem[]> {
+  const res = await fetch(`${API_BASE}/api/services`);
+  if (!res.ok) throw new Error('Failed to fetch services');
+  return res.json();
+}
+
+/** Resolve service image to full URL (for display). */
+export function getServiceImageUrl(image: string | null | undefined): string | null {
+  if (!image || typeof image !== 'string') return null;
+  const trimmed = image.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  const base = API_BASE.replace(/\/$/, '');
+  const path = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  return base ? `${base}${path}` : path;
+}
+
+/** Upload an image for a service. Returns the path to store (e.g. /uploads/xxx). */
+export async function uploadServiceImage(file: File): Promise<{ success: true; url: string } | { success: false; message: string }> {
+  const form = new FormData();
+  form.append('image', file);
+  const res = await fetch(`${API_BASE}/api/admin/upload`, {
+    method: 'POST',
+    body: form,
+  });
+  const data = await res.json();
+  if (!res.ok) return { success: false, message: data.message || 'Upload failed' };
+  if (data.success && data.url) return { success: true, url: data.url };
+  return { success: false, message: data.message || 'Upload failed' };
+}
+
 export type CreateServicePayload = {
   title: string;
   category: string;
   priceRange: string;
   visible?: boolean;
+  image?: string;
+  description?: string;
+  shortDescription?: string;
+  overview?: string;
+  keyFeatures?: string[];
+  benefits?: string[];
+  whatYouGet?: string[];
 };
 
 export type CreateServiceSuccess = {
@@ -46,6 +93,13 @@ export async function createService(payload: CreateServicePayload): Promise<Crea
       category: payload.category.trim() || 'General',
       priceRange: payload.priceRange.trim() || '',
       visible: payload.visible !== false,
+      image: payload.image?.trim() || null,
+      description: payload.description?.trim() || null,
+      shortDescription: payload.shortDescription?.trim() || null,
+      overview: payload.overview?.trim() || null,
+      keyFeatures: payload.keyFeatures ?? [],
+      benefits: payload.benefits ?? [],
+      whatYouGet: payload.whatYouGet ?? [],
     }),
   });
   const data = (await res.json()) as CreateServiceResponse;
@@ -96,6 +150,13 @@ export type UpdateServicePayload = {
   category?: string;
   priceRange?: string;
   visible?: boolean;
+  image?: string;
+  description?: string;
+  shortDescription?: string;
+  overview?: string;
+  keyFeatures?: string[];
+  benefits?: string[];
+  whatYouGet?: string[];
 };
 
 export type UpdateServiceSuccess = {
@@ -124,6 +185,13 @@ export async function updateService(
       category: payload.category?.trim(),
       priceRange: payload.priceRange?.trim(),
       visible: payload.visible,
+      image: payload.image !== undefined ? (payload.image?.trim() || null) : undefined,
+      description: payload.description !== undefined ? (payload.description?.trim() || null) : undefined,
+      shortDescription: payload.shortDescription !== undefined ? (payload.shortDescription?.trim() || null) : undefined,
+      overview: payload.overview !== undefined ? (payload.overview?.trim() || null) : undefined,
+      keyFeatures: payload.keyFeatures,
+      benefits: payload.benefits,
+      whatYouGet: payload.whatYouGet,
     }),
   });
   const data = (await res.json()) as UpdateServiceResponse;

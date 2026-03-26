@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import type { ServiceCardData } from './ServiceCard';
+import { useState, useEffect, useRef } from 'react';
+import type { ServiceItem } from '../../api/services';
 import type { UpdateServicePayload, UpdateServiceResponse } from '../../api/services';
+import { uploadServiceImage, getServiceImageUrl } from '../../api/services';
 
 interface EditServiceModalProps {
   isOpen: boolean;
-  service: ServiceCardData | null;
+  service: ServiceItem | null;
   onClose: () => void;
   onSubmit: (id: string, payload: UpdateServicePayload) => Promise<UpdateServiceResponse>;
   onSuccess: () => void;
@@ -17,11 +18,28 @@ export function EditServiceModal({
   onSubmit,
   onSuccess,
 }: EditServiceModalProps) {
-  const [form, setForm] = useState({ title: '', category: '', priceRange: '', visible: true });
+  const [form, setForm] = useState({
+    title: '',
+    category: '',
+    priceRange: '',
+    visible: true,
+    image: '',
+    description: '',
+    shortDescription: '',
+    overview: '',
+    keyFeaturesText: '',
+    benefitsText: '',
+    whatYouGetText: '',
+  });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const IMAGE_ACCEPT = 'image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif,image/bmp,image/svg+xml';
 
   useEffect(() => {
     if (service) {
@@ -30,9 +48,17 @@ export function EditServiceModal({
         category: service.category,
         priceRange: service.priceRange,
         visible: service.status === 'Active',
+        image: service.image ?? '',
+        description: service.description ?? '',
+        shortDescription: service.shortDescription ?? '',
+        overview: service.overview ?? '',
+        keyFeaturesText: (service.keyFeatures ?? []).join('\n'),
+        benefitsText: (service.benefits ?? []).join('\n'),
+        whatYouGetText: (service.whatYouGet ?? []).join('\n'),
       });
       setSuccess(null);
       setError(null);
+      setUploadError(null);
       setFieldErrors({});
     }
   }, [service]);
@@ -52,11 +78,21 @@ export function EditServiceModal({
     setFieldErrors({});
     setLoading(true);
     try {
+      const keyFeatures = form.keyFeaturesText.split('\n').map((s) => s.trim()).filter(Boolean);
+      const benefits = form.benefitsText.split('\n').map((s) => s.trim()).filter(Boolean);
+      const whatYouGet = form.whatYouGetText.split('\n').map((s) => s.trim()).filter(Boolean);
       const result = await onSubmit(service.id, {
         title: form.title,
         category: form.category,
         priceRange: form.priceRange,
         visible: form.visible,
+        image: form.image || undefined,
+        description: form.description || undefined,
+        shortDescription: form.shortDescription || undefined,
+        overview: form.overview || undefined,
+        keyFeatures: keyFeatures.length ? keyFeatures : undefined,
+        benefits: benefits.length ? benefits : undefined,
+        whatYouGet: whatYouGet.length ? whatYouGet : undefined,
       });
       if (result.success) {
         setSuccess(result.message);
@@ -149,6 +185,125 @@ export function EditServiceModal({
               value={form.priceRange}
               onChange={(e) => setForm((f) => ({ ...f, priceRange: e.target.value }))}
               placeholder="e.g. ₦500,000+"
+            />
+          </div>
+          <div className="service-modal__field">
+            <label className="service-modal__label">Image</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={IMAGE_ACCEPT}
+              className="service-modal__file-input"
+              aria-label="Upload image"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                setUploadError(null);
+                setUploading(true);
+                const result = await uploadServiceImage(file);
+                setUploading(false);
+                if (result.success) setForm((f) => ({ ...f, image: result.url }));
+                else setUploadError(result.message);
+                e.target.value = '';
+              }}
+            />
+            <div
+              className="service-modal__upload-zone"
+              onClick={() => fileInputRef.current?.click()}
+              onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
+              role="button"
+              tabIndex={0}
+              aria-label="Click to upload image"
+            >
+              {form.image ? (
+                <>
+                  <img src={getServiceImageUrl(form.image) ?? ''} alt="Uploaded" className="service-modal__upload-preview" />
+                  <span className="service-modal__upload-replace">Replace image</span>
+                </>
+              ) : (
+                <span className="service-modal__upload-placeholder">
+                  {uploading ? 'Uploading…' : 'Click or drop image (JPEG, PNG, GIF, WebP, etc.)'}
+                </span>
+              )}
+            </div>
+            {uploadError && <span className="service-modal__field-error">{uploadError}</span>}
+          </div>
+          <div className="service-modal__field">
+            <label className="service-modal__label" htmlFor="edit-service-description">
+              Short description (card)
+            </label>
+            <input
+              id="edit-service-description"
+              type="text"
+              className="service-modal__input"
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              placeholder="Brief text for the service card"
+            />
+          </div>
+          <div className="service-modal__field">
+            <label className="service-modal__label" htmlFor="edit-service-short-desc">
+              Hero short description
+            </label>
+            <input
+              id="edit-service-short-desc"
+              type="text"
+              className="service-modal__input"
+              value={form.shortDescription}
+              onChange={(e) => setForm((f) => ({ ...f, shortDescription: e.target.value }))}
+              placeholder="One line under the title on detail page"
+            />
+          </div>
+          <div className="service-modal__field">
+            <label className="service-modal__label" htmlFor="edit-service-overview">
+              Overview (detail page)
+            </label>
+            <textarea
+              id="edit-service-overview"
+              className="service-modal__input"
+              rows={3}
+              value={form.overview}
+              onChange={(e) => setForm((f) => ({ ...f, overview: e.target.value }))}
+              placeholder="Full overview text"
+            />
+          </div>
+          <div className="service-modal__field">
+            <label className="service-modal__label" htmlFor="edit-service-key-features">
+              Key features (one per line)
+            </label>
+            <textarea
+              id="edit-service-key-features"
+              className="service-modal__input"
+              rows={3}
+              value={form.keyFeaturesText}
+              onChange={(e) => setForm((f) => ({ ...f, keyFeaturesText: e.target.value }))}
+              placeholder="Feature one per line"
+            />
+          </div>
+          <div className="service-modal__field">
+            <label className="service-modal__label" htmlFor="edit-service-benefits">
+              Benefits (one per line)
+            </label>
+            <textarea
+              id="edit-service-benefits"
+              className="service-modal__input"
+              rows={3}
+              value={form.benefitsText}
+              onChange={(e) => setForm((f) => ({ ...f, benefitsText: e.target.value }))}
+              placeholder="Benefit one per line"
+            />
+          </div>
+          <div className="service-modal__field">
+            <label className="service-modal__label" htmlFor="edit-service-what-you-get">
+              What you'll get (one per line)
+            </label>
+            <textarea
+              id="edit-service-what-you-get"
+              className="service-modal__input"
+              rows={3}
+              value={form.whatYouGetText}
+              onChange={(e) => setForm((f) => ({ ...f, whatYouGetText: e.target.value }))}
+              placeholder="Deliverable one per line"
             />
           </div>
           <div className="service-modal__field service-modal__field--row">

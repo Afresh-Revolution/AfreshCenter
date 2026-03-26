@@ -33,10 +33,10 @@ function toCardData(s: ServiceItem): ServiceCardData {
 }
 
 export function Services() {
-  const [services, setServices] = useState<ServiceCardData[]>([]);
+  const [services, setServices] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingService, setEditingService] = useState<ServiceCardData | null>(null);
+  const [editingService, setEditingService] = useState<ServiceItem | null>(null);
   const [pageMessage, setPageMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const loadServices = useCallback(async () => {
@@ -44,7 +44,14 @@ export function Services() {
     setPageMessage(null);
     try {
       const list = await fetchServices();
-      setServices(list.map(toCardData));
+      const sorted = [...list].sort((a, b) => {
+        const aId = isNaN(Number(a.id)) ? a.id : Number(a.id);
+        const bId = isNaN(Number(b.id)) ? b.id : Number(b.id);
+        if (aId < bId) return -1;
+        if (aId > bId) return 1;
+        return 0;
+      });
+      setServices(sorted);
     } catch {
       setPageMessage({ type: 'error', text: 'Failed to load services.' });
       setServices([]);
@@ -62,7 +69,7 @@ export function Services() {
       const result = await toggleServiceVisibility(id, nextVisible);
       if (result.success) {
         setServices((prev) =>
-          prev.map((s) => (s.id === id ? { ...s, status: result.service!.status } : s))
+          prev.map((s) => (s.id === id && result.service ? { ...s, status: result.service.status } : s))
         );
         return { success: true, message: result.message };
       }
@@ -77,7 +84,7 @@ export function Services() {
     setTimeout(() => setPageMessage(null), 4000);
   }, [loadServices]);
 
-  const handleEdit = useCallback((service: ServiceCardData) => {
+  const handleEdit = useCallback((service: ServiceItem) => {
     setEditingService(service);
   }, []);
 
@@ -143,9 +150,9 @@ export function Services() {
           {services.map((service) => (
             <ServiceCard
               key={service.id ?? service.title}
-              service={service}
+              service={toCardData(service)}
               onToggleVisibility={service.id ? handleToggleVisibility : undefined}
-              onEdit={handleEdit}
+              onEdit={() => handleEdit(service)}
               onDelete={handleDelete}
             />
           ))}
