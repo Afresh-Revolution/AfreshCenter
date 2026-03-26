@@ -60,7 +60,7 @@ function Services() {
           <header
             className="services-hero"
             aria-label="Our Services hero"
-            style={{ backgroundImage: `url(${servicesHeroImg})` }}
+            style={{ ["--services-hero-image"]: `url(${servicesHeroImg})` } as Record<string, string>}
           >
             <div className="services-hero-overlay" />
             <SiteNavbar />

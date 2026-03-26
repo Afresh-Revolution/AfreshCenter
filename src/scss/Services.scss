@@ -45,16 +45,18 @@ $close-color: #aaa;
   .services-hero {
     position: relative;
     width: 100%;
-    min-height: 100vh;
-    height: 100vh;
+    min-height: 460px;
     color: #fff;
     background-image:
       linear-gradient(135deg, rgba(7, 16, 27, 0.85), rgba(13, 29, 45, 0.65)),
-      url("../assets/images/Group%2031.png");
+      var(--services-hero-image);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .services-hero::after {
@@ -65,21 +67,18 @@ $close-color: #aaa;
     width: 104%;
     height: 100px;
     background: var(--page-bg);
-    clip-path: polygon(
-      0 27%,
-      10% 53%,
-      18% 69%,
-      29% 81%,
-      36% 85.3%,
-      40.2% 85.2%,
-      50% 82%,
-      64% 74%,
-      78% 61%,
-      90% 54%,
-      100% 50%,
-      100% 100%,
-      0 100%
-    );
+    clip-path: polygon(0 27%,
+        8% 48%,
+        18% 64%,
+        30% 76%,
+        42% 82%,
+        54% 80%,
+        66% 72%,
+        78% 60%,
+        90% 52%,
+        100% 48%,
+        100% 100%,
+        0 100%);
     z-index: 1;
   }
 
@@ -87,12 +86,10 @@ $close-color: #aaa;
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(
-        circle at 20% 10%,
-        rgba(246, 128, 20, 0.18),
-        transparent 34%
-      ),
-      linear-gradient(to bottom, rgba(8, 18, 28, 0.66), rgba(8, 18, 28, 0.55));
+      radial-gradient(circle at 20% 10%,
+        rgba(246, 128, 20, 0.15),
+        transparent 34%),
+      linear-gradient(to bottom, rgba(8, 18, 28, 0.55), rgba(8, 18, 28, 0.45));
     z-index: 0;
   }
 
@@ -151,17 +148,31 @@ $close-color: #aaa;
 
   .services-hero-content {
     max-width: 700px;
-    margin: 86px auto 0;
-    padding: 0 24px 54px;
+    margin: 0 auto;
+    padding: 0 24px;
     text-align: center;
+    position: relative;
+    z-index: 1;
 
     h1 {
       margin: 0;
       font-size: clamp(2rem, 4vw, 2.8rem);
       font-weight: 700;
+      font-family: 'Inter', sans-serif;
       line-height: 1.2;
       color: #fff;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
     }
+  }
+
+  .services-hero-content::before {
+    content: "";
+    position: absolute;
+    inset: -24px -32px;
+    background: rgba(6, 14, 22, 0.55);
+    border-radius: 18px;
+    z-index: -1;
+    filter: blur(6px);
   }
 
   // ── Main content: fills viewport height, full-width page with centered content ──
@@ -362,11 +373,9 @@ $close-color: #aaa;
   .service-detail-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(7, 16, 27, 0.85),
-      rgba(13, 29, 45, 0.65)
-    );
+    background: linear-gradient(135deg,
+        rgba(7, 16, 27, 0.85),
+        rgba(13, 29, 45, 0.65));
     z-index: 0;
   }
 
@@ -541,27 +550,190 @@ $close-color: #aaa;
     color: $brand-orange;
   }
 
-    .service-detail-block {
-        margin-bottom: 2rem;
+  .ready-to-get-started-card__help-sub {
+    margin: 0 0 0.5rem;
+    font-size: 0.82rem;
+    color: var(--muted, #6d7780);
+  }
+
+  // ── Inline booking form ──────────────────────────────────────────
+  .rtgs-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .rtgs-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .rtgs-form__label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dark);
+
+    span[aria-hidden] {
+      color: $brand-orange;
+      margin-left: 2px;
+    }
+  }
+
+  .rtgs-form__optional {
+    font-weight: 400;
+    color: var(--muted, #6d7780);
+    font-size: 0.78rem;
+  }
+
+  .rtgs-form__input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #e0e4e8;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+
+    &::placeholder {
+      color: #b0b8c1;
     }
 
-    .service-detail-card {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        padding: 1.5rem;
-
-        h2 {
-            margin: 0 0 1rem;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        h2:first-child:last-child {
-            margin-bottom: 0;
-        }
+    &:focus {
+      border-color: $brand-orange;
+      box-shadow: 0 0 0 3px rgba(255, 137, 1, 0.12);
+      background: #fff;
     }
+  }
+
+  .rtgs-form__textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .rtgs-form__status {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    margin: 0;
+
+    &--success {
+      background: #ecfdf5;
+      color: #15803d;
+    }
+
+    &--error {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    &--sending {
+      color: var(--muted, #6d7780);
+    }
+  }
+
+  .rtgs-form__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+  }
+
+  .rtgs-form__btn {
+    width: 100%;
+    padding: 0.82rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.05s;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &--primary {
+      background: $brand-orange;
+      color: #fff;
+
+      &:hover:not(:disabled) {
+        background: #e57a01;
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+    }
+
+    &--pay {
+      background: $brand-orange;
+      color: #fff;
+
+      &:hover {
+        background: #e57a01;
+      }
+    }
+
+    &--cancel {
+      background: transparent;
+      color: var(--muted, #6d7780);
+      border: 1.5px solid #e0e4e8;
+      font-weight: 500;
+
+      &:hover {
+        background: #f3f5f7;
+        color: var(--text-dark);
+      }
+    }
+  }
+
+  // Slide-in animation for form reveal
+  .rtgs-form-wrap {
+    animation: rtgs-slide-in 0.25s ease both;
+    overflow: hidden;
+  }
+
+  @keyframes rtgs-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+
+  .service-detail-block {
+    margin-bottom: 2rem;
+  }
+
+  .service-detail-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    h2:first-child:last-child {
+      margin-bottom: 0;
+    }
+  }
 
   .service-detail-overview-media {
     margin-bottom: 1rem;
@@ -681,8 +853,7 @@ $close-color: #aaa;
   }
 
   .services-page .services-hero {
-    min-height: 100vh;
-    height: 100vh;
+    min-height: 460px;
   }
 
   .services-page .services-hero-content {
@@ -711,6 +882,16 @@ $close-color: #aaa;
   }
 
   .services-page .services-hero::after {
-    height: 80px;
+    height: 110px;
+    clip-path: polygon(0 66%,
+        14% 64%,
+        28% 68%,
+        44% 73%,
+        60% 74%,
+        76% 69%,
+        90% 60%,
+        100% 56%,
+        100% 100%,
+        0 100%);
   }
 }
