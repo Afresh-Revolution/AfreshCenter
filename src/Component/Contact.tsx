@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { sendContact } from '../api/contact'
 import { SiteFooter, SiteNavbar } from './SharedLayout'
 // import '../scss/Contact.scss'
@@ -69,6 +69,17 @@ function Contact() {
   })
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [statusMessage, setStatusMessage] = useState('')
+
+  useEffect(() => {
+    if (status === 'success' || status === 'error') {
+      const timeout = window.setTimeout(() => {
+        setStatus('idle')
+        setStatusMessage('')
+      }, 5000)
+      return () => window.clearTimeout(timeout)
+    }
+    return undefined
+  }, [status])
 
   const handleChange = (field: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }))
@@ -191,6 +202,23 @@ function Contact() {
                 {statusMessage}
               </p>
             )}
+            <div className="contact-social">
+              <p>Follow our social media</p>
+              <div className="social-row">
+                <button type="button" aria-label="Facebook">
+                  <i className="fab fa-facebook-f" aria-hidden="true" />
+                </button>
+                <button type="button" aria-label="Twitter">
+                  <i className="fab fa-twitter" aria-hidden="true" />
+                </button>
+                <button type="button" aria-label="Instagram">
+                  <i className="fab fa-instagram" aria-hidden="true" />
+                </button>
+                <button type="button" aria-label="LinkedIn">
+                  <i className="fab fa-linkedin-in" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
           </form>
         </section>
 

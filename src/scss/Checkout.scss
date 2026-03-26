@@ -1,0 +1,459 @@
+@use "sass:color";
+
+$brand-orange: #ff8901;
+$brand-dark: #0b2f45;
+$text-dark: #1d2730;
+$muted: #6d7780;
+$line: #e8edf2;
+$page-bg: #f3f5f7;
+$radius: 12px;
+
+.checkout-page {
+    min-height: 100vh;
+    background: $page-bg;
+    color: $text-dark;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-inner {
+    flex: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    width: 100%;
+}
+
+.checkout-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    color: $muted;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    font-family: inherit;
+    transition: color 0.2s;
+
+    &:hover {
+        color: $brand-orange;
+    }
+}
+
+.checkout-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 2rem;
+}
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 360px;
+    }
+}
+
+// ── Payment method tabs ──────────────────────────────────────────
+.checkout-form-col {
+    background: #fff;
+    border-radius: $radius;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    padding: 2rem;
+}
+
+.checkout-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.checkout-method-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1.5px solid $line;
+    background: #fafafa;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: $muted;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+
+    &.is-active {
+        border-color: $brand-orange;
+        color: $brand-orange;
+        background: rgba($brand-orange, 0.06);
+        font-weight: 600;
+    }
+
+    &:hover:not(.is-active) {
+        border-color: color.adjust($line, $lightness: -10%);
+        color: $text-dark;
+    }
+}
+
+// ── Form fields ──────────────────────────────────────────────────
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.checkout-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: $text-dark;
+    }
+}
+
+.checkout-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.checkout-form__input {
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid $line;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: $text-dark;
+    background: #fafafa;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder {
+        color: #b0b8c1;
+    }
+
+    &:focus {
+        border-color: $brand-orange;
+        box-shadow: 0 0 0 3px rgba($brand-orange, 0.12);
+        background: #fff;
+    }
+
+    &--mono {
+        letter-spacing: 0.1em;
+    }
+}
+
+// ── Bank transfer info ───────────────────────────────────────────
+.checkout-bank-info {
+    background: #f8f9fb;
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    color: $text-dark;
+    line-height: 1.6;
+
+    p {
+        margin: 0 0 0.75rem;
+    }
+}
+
+.checkout-bank-details {
+    margin: 0.75rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    div {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    dt {
+        font-weight: 600;
+        min-width: 130px;
+        color: $muted;
+        font-size: 0.85rem;
+    }
+
+    dd {
+        margin: 0;
+        font-weight: 500;
+    }
+}
+
+.checkout-bank-note {
+    color: $brand-orange;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 0 !important;
+}
+
+.checkout-paystack-info {
+    background: #f8f9fb;
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    color: $muted;
+    line-height: 1.6;
+
+    p {
+        margin: 0;
+    }
+}
+
+// ── Submit button ────────────────────────────────────────────────
+.checkout-form__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    background: $brand-orange;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.05s;
+
+    &:hover:not(:disabled) {
+        background: #e57a01;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+}
+
+.checkout-form__secure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    color: $muted;
+    margin: 0;
+
+    svg {
+        color: #22c55e;
+    }
+}
+
+.checkout-form__status {
+    font-size: 0.875rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    margin: 0;
+
+    &--error {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    &--success {
+        background: #ecfdf5;
+        color: #15803d;
+    }
+}
+
+// ── Order summary ────────────────────────────────────────────────
+.checkout-summary {
+    background: #fff;
+    border-radius: $radius;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    padding: 1.75rem;
+
+    @media (min-width: 768px) {
+        position: sticky;
+        top: 1.5rem;
+    }
+}
+
+.checkout-summary__title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 1.25rem;
+}
+
+.checkout-summary__service {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.checkout-summary__service-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba($brand-orange, 0.12);
+    flex-shrink: 0;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: $brand-orange;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Crect x='2' y='7' width='20' height='14' rx='2'/%3E%3Cpath d='M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3'/%3E%3C/svg%3E") center / 60% no-repeat;
+        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Crect x='2' y='7' width='20' height='14' rx='2'/%3E%3Cpath d='M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3'/%3E%3C/svg%3E") center / 60% no-repeat;
+        border-radius: 10px;
+        opacity: 0.8;
+    }
+}
+
+.checkout-summary__service-name {
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 0.15rem;
+    font-size: 0.95rem;
+}
+
+.checkout-summary__service-sub {
+    font-size: 0.8rem;
+    color: $muted;
+    margin: 0;
+}
+
+.checkout-summary__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: $muted;
+    margin-bottom: 0.4rem;
+
+    span:last-child {
+        color: $text-dark;
+        font-weight: 500;
+        max-width: 55%;
+        text-align: right;
+        word-break: break-word;
+    }
+}
+
+.checkout-summary__divider {
+    height: 1px;
+    background: $line;
+    margin: 1rem 0;
+}
+
+.checkout-summary__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: $text-dark;
+
+        svg {
+            color: #22c55e;
+            flex-shrink: 0;
+        }
+    }
+}
+
+.checkout-summary__note {
+    font-size: 0.8rem;
+    color: $muted;
+    line-height: 1.5;
+    margin: 0;
+}
+
+// ── Success state ────────────────────────────────────────────────
+.checkout-success {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    max-width: 520px;
+    margin: 0 auto;
+
+    &__icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #22c55e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+
+        svg {
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            stroke-width: 3;
+        }
+    }
+
+    h1 {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: $text-dark;
+        margin: 0 0 0.75rem;
+    }
+
+    p {
+        color: $muted;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 0 0 0.5rem;
+    }
+
+    &__service {
+        font-weight: 500;
+        color: $text-dark !important;
+    }
+
+    &__email {
+        font-size: 0.875rem !important;
+    }
+
+    &__btn {
+        margin-top: 2rem;
+        padding: 0.85rem 2rem;
+        background: $brand-orange;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: #e57a01;
+        }
+    }
+}

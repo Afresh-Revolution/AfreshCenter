@@ -6,11 +6,18 @@ import { Team } from './team/Team';
 import { Bookings } from './bookings/Bookings';
 import { Contacts } from './contacts/Contacts';
 import { Settings } from './settings/Settings';
+import { RequireAuth } from './RequireAuth';
 
 export function AdminRoutes() {
   return (
     <Routes>
-      <Route path="*" element={<AdminLayout />}>
+      <Route
+        element={
+          <RequireAuth>
+            <AdminLayout />
+          </RequireAuth>
+        }
+      >
         <Route index element={<Overview />} />
         <Route path="services" element={<Services />} />
         <Route path="team" element={<Team />} />
@@ -21,3 +28,4 @@ export function AdminRoutes() {
     </Routes>
   );
 }
+

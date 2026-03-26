@@ -14,6 +14,19 @@ export type BookingDTO = {
   service?: string;
 };
 
+export type CreateBookingPayload = {
+  full_name: string;
+  email: string;
+  phone_number: string;
+  company?: string;
+  project_details?: string;
+};
+
+export type BookingResponse = {
+  success: boolean;
+  message?: string;
+};
+
 export async function fetchBookings(): Promise<BookingDTO[]> {
   const base = API_BASE ? `${API_BASE}/api/bookings` : '/api/bookings';
   const res = await fetch(base);
@@ -22,4 +35,22 @@ export async function fetchBookings(): Promise<BookingDTO[]> {
   }
   const data = (await res.json()) as BookingDTO[];
   return Array.isArray(data) ? data : [];
+}
+
+export async function createBooking(payload: CreateBookingPayload): Promise<BookingResponse> {
+  const base = API_BASE ? `${API_BASE}/api/bookings` : '/api/bookings';
+  try {
+    const res = await fetch(base, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = (await res.json()) as BookingResponse;
+    if (!res.ok) {
+      return { success: false, message: data?.message ?? 'Failed to submit booking' };
+    }
+    return { success: true, message: data?.message ?? 'Booking submitted successfully' };
+  } catch {
+    return { success: false, message: 'Network error. Please try again.' };
+  }
 }

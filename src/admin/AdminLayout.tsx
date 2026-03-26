@@ -134,6 +134,9 @@ export function AdminLayout() {
             aria-label="Log out"
           >
             <span className="logout-icon" aria-hidden />
+            <span className="logout-tooltip" role="status" aria-live="polite">
+              Logout
+            </span>
           </button>
         </div>
       </aside>

@@ -10,18 +10,19 @@ import knowristLogo from "../assets/images/knowrist 1.png";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
 import serviceImage1 from "../assets/images/Image 1.png";
-import { fetchPublicServices, getServiceImageUrl, type ServiceItem } from "../api/services";
-import blessingImage from "../assets/images/BlessingWilliams.jpg";
-import jethroImage from "../assets/images/JethroMD.jpg";
-import williamImage from "../assets/images/WilliamsBosw.jpg";
-import felixImage from "../assets/images/MrFelix.JPG";
-import dominicImage from "../assets/images/DominicRay.JPG";
+import {
+  fetchPublicServices,
+  getServiceImageUrl,
+  type ServiceItem,
+} from "../api/services";
+import { fetchTeams, getTeamImageUrl, type TeamMemberDTO } from "../api/teams";
 import ourWork1 from "../assets/images/our-woks-1.png";
 import ourWork2 from "../assets/images/our-woks-2.png";
 import ourWork3 from "../assets/images/our-woks-3.png";
 import olaImage from "../assets/images/Ola.png";
 import samLightImage from "../assets/images/Sam-light.png";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
+import { sendContact } from "../api/contact";
 
 function LandingPage() {
   const affiliatedCompanies = [
@@ -33,70 +34,48 @@ function LandingPage() {
   ];
 
   const [landingServices, setLandingServices] = useState<ServiceItem[]>([]);
+  const [teamMembers, setTeamMembers] = useState<
+    (TeamMemberDTO & { featured?: boolean })[]
+  >([]);
   const SERVICES_PREVIEW_COUNT = 6;
 
   useEffect(() => {
     let cancelled = false;
+
+    // Fetch services
     fetchPublicServices()
       .then((list) => {
         if (!cancelled) setLandingServices(list);
       })
       .catch(() => {});
-    return () => { cancelled = true; };
-  }, []);
 
-  const teamMembers = [
-    {
-      id: "felix",
-      name: "Felix Nwachukwu",
-      role: "Hardware Manager",
-      bio: "Oversees procurement and maintenance of hardware systems with a focus on stability and reliability.",
-      image: felixImage,
-    },
-    {
-      id: "blessing",
-      name: "Blessing Adukuchili",
-      role: "Administrative Manager",
-      bio: "Leads administrative operations, documentation, scheduling, and internal process coordination.",
-      image: blessingImage,
-    },
-    {
-      id: "jethro",
-      name: "Jethro Mark Da'ar",
-      role: "Chief Executive Officer (CEO)",
-      bio: "Drives strategic growth, innovation, and partnerships while leading long-term company direction.",
-      image: jethroImage,
-      featured: true,
-    },
-    {
-      id: "dominic",
-      name: "Dominic Ray Nanjwan",
-      role: "General Manager",
-      bio: "Coordinates day-to-day execution across teams to deliver results and maintain operational excellence.",
-      image: dominicImage,
-    },
-    {
-      id: "william",
-      name: "William Bosworth",
-      role: "Software Manager",
-      bio: "Leads software architecture, delivery standards, and continuous engineering improvements.",
-      image: williamImage,
-    },
-    {
-      id: "ola",
-      name: "Ola Adeyemi",
-      role: "Creative Director",
-      bio: "Drives brand identity and visual storytelling across all Afresh Centre platforms.",
-      image: olaImage,
-    },
-    {
-      id: "sam",
-      name: "Samuel Bright",
-      role: "Business Development",
-      bio: "Identifies growth opportunities and manages strategic partnerships to expand Afresh Centre's reach.",
-      image: samLightImage,
-    },
-  ];
+    // Fetch teams
+    fetchTeams()
+      .then((list) => {
+        if (!cancelled) {
+          // Filter to only visible members and map to include featured property
+          const visibleMembers = list.filter(
+            (m) => m.visible !== false || m.status !== "Inactive",
+          );
+          // Try to find CEO as featured member
+          const featuredIdx = visibleMembers.findIndex(
+            (m) =>
+              m.role?.toLowerCase().includes("ceo") ||
+              m.role?.toLowerCase().includes("chief executive"),
+          );
+          const membersWithFeatured = visibleMembers.map((m, idx) => ({
+            ...m,
+            featured: idx === featuredIdx && featuredIdx >= 0,
+          }));
+          setTeamMembers(membersWithFeatured);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const topWorkTiles = [
     { type: "image", title: "vann", image: ourWork1 },
@@ -155,20 +134,35 @@ function LandingPage() {
 
   const [disableTrackTransition, setDisableTrackTransition] = useState(false);
   const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(
-    () => minFeaturedIdx + getFeaturedIndex()
+    () => minFeaturedIdx + getFeaturedIndex(),
   );
   const [isMobileTeam, setIsMobileTeam] = useState(
-    typeof window !== "undefined" ? window.innerWidth <= 900 : false
+    typeof window !== "undefined" ? window.innerWidth <= 900 : false,
   );
+  const [isTeamHovered, setIsTeamHovered] = useState(false);
+  const [teamTickSeed, setTeamTickSeed] = useState(0);
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [contactStatus, setContactStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
+  const [contactStatusMessage, setContactStatusMessage] = useState("");
 
   const handleTeamPrev = () => {
     if (!totalMembers) return;
     setLoopFeaturedIndex((i) => i - 1);
+    setTeamTickSeed((s) => s + 1);
   };
 
   const handleTeamNext = () => {
     if (!totalMembers) return;
     setLoopFeaturedIndex((i) => i + 1);
+    setTeamTickSeed((s) => s + 1);
   };
 
   const handleTeamTrackTransitionEnd = () => {
@@ -185,14 +179,15 @@ function LandingPage() {
   const startIdx = loopFeaturedIndex - FEAT_POS;
   const activeIdx =
     totalMembers > 0
-      ? ((loopFeaturedIndex - minFeaturedIdx) % totalMembers + totalMembers) % totalMembers
+      ? (((loopFeaturedIndex - minFeaturedIdx) % totalMembers) + totalMembers) %
+        totalMembers
       : -1;
   const activeMember = activeIdx >= 0 ? teamMembers[activeIdx] : null;
 
   useEffect(() => {
     if (!disableTrackTransition) return;
     const raf = window.requestAnimationFrame(() =>
-      setDisableTrackTransition(false)
+      setDisableTrackTransition(false),
     );
     return () => window.cancelAnimationFrame(raf);
   }, [disableTrackTransition]);
@@ -203,6 +198,113 @@ function LandingPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    if (isMobileTeam || isTeamHovered || totalMembers < 2) return;
+    const id = window.setInterval(() => {
+      setLoopFeaturedIndex((i) => i + 1);
+    }, 6000);
+    return () => window.clearInterval(id);
+  }, [isMobileTeam, isTeamHovered, totalMembers, teamTickSeed]);
+
+  useEffect(() => {
+    if (contactStatus === "success" || contactStatus === "error") {
+      const timeout = window.setTimeout(() => {
+        setContactStatus("idle");
+        setContactStatusMessage("");
+      }, 5000);
+      return () => window.clearTimeout(timeout);
+    }
+    return undefined;
+  }, [contactStatus]);
+
+  const handleContactChange =
+    (field: keyof typeof contactForm) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setContactForm((prev) => ({ ...prev, [field]: event.target.value }));
+    };
+
+  const handleContactSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+    setContactStatus("sending");
+    setContactStatusMessage("");
+    const response = await sendContact({
+      name: contactForm.name.trim(),
+      email: contactForm.email.trim(),
+      phone: contactForm.phone.trim(),
+      subject: contactForm.subject.trim(),
+      message: contactForm.message.trim(),
+    });
+    if (response.success) {
+      setContactStatus("success");
+      setContactStatusMessage(response.message ?? "Message sent successfully.");
+      setContactForm({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } else {
+      setContactStatus("error");
+      setContactStatusMessage(response.message ?? "Failed to send message.");
+    }
+  };
+
+  const testimonials = [
+    {
+      name: "Samuel Light",
+      role: "Full stack Dev",
+      image: samLightImage,
+      quote:
+        "At our tech hub, we embrace innovation and creativity, ensuring that every challenge is met with a solution. Our team is dedicated to providing exceptional service, making it easy for you to navigate the complexities of technology.",
+    },
+    {
+      name: "Ola Adeyemi",
+      role: "Creative Director",
+      image: olaImage,
+      quote:
+        "Afresh Centre helped our team move faster with clearer priorities and better collaboration. The experience felt structured, supportive, and focused on real outcomes.",
+    },
+    {
+      name: "Afresh Team",
+      role: "Product & Strategy",
+      image: aboutImageRight,
+      quote:
+        "We value long-term partnerships built on trust and measurable progress. The process is transparent and the results speak for themselves.",
+    },
+  ];
+
+  const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
+  const totalTestimonials = testimonials.length;
+  const [isTestimonialHovered, setIsTestimonialHovered] = useState(false);
+  const [testimonialTickSeed, setTestimonialTickSeed] = useState(0);
+
+  const handleTestimonialPrev = () => {
+    if (totalTestimonials < 2) return;
+    setActiveTestimonialIndex((i) =>
+      (i - 1 + totalTestimonials) % totalTestimonials,
+    );
+    setTestimonialTickSeed((s) => s + 1);
+  };
+
+  const handleTestimonialNext = () => {
+    if (totalTestimonials < 2) return;
+    setActiveTestimonialIndex((i) => (i + 1) % totalTestimonials);
+    setTestimonialTickSeed((s) => s + 1);
+  };
+
+  const activeTestimonial = testimonials[activeTestimonialIndex];
+
+  useEffect(() => {
+    if (isTestimonialHovered || totalTestimonials < 2) return;
+    const id = window.setInterval(() => {
+      setActiveTestimonialIndex((i) => (i + 1) % totalTestimonials);
+    }, 7000);
+    return () => window.clearInterval(id);
+  }, [isTestimonialHovered, totalTestimonials, testimonialTickSeed]);
+
   return (
     <div className="landingPage">
       {/* Navbar (exact from screenshot)  */}
@@ -212,8 +314,7 @@ function LandingPage() {
       <header
         className="hero"
         style={{
-          backgroundImage: `url(${heroBackground})`
-         
+          backgroundImage: `url(${heroBackground})`,
         }}>
         <div className="hero-content">
           <h1>EMPOWERING AFRICA THROUGH INNOVATION AND CREATIVITY</h1>
@@ -224,18 +325,23 @@ function LandingPage() {
           </p>
           <div className="btn-group">
             <button className="btn btn-primary">Learn more</button>
-            <Link to="/wailin" className="btn btn-outline">Wailin</Link>
+            <Link to="/wailin" className="btn btn-outline">
+              Wailin
+            </Link>
           </div>
         </div>
         <div className="hero-social">
           <a href="#" aria-label="Facebook">
-            f
+            <i className="fab fa-facebook-f" aria-hidden="true" />
           </a>
-          <a href="#" aria-label="X">
-            x
+          <a href="#" aria-label="Twitter">
+            <i className="fab fa-twitter" aria-hidden="true" />
+          </a>
+          <a href="#" aria-label="Instagram">
+            <i className="fab fa-instagram" aria-hidden="true" />
           </a>
           <a href="#" aria-label="LinkedIn">
-            in
+            <i className="fab fa-linkedin-in" aria-hidden="true" />
           </a>
         </div>
       </header>
@@ -300,8 +406,13 @@ function LandingPage() {
                   }}
                 />
                 <h3>{service.title}</h3>
-                <p>{service.description || "Contact us for more details about this service."}</p>
-                <Link to={`/services?id=${service.id}`} className="service-learn-btn">
+                <p>
+                  {service.description ||
+                    "Contact us for more details about this service."}
+                </p>
+                <Link
+                  to={`/services?id=${service.id}`}
+                  className="service-learn-btn">
                   Learn More
                 </Link>
               </article>
@@ -343,19 +454,34 @@ function LandingPage() {
         <div
           className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
           aria-live="polite"
+          onMouseEnter={() => setIsTeamHovered(true)}
+          onMouseLeave={() => setIsTeamHovered(false)}
           style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
           <div
             className="team-track"
             onTransitionEnd={handleTeamTrackTransitionEnd}
             style={disableTrackTransition ? { transition: "none" } : undefined}>
-            {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
+            {(isMobileTeam
+              ? activeMember
+                ? [activeMember]
+                : []
+              : loopMembers
+            ).map((member, idx) => {
               const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
               return (
                 <article
                   key={`${member.id}-${idx}`}
                   className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
                   <div className="team-card-img-wrap">
-                    <img src={member.image} alt={member.name} className="team-card-img" />
+                    <img
+                      src={
+                        member.image_url
+                          ? (getTeamImageUrl(member.image_url) ?? "")
+                          : ""
+                      }
+                      alt={member.name || ""}
+                      className="team-card-img"
+                    />
                   </div>
                   <div className="team-card-body">
                     <h3>{member.name}</h3>
@@ -424,34 +550,38 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="testimonial-panel">
+          <div
+            className="testimonial-panel"
+            onMouseEnter={() => setIsTestimonialHovered(true)}
+            onMouseLeave={() => setIsTestimonialHovered(false)}>
             <div className="testimonial-profile-card">
               <img
-                src={samLightImage}
-                alt="Samuel Light"
+                src={activeTestimonial.image}
+                alt={activeTestimonial.name}
                 className="testimonial-profile-image"
               />
-              <h4>Samuel Light</h4>
-              <p>Full stack Dev</p>
+              <h4>{activeTestimonial.name}</h4>
+              <p>{activeTestimonial.role}</p>
               <div className="testimonial-mini-nav">
-                <button type="button" aria-label="Previous testimonial">
+                <button
+                  type="button"
+                  aria-label="Previous testimonial"
+                  onClick={handleTestimonialPrev}
+                  disabled={totalTestimonials < 2}>
                   &larr;
                 </button>
-                <button type="button" aria-label="Next testimonial">
+                <button
+                  type="button"
+                  aria-label="Next testimonial"
+                  onClick={handleTestimonialNext}
+                  disabled={totalTestimonials < 2}>
                   &rarr;
                 </button>
               </div>
             </div>
             <div className="testimonial-copy">
               <h3>Testimonials</h3>
-              <p>
-                At our tech hub, we embrace innovation and creativity, ensuring
-                that every challenge is met with a solution. Our team is
-                dedicated to providing exceptional service, making it easy for
-                you to navigate the complexities of technology. With us, you can
-                explore endless possibilities without any compromise in your
-                setup.
-              </p>
+              <p>{activeTestimonial.quote}</p>
             </div>
           </div>
         </div>
@@ -459,33 +589,71 @@ function LandingPage() {
       {/* Get in Touch with Us */}
       <section className="contact-section">
         <div className="container contact-wrap">
-          <div className="contact-form-panel">
+          <form className="contact-form-panel" onSubmit={handleContactSubmit}>
             <h3>Get in Touch with Us</h3>
             <div className="form-row">
               <div className="input-group">
                 <label>Name</label>
-                <input type="text" placeholder="Enter name" />
+                <input
+                  type="text"
+                  placeholder="Enter name"
+                  value={contactForm.name}
+                  onChange={handleContactChange("name")}
+                  required
+                />
               </div>
               <div className="input-group">
                 <label>Email</label>
-                <input type="email" placeholder="Enter Email" />
+                <input
+                  type="email"
+                  placeholder="Enter Email"
+                  value={contactForm.email}
+                  onChange={handleContactChange("email")}
+                  required
+                />
               </div>
             </div>
             <div className="form-row">
               <div className="input-group">
                 <label>Phone Number</label>
-                <input type="text" placeholder="Enter number" />
+                <input
+                  type="text"
+                  placeholder="Enter number"
+                  value={contactForm.phone}
+                  onChange={handleContactChange("phone")}
+                  required
+                />
               </div>
               <div className="input-group">
                 <label>Subject</label>
-                <input type="text" placeholder="Enter Subject" />
+                <input
+                  type="text"
+                  placeholder="Enter Subject"
+                  value={contactForm.subject}
+                  onChange={handleContactChange("subject")}
+                  required
+                />
               </div>
             </div>
             <div className="input-group">
               <label>Message</label>
-              <textarea placeholder="Write your message"></textarea>
+              <textarea
+                placeholder="Write your message"
+                value={contactForm.message}
+                onChange={handleContactChange("message")}
+                required></textarea>
             </div>
-            <button className="submit-btn">Submit</button>
+            <button
+              className="submit-btn"
+              type="submit"
+              disabled={contactStatus === "sending"}>
+              Submit
+            </button>
+            {contactStatus !== "idle" && (
+              <p className="form-status" role="status" aria-live="polite">
+                {contactStatusMessage}
+              </p>
+            )}
 
             <div className="contact-meta">
               <div className="contact-chip">
@@ -522,7 +690,7 @@ function LandingPage() {
                 </button>
               </div>
             </div>
-          </div>
+          </form>
 
           <div className="contact-map-panel">
             <iframe
@@ -538,9 +706,9 @@ function LandingPage() {
       <section className="getstarted-banner">
         <div className="container getstarted-inner">
           <h2>GET STARTED NOW</h2>
-          <button className="getstarted-btn" type="button">
+          <Link to="/services" className="getstarted-btn">
             Get Started
-          </button>
+          </Link>
         </div>
       </section>
       {/* footer with extra details  */}

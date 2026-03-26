@@ -1,36 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ContactMessageModal } from './ContactMessageModal';
 import type { ContactSubmission } from './ContactMessageModal';
-
-const contactsData: ContactSubmission[] = [
-  {
-    name: 'Alice Cooper',
-    email: 'alice@example.com',
-    phone: '+234 803 111 2222',
-    subject: 'Services Information',
-    date: '2026-02-26',
-    dateTime: '2026-02-26 at 10:30 AM',
-    message: 'I would like to inquire about your software development services. We are looking to build a custom ERP system for our company. Can you provide more details about our pricing and timeline?',
-  },
-  {
-    name: 'Bob Wilson',
-    email: 'bob@example.com',
-    phone: '+234 804 222 3333',
-    subject: 'Partnership Opportunity',
-    date: '2026-02-25',
-    dateTime: '2026-02-25 at 2:00 PM',
-    message: 'We are interested in exploring a partnership with your company for joint projects. Could we schedule a call to discuss potential collaboration?',
-  },
-  {
-    name: 'Carol Davis',
-    email: 'carol@example.com',
-    phone: '+234 805 333 4444',
-    subject: 'General Inquiry',
-    date: '2026-02-24',
-    dateTime: '2026-02-24 at 9:15 AM',
-    message: 'I came across your website and would like to learn more about the range of services you offer. Please send me your brochure or schedule a brief introductory call.',
-  },
-];
+import { fetchAdminContacts, type AdminContactDTO } from '../../api/adminContacts';
 
 function formatContactsDate() {
   return new Date().toLocaleDateString('en-US', {
@@ -41,7 +12,28 @@ function formatContactsDate() {
   });
 }
 
+function mapContactToSubmission(contact: AdminContactDTO, fallbackIndex: number): ContactSubmission {
+  const rawDate = contact.created_at ?? contact.date ?? '';
+  const dateObj = rawDate ? new Date(rawDate) : null;
+  const date = dateObj ? dateObj.toISOString().slice(0, 10) : '';
+  const time = dateObj ? dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '';
+  const dateTime = dateObj ? `${date} at ${time}` : '';
+
+  return {
+    name: contact.name ?? `Contact ${fallbackIndex + 1}`,
+    email: contact.email ?? '',
+    phone: contact.phone ?? '',
+    subject: contact.subject ?? '',
+    date,
+    dateTime,
+    message: contact.message ?? '',
+  };
+}
+
 export function Contacts() {
+  const [contacts, setContacts] = useState<ContactSubmission[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null);
   const [showSendEmail, setShowSendEmail] = useState(false);
   const [emailForm, setEmailForm] = useState({
@@ -50,6 +42,28 @@ export function Contacts() {
     subject: '',
     message: '',
   });
+
+  useEffect(() => {
+    let isActive = true;
+    const loadContacts = async () => {
+      try {
+        const data = await fetchAdminContacts();
+        if (!isActive) return;
+        const mapped = data.map((contact, idx) => mapContactToSubmission(contact, idx));
+        setContacts(mapped);
+      } catch (err) {
+        if (!isActive) return;
+        setError(err instanceof Error ? err.message : 'Failed to load contacts');
+      } finally {
+        if (!isActive) return;
+        setIsLoading(false);
+      }
+    };
+    loadContacts();
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   const openReplyEmail = () => {
     if (!selectedContact) return;
@@ -78,6 +92,10 @@ export function Contacts() {
       <div className="contacts-card">
         <h2 className="contacts-section-title">Contact Submissions</h2>
         <div className="contacts-table-wrap">
+          {isLoading && <p>Loading contacts...</p>}
+          {error && !isLoading && <p>{error}</p>}
+          {!isLoading && !error && contacts.length === 0 && <p>No contact submissions yet.</p>}
+          {!isLoading && !error && contacts.length > 0 && (
           <table className="contacts-table">
             <thead>
               <tr>
@@ -89,7 +107,7 @@ export function Contacts() {
               </tr>
             </thead>
             <tbody>
-              {contactsData.map((row) => (
+              {contacts.map((row) => (
                 <tr key={`${row.name}-${row.date}`}>
                   <td>{row.name}</td>
                   <td>{row.email}</td>
@@ -108,6 +126,7 @@ export function Contacts() {
               ))}
             </tbody>
           </table>
+          )}
         </div>
       </div>
 

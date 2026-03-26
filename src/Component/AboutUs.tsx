@@ -233,6 +233,8 @@ function AboutUs() {
     const [isMobileTeam, setIsMobileTeam] = useState(
         typeof window !== 'undefined' ? window.innerWidth <= 900 : false
     )
+    const [isTeamHovered, setIsTeamHovered] = useState(false)
+    const [teamTickSeed, setTeamTickSeed] = useState(0)
 
     useEffect(() => {
         if (!totalMembers) return
@@ -253,13 +255,23 @@ function AboutUs() {
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
+    useEffect(() => {
+        if (isMobileTeam || isTeamHovered || totalMembers < 2) return
+        const id = window.setInterval(() => {
+            setLoopFeaturedIndex((i) => i + 1)
+        }, 6000)
+        return () => window.clearInterval(id)
+    }, [isMobileTeam, isTeamHovered, totalMembers, teamTickSeed])
+
     const prev = () => {
         if (!totalMembers) return
         setLoopFeaturedIndex((i) => i - 1)
+        setTeamTickSeed((s) => s + 1)
     }
     const next = () => {
         if (!totalMembers) return
         setLoopFeaturedIndex((i) => i + 1)
+        setTeamTickSeed((s) => s + 1)
     }
 
     const handleTrackTransitionEnd = () => {
@@ -479,6 +491,8 @@ function AboutUs() {
                 <div
                     className={`team-carousel${isMobileTeam ? ' team-carousel--single' : ''}`}
                     aria-live="polite"
+                    onMouseEnter={() => setIsTeamHovered(true)}
+                    onMouseLeave={() => setIsTeamHovered(false)}
                     style={{ ['--start-idx']: startIdx } as React.CSSProperties}
                 >
                     <div

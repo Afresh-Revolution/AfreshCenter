@@ -43,7 +43,7 @@ export function getServiceImageUrl(image: string | null | undefined): string | n
 }
 
 /** Upload an image for a service. Returns the path to store (e.g. /uploads/xxx). */
-export async function uploadServiceImage(file: File): Promise<{ success: true; url: string } | { success: false; message: string }> {
+export async function adminImageUpload(file: File): Promise<{ success: true; url: string } | { success: false; message: string }> {
   const form = new FormData();
   form.append('image', file);
   const res = await fetch(`${API_BASE}/api/admin/upload`, {
