@@ -372,7 +372,9 @@ function LandingPage() {
               impact. At AfRESH, we don’t just offer services — we build
               platforms, create opportunities, and drive transformation.
             </p>
-            <span className="read-more-link">Read More →</span>
+            <button type="button" className="read-more-link">
+              Read More...
+            </button>
           </div>
           <div className="about-visual">
             <div className="about-photo about-photo-left">
@@ -658,15 +660,15 @@ function LandingPage() {
             <div className="contact-meta">
               <div className="contact-chip">
                 <i className="fas fa-phone"></i>
-                <span>+35866970742</span>
+                <span>+03586907042</span>
               </div>
               <div className="contact-chip">
                 <i className="fas fa-envelope"></i>
-                <span>jewishmail.com</span>
+                <span>afreshcenter@gmail.com</span>
               </div>
               <div className="contact-chip">
                 <i className="fas fa-map-pin"></i>
-                <span>No 2344 oil airport roundabout, Jos Plateau</span>
+                <span>N0-2344 OIL AIRPORT ROUNDABOUT JOS, PLATEAU STATE</span>
               </div>
             </div>
 
