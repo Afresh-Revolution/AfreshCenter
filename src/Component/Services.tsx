@@ -91,13 +91,16 @@ function Services() {
                 <div className="services-grid">
                   {services.map((service) => (
                     <article key={service.id} className="service-card">
-                      <img
-                        src={
-                          getServiceImageUrl(service.image) ||
-                          "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400"
-                        }
-                        alt={service.title}
-                      />
+                      {getServiceImageUrl(service.image) ? (
+                        <img
+                          src={getServiceImageUrl(service.image) ?? ""}
+                          alt={service.title}
+                        />
+                      ) : (
+                        <div className="service-card-image-placeholder" aria-label={`${service.title} image not uploaded`}>
+                          No image uploaded yet
+                        </div>
+                      )}
                       <div className="service-content">
                         <h3>{service.title}</h3>
                         <p>

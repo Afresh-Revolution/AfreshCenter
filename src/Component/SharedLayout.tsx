@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 const navItems = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
-  { to: '/digital', label: 'Services' },
+  { to: '/services', label: 'Services' },
   { to: '/contact', label: 'Contact Us' },
 ]
 
@@ -23,6 +23,7 @@ type SiteNavbarProps = {
 
 export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const onResize = () => {
@@ -39,7 +40,19 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
   return (
     <nav className={`site-navbar-wrap${menuOpen ? ' menu-open' : ''}`}>
       <div className="site-navbar">
-        <div className="site-logo">
+        <div
+          className="site-logo"
+          aria-label="AfrESH home"
+          role="link"
+          tabIndex={0}
+          onClick={() => navigate('/')}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              navigate('/')
+            }
+          }}
+        >
           <span className="site-mark" aria-hidden="true">
             afr
           </span>

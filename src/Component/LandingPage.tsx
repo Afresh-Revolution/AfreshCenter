@@ -9,7 +9,6 @@ import popsLogo from "../assets/images/pops 1.png";
 import knowristLogo from "../assets/images/knowrist 1.png";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
-import serviceImage1 from "../assets/images/Image 1.png";
 import {
   fetchPublicServices,
   getServiceImageUrl,
@@ -326,7 +325,9 @@ function LandingPage() {
             That Drive Real Impact.
           </p>
           <div className="btn-group">
-            <button className="btn btn-primary">Learn more</button>
+            <Link to="/about" className="btn btn-primary">
+              Learn more
+            </Link>
             <Link to="/wailin" className="btn btn-outline">
               Wailin
             </Link>
@@ -400,15 +401,17 @@ function LandingPage() {
           <div className="service-cards">
             {landingServices.slice(0, SERVICES_PREVIEW_COUNT).map((service) => (
               <article className="service-card" key={service.id}>
-                <img
-                  src={getServiceImageUrl(service.image) ?? serviceImage1}
-                  alt={service.title}
-                  className="service-card-image"
-                  onError={(e) => {
-                    const el = e.currentTarget;
-                    if (el.src !== serviceImage1) el.src = serviceImage1;
-                  }}
-                />
+                {getServiceImageUrl(service.image) ? (
+                  <img
+                    src={getServiceImageUrl(service.image) ?? ""}
+                    alt={service.title}
+                    className="service-card-image"
+                  />
+                ) : (
+                  <div className="service-card-image service-card-image--placeholder" aria-label={`${service.title} image not uploaded`}>
+                    No image uploaded yet
+                  </div>
+                )}
                 <h3>{service.title}</h3>
                 <p>
                   {service.description ||
