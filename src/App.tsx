@@ -20,6 +20,7 @@ function App() {
         <Route path="/wailin" element={<WailinPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route path="*" element={<LandingPage />} />
       </Routes>
     </BrowserRouter>
   );
