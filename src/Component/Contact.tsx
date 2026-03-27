@@ -59,6 +59,10 @@ const contactItems: ContactItem[] = [
   },
 ]
 
+const CONTACT_PHONE_DISPLAY = '+234 908 842 4461'
+const CONTACT_PHONE_HREF = 'tel:+2349088424461'
+const CONTACT_WHATSAPP_HREF = 'https://wa.me/2349088424461'
+
 function Contact() {
   const [form, setForm] = useState({
     firstName: '',
@@ -239,7 +243,7 @@ function Contact() {
                       if (item.title === 'Phone' && line.includes('+234')) {
                         return (
                           <p key={line}>
-                            <a href="tel:+2349088424461">{line}</a>
+                            <a href={CONTACT_PHONE_HREF}>{line}</a>
                           </p>
                         )
                       }
@@ -276,8 +280,22 @@ function Contact() {
               <h3>Need Quick Help?</h3>
               <p>Check out our FAQ section or browse our services to learn more about what we offer.</p>
               <div className="help-btns">
-                <button type="button" className="help-btn-primary">Chat With Us</button>
-                <button type="button" className="help-btn-outline">Call Now</button>
+                <a
+                  href={CONTACT_WHATSAPP_HREF}
+                  className="help-btn-primary"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Chat with us on WhatsApp at ${CONTACT_PHONE_DISPLAY}`}
+                >
+                  Chat With Us
+                </a>
+                <a
+                  href={CONTACT_PHONE_HREF}
+                  className="help-btn-outline"
+                  aria-label={`Call us at ${CONTACT_PHONE_DISPLAY}`}
+                >
+                  Call Now
+                </a>
               </div>
             </div>
           </section>

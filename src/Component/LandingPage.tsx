@@ -9,7 +9,6 @@ import popsLogo from "../assets/images/pops 1.png";
 import knowristLogo from "../assets/images/knowrist 1.png";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
-import serviceImage1 from "../assets/images/Image 1.png";
 import {
   fetchPublicServices,
   getServiceImageUrl,
@@ -20,7 +19,7 @@ import ourWork1 from "../assets/images/our-woks-1.png";
 import ourWork2 from "../assets/images/our-woks-2.png";
 import ourWork3 from "../assets/images/our-woks-3.png";
 import olaImage from "../assets/images/Ola.png";
-import samLightImage from "../assets/images/Sam-light.png";
+import samLightImage from "../assets/images/Sam-light.jpg";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
 import { sendContact } from "../api/contact";
 
@@ -37,6 +36,7 @@ function LandingPage() {
   const [teamMembers, setTeamMembers] = useState<
     (TeamMemberDTO & { featured?: boolean })[]
   >([]);
+  const [teamLoading, setTeamLoading] = useState(true);
   const SERVICES_PREVIEW_COUNT = 6;
 
   useEffect(() => {
@@ -53,11 +53,9 @@ function LandingPage() {
     fetchTeams()
       .then((list) => {
         if (!cancelled) {
-          // Filter to only visible members and map to include featured property
           const visibleMembers = list.filter(
-            (m) => m.visible !== false || m.status !== "Inactive",
+            (m) => m.visible !== false && m.status !== "Inactive",
           );
-          // Try to find CEO as featured member
           const featuredIdx = visibleMembers.findIndex(
             (m) =>
               m.role?.toLowerCase().includes("ceo") ||
@@ -70,7 +68,10 @@ function LandingPage() {
           setTeamMembers(membersWithFeatured);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setTeamLoading(false);
+      });
 
     return () => {
       cancelled = true;
@@ -324,7 +325,9 @@ function LandingPage() {
             That Drive Real Impact.
           </p>
           <div className="btn-group">
-            <button className="btn btn-primary">Learn more</button>
+            <Link to="/about" className="btn btn-primary">
+              Learn more
+            </Link>
             <Link to="/wailin" className="btn btn-outline">
               Wailin
             </Link>
@@ -372,7 +375,9 @@ function LandingPage() {
               impact. At AfRESH, we don’t just offer services — we build
               platforms, create opportunities, and drive transformation.
             </p>
-            <span className="read-more-link">Read More →</span>
+            <button type="button" className="read-more-link">
+              Read More...
+            </button>
           </div>
           <div className="about-visual">
             <div className="about-photo about-photo-left">
@@ -396,15 +401,17 @@ function LandingPage() {
           <div className="service-cards">
             {landingServices.slice(0, SERVICES_PREVIEW_COUNT).map((service) => (
               <article className="service-card" key={service.id}>
-                <img
-                  src={getServiceImageUrl(service.image) ?? serviceImage1}
-                  alt={service.title}
-                  className="service-card-image"
-                  onError={(e) => {
-                    const el = e.currentTarget;
-                    if (el.src !== serviceImage1) el.src = serviceImage1;
-                  }}
-                />
+                {getServiceImageUrl(service.image) ? (
+                  <img
+                    src={getServiceImageUrl(service.image) ?? ""}
+                    alt={service.title}
+                    className="service-card-image"
+                  />
+                ) : (
+                  <div className="service-card-image service-card-image--placeholder" aria-label={`${service.title} image not uploaded`}>
+                    No image uploaded yet
+                  </div>
+                )}
                 <h3>{service.title}</h3>
                 <p>
                   {service.description ||
@@ -451,48 +458,54 @@ function LandingPage() {
           </div>
         </div>
 
-        <div
-          className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
-          aria-live="polite"
-          onMouseEnter={() => setIsTeamHovered(true)}
-          onMouseLeave={() => setIsTeamHovered(false)}
-          style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
-          <div
-            className="team-track"
-            onTransitionEnd={handleTeamTrackTransitionEnd}
-            style={disableTrackTransition ? { transition: "none" } : undefined}>
-            {(isMobileTeam
-              ? activeMember
-                ? [activeMember]
-                : []
-              : loopMembers
-            ).map((member, idx) => {
-              const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
-              return (
-                <article
-                  key={`${member.id}-${idx}`}
-                  className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
-                  <div className="team-card-img-wrap">
-                    <img
-                      src={
-                        member.image_url
-                          ? (getTeamImageUrl(member.image_url) ?? "")
-                          : ""
-                      }
-                      alt={member.name || ""}
-                      className="team-card-img"
-                    />
-                  </div>
-                  <div className="team-card-body">
-                    <h3>{member.name}</h3>
-                    <p className="team-card-role">{member.role}</p>
-                    <p className="team-card-bio">{member.bio}</p>
-                  </div>
-                </article>
-              );
-            })}
+        {teamLoading || totalMembers === 0 ? (
+          <div className="team-loading" role="status" aria-live="polite">
+            Loading team members...
           </div>
-        </div>
+        ) : (
+          <div
+            className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
+            aria-live="polite"
+            onMouseEnter={() => setIsTeamHovered(true)}
+            onMouseLeave={() => setIsTeamHovered(false)}
+            style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
+            <div
+              className="team-track"
+              onTransitionEnd={handleTeamTrackTransitionEnd}
+              style={disableTrackTransition ? { transition: "none" } : undefined}>
+              {(isMobileTeam
+                ? activeMember
+                  ? [activeMember]
+                  : []
+                : loopMembers
+              ).map((member, idx) => {
+                const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
+                return (
+                  <article
+                    key={`${member.id}-${idx}`}
+                    className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
+                    <div className="team-card-img-wrap">
+                      <img
+                        src={
+                          member.image_url
+                            ? (getTeamImageUrl(member.image_url) ?? "")
+                            : ""
+                        }
+                        alt={member.name || ""}
+                        className="team-card-img"
+                      />
+                    </div>
+                    <div className="team-card-body">
+                      <h3>{member.name}</h3>
+                      <p className="team-card-role">{member.role}</p>
+                      <p className="team-card-bio">{member.bio}</p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </section>
       {/* Our Top Works */}
       <section className="topworks">
@@ -658,15 +671,15 @@ function LandingPage() {
             <div className="contact-meta">
               <div className="contact-chip">
                 <i className="fas fa-phone"></i>
-                <span>+35866970742</span>
+                <span>+03586907042</span>
               </div>
               <div className="contact-chip">
                 <i className="fas fa-envelope"></i>
-                <span>jewishmail.com</span>
+                <span>afreshcenter@gmail.com</span>
               </div>
               <div className="contact-chip">
                 <i className="fas fa-map-pin"></i>
-                <span>No 2344 oil airport roundabout, Jos Plateau</span>
+                <span>N0-2344 OIL AIRPORT ROUNDABOUT JOS, PLATEAU STATE</span>
               </div>
             </div>
 

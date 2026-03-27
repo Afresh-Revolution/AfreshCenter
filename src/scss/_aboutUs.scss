@@ -260,22 +260,24 @@ body {
   aspect-ratio: 16 / 10;
   background: #c8cdd3
     url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80")
-    center / cover no-repeat;
+    center / contain no-repeat;
 }
 
 /* Give each card a slightly different stock image */
 .work-card:nth-child(2) .work-card-img {
   background-image: url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80");
   background-color: #c8cdd3;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 .work-card:nth-child(3) .work-card-img {
   background-image: url("https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80");
   background-color: #c8cdd3;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 .work-card-body {
@@ -510,6 +512,18 @@ body {
     min-height: clamp(420px, 38vw, 680px);
 }
 
+.team-loading {
+  width: min(1060px, calc(100% - 64px));
+  margin: 24px auto 0;
+  padding: 28px 24px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(29, 39, 48, 0.08);
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
 .team-track {
     position: absolute;
     left: 50%;
@@ -600,6 +614,41 @@ body {
     line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.about-hero::after {
+    content: '';
+    position: absolute;
+    left: -2%;
+    bottom: -1px;
+    width: 104%;
+    height: 100px;
+    background: var(--page-bg);
+    -webkit-clip-path: polygon(0 27%,
+        8% 48%,
+        18% 64%,
+        30% 76%,
+        42% 82%,
+        54% 80%,
+        66% 72%,
+        78% 60%,
+        90% 52%,
+        100% 48%,
+        100% 100%,
+        0 100%);
+            clip-path: polygon(0 27%,
+        8% 48%,
+        18% 64%,
+        30% 76%,
+        42% 82%,
+        54% 80%,
+        66% 72%,
+        78% 60%,
+        90% 52%,
+        100% 48%,
+        100% 100%,
+        0 100%);
+    z-index: 1;
 }
 
 .team-card--featured .team-card-bio {

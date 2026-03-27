@@ -10,16 +10,28 @@ export type TeamMemberDTO = {
   visible?: boolean;
 };
 
+type TeamCollectionResponse =
+  | TeamMemberDTO[]
+  | { value?: TeamMemberDTO[]; data?: TeamMemberDTO[]; items?: TeamMemberDTO[] };
+
+function parseTeamCollection(data: TeamCollectionResponse): TeamMemberDTO[] {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data.value)) return data.value;
+  if (Array.isArray(data.data)) return data.data;
+  if (Array.isArray(data.items)) return data.items;
+  return [];
+}
+
 export async function fetchTeams(): Promise<TeamMemberDTO[]> {
   const base = API_BASE ? `${API_BASE}/api/teams` : "/api/teams";
   const res = await fetch(base);
   if (!res.ok) {
     throw new Error("Failed to fetch teams");
   }
-  const data = (await res.json()) as TeamMemberDTO[];
+  const data = (await res.json()) as TeamCollectionResponse;
   console.log("Fetched teams:", data);
   
-  return Array.isArray(data) ? data : [];
+  return parseTeamCollection(data);
 }
 
 /** Fetch all team members for admin (includes inactive). */
@@ -31,8 +43,8 @@ export async function fetchAdminTeams(): Promise<TeamMemberDTO[]> {
     res = await fetch(fallbackUrl);
   }
   if (!res.ok) throw new Error('Failed to fetch teams');
-  const data = (await res.json()) as TeamMemberDTO[];
-  return Array.isArray(data) ? data : [];
+  const data = (await res.json()) as TeamCollectionResponse;
+  return parseTeamCollection(data);
 }
 
 
@@ -87,7 +99,11 @@ export type CreateTeamSuccess = {
   message: string;
   member: TeamMemberDTO;
 };
-export type CreateTeamError = { success: false; message: string };
+export type CreateTeamError = {
+  success: false;
+  message: string;
+  errors?: Array<{ field: string; message: string }>;
+};
 export type CreateTeamResponse = CreateTeamSuccess | CreateTeamError;
 
 export async function createTeamMember(
@@ -112,7 +128,7 @@ export async function createTeamMember(
       success: false,
       message:
         data.success === false ? data.message : "Failed to create team member",
-      // success: data.success === false ? data.message : undefined,
+      errors: data.success === false ? data.errors : undefined,
     };
   }
   return data;
