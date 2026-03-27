@@ -20,7 +20,7 @@ import ourWork1 from "../assets/images/our-woks-1.png";
 import ourWork2 from "../assets/images/our-woks-2.png";
 import ourWork3 from "../assets/images/our-woks-3.png";
 import olaImage from "../assets/images/Ola.png";
-import samLightImage from "../assets/images/Sam-light.png";
+import samLightImage from "../assets/images/Sam-light.jpg";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
 import { sendContact } from "../api/contact";
 
@@ -37,6 +37,7 @@ function LandingPage() {
   const [teamMembers, setTeamMembers] = useState<
     (TeamMemberDTO & { featured?: boolean })[]
   >([]);
+  const [teamLoading, setTeamLoading] = useState(true);
   const SERVICES_PREVIEW_COUNT = 6;
 
   useEffect(() => {
@@ -53,11 +54,9 @@ function LandingPage() {
     fetchTeams()
       .then((list) => {
         if (!cancelled) {
-          // Filter to only visible members and map to include featured property
           const visibleMembers = list.filter(
-            (m) => m.visible !== false || m.status !== "Inactive",
+            (m) => m.visible !== false && m.status !== "Inactive",
           );
-          // Try to find CEO as featured member
           const featuredIdx = visibleMembers.findIndex(
             (m) =>
               m.role?.toLowerCase().includes("ceo") ||
@@ -70,7 +69,10 @@ function LandingPage() {
           setTeamMembers(membersWithFeatured);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setTeamLoading(false);
+      });
 
     return () => {
       cancelled = true;
@@ -453,48 +455,54 @@ function LandingPage() {
           </div>
         </div>
 
-        <div
-          className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
-          aria-live="polite"
-          onMouseEnter={() => setIsTeamHovered(true)}
-          onMouseLeave={() => setIsTeamHovered(false)}
-          style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
-          <div
-            className="team-track"
-            onTransitionEnd={handleTeamTrackTransitionEnd}
-            style={disableTrackTransition ? { transition: "none" } : undefined}>
-            {(isMobileTeam
-              ? activeMember
-                ? [activeMember]
-                : []
-              : loopMembers
-            ).map((member, idx) => {
-              const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
-              return (
-                <article
-                  key={`${member.id}-${idx}`}
-                  className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
-                  <div className="team-card-img-wrap">
-                    <img
-                      src={
-                        member.image_url
-                          ? (getTeamImageUrl(member.image_url) ?? "")
-                          : ""
-                      }
-                      alt={member.name || ""}
-                      className="team-card-img"
-                    />
-                  </div>
-                  <div className="team-card-body">
-                    <h3>{member.name}</h3>
-                    <p className="team-card-role">{member.role}</p>
-                    <p className="team-card-bio">{member.bio}</p>
-                  </div>
-                </article>
-              );
-            })}
+        {teamLoading || totalMembers === 0 ? (
+          <div className="team-loading" role="status" aria-live="polite">
+            Loading team members...
           </div>
-        </div>
+        ) : (
+          <div
+            className={`team-carousel${isMobileTeam ? " team-carousel--single" : ""}`}
+            aria-live="polite"
+            onMouseEnter={() => setIsTeamHovered(true)}
+            onMouseLeave={() => setIsTeamHovered(false)}
+            style={{ ["--start-idx"]: startIdx } as React.CSSProperties}>
+            <div
+              className="team-track"
+              onTransitionEnd={handleTeamTrackTransitionEnd}
+              style={disableTrackTransition ? { transition: "none" } : undefined}>
+              {(isMobileTeam
+                ? activeMember
+                  ? [activeMember]
+                  : []
+                : loopMembers
+              ).map((member, idx) => {
+                const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
+                return (
+                  <article
+                    key={`${member.id}-${idx}`}
+                    className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
+                    <div className="team-card-img-wrap">
+                      <img
+                        src={
+                          member.image_url
+                            ? (getTeamImageUrl(member.image_url) ?? "")
+                            : ""
+                        }
+                        alt={member.name || ""}
+                        className="team-card-img"
+                      />
+                    </div>
+                    <div className="team-card-body">
+                      <h3>{member.name}</h3>
+                      <p className="team-card-role">{member.role}</p>
+                      <p className="team-card-bio">{member.bio}</p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </section>
       {/* Our Top Works */}
       <section className="topworks">

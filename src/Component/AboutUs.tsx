@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react'
-import { fetchTeams } from '../api/teams'
-import cbrillianceImg from '../assets/images/cbrilliance.jpg'
+import { fetchTeams, getTeamImageUrl } from '../api/teams'
+import cbrillianceImg from '../assets/images/cbrilliance.png'
 import knowristImg from '../assets/images/knowrist.jpg'
 import josCityImg from '../assets/images/joscity.jpg'
 import designerImg from '../assets/images/designerrrr.png'
 import joinUsImg from '../assets/images/faf5808cbbf8bf77544b1eed718d2e7cbd59dd0f.png'
 import afreshLogoImg from '../assets/images/AfreshLogo.png'
-import felixImg from '../assets/images/MrFelix.JPG'
-import blessingImg from '../assets/images/BlessingWilliams.jpg'
 import jethroImg from '../assets/images/JethroMD.jpg'
-import dominicImg from '../assets/images/DominicRay.JPG'
-import williamImg from '../assets/images/WilliamsBosw.jpg'
-import olaImg from '../assets/images/Ola.png'
-import samImg from '../assets/images/Sam-light.png'
 
 import { SiteFooter, SiteNavbar } from './SharedLayout'
 type TopWork = {
@@ -46,13 +40,6 @@ const imageMap: Record<string, string> = {
     designer: designerImg,
     joinus: joinUsImg,
     afreshlogo: afreshLogoImg,
-    felix: felixImg,
-    blessing: blessingImg,
-    jethro: jethroImg,
-    dominic: dominicImg,
-    william: williamImg,
-    ola: olaImg,
-    sam: samImg,
 }
 
 const getFeaturedIndex = (members: TeamMember[]) => {
@@ -68,85 +55,25 @@ const defaultTopWorks: TopWork[] = [
         id: 'cbrilliance',
         title: 'Cbrilliance',
         description: 'Software development involves collaboration to design, code, test, and maintain userâ€‘friendly applications.',
-        link: '#',
+        link: 'https://cbrilliance.io',
         imgKey: 'cbrilliance',
     },
     {
         id: 'joscity',
         title: 'JosCity',
         description: 'Software development involves collaboration to design, code, test, and maintain userâ€‘friendly applications.',
-        link: '#',
+        link: 'https://joscity.com',
         imgKey: 'joscity',
     },
     {
         id: 'knowrist',
         title: 'Knowrist',
         description: 'Software development involves collaboration to design, code, test, and maintain userâ€‘friendly applications.',
-        link: '#',
+        link: 'https://knowrist.com',
         imgKey: 'knowrist',
     },
 ]
 
-/* â”€â”€ Team members data â”€â”€ */
-const defaultTeamMembers: TeamMember[] = [
-    {
-        id: 'felix',
-        name: 'Felix Nwachukwu',
-        role: 'Hardware Manager',
-        roleColor: '#f68014',
-        bio: 'Oversees the procurement and maintenance of hardware infrastructure, ensuring all systems function efficiently and securely.',
-        imgKey: 'felix',
-    },
-    {
-        id: 'blessing',
-        name: 'Blessing Adukuchilli',
-        role: 'Administrative Manager',
-        roleColor: '#f68014',
-        bio: 'Manages internal documentation, compliance, scheduling, and organizational processes. Ensures smooth administrative operations and supports executive management.',
-        imgKey: 'blessing',
-    },
-    {
-        id: 'jethro',
-        name: "Jethro Mark Da'ar",
-        role: 'Chief Executive Officer (CEO)',
-        roleColor: '#f68014',
-        bio: 'Leads the overall vision, strategic direction, and growth of the company. Oversees major partnerships, financial decisions, and longâ€‘term development initiatives.',
-        imgKey: 'jethro',
-        featured: true,
-    },
-    {
-        id: 'dominic',
-        name: 'Dominic Ray Nanjwan',
-        role: 'General Manager',
-        roleColor: '#f68014',
-        bio: 'Oversees daily operations, coordinating teams and performance goals to ensure all departments function efficiently and meet company objectives.',
-        imgKey: 'dominic',
-    },
-    {
-        id: 'william',
-        name: 'William Bosworth',
-        role: 'Software Manager',
-        roleColor: '#f68014',
-        bio: 'Leads software architecture, system design, and technical innovation across all company platforms.',
-        imgKey: 'william',
-    },
-    {
-        id: 'ola',
-        name: 'Ola Adeyemi',
-        role: 'Creative Director',
-        roleColor: '#f68014',
-        bio: 'Drives brand identity and visual storytelling across all Afresh Centre platforms.',
-        imgKey: 'ola',
-    },
-    {
-        id: 'sam',
-        name: 'Samuel Bright',
-        role: 'Business Development',
-        roleColor: '#f68014',
-        bio: 'Identifies growth opportunities and manages strategic partnerships to expand Afresh Centre’s reach.',
-        imgKey: 'sam',
-    },
-]
 
 /* â”€â”€ Inline SVG icons â”€â”€ */
 
@@ -157,8 +84,9 @@ function AboutUs() {
     const [content, setContent] = useState<AboutContent>({
         heroTitle: defaultHeroTitle,
         topWorks: defaultTopWorks,
-        teamMembers: defaultTeamMembers,
+        teamMembers: [],
     })
+    const [teamLoading, setTeamLoading] = useState(true)
 
     useEffect(() => {
         let isActive = true
@@ -180,23 +108,38 @@ function AboutUs() {
         const fetchTeamsData = async () => {
             try {
                 const teams = await fetchTeams()
-                // Carousel shows 5 at a time and needs at least 7 to slide; keep defaults if API returns fewer
-                const MIN_FOR_CAROUSEL = 7
-                if (!teams.length || teams.length < MIN_FOR_CAROUSEL) return
-                const midIdx = Math.floor((teams.length - 1) / 2)
-                const mapped = teams.map((member, idx) => ({
+                const visibleMembers = teams.filter(
+                    (member) => member.visible !== false && member.status !== 'Inactive'
+                )
+                if (!visibleMembers.length) {
+                    if (!isActive) return
+                    setContent((prev) => ({ ...prev, teamMembers: [] }))
+                    return
+                }
+                const featuredIdx = visibleMembers.findIndex(
+                    (member) =>
+                        member.role?.toLowerCase().includes('ceo') ||
+                        member.role?.toLowerCase().includes('chief executive')
+                )
+                const mapped = visibleMembers.map((member, idx) => ({
                     id: member.id ?? `${member.name ?? 'member'}-${idx}`,
                     name: member.name ?? 'Team Member',
                     role: member.role ?? 'Team',
                     roleColor: '#f68014',
                     bio: member.bio ?? '',
-                    imgKey: member.image_url ?? member.id ?? '',
-                    featured: idx === midIdx,
+                    imgKey: getTeamImageUrl(member.image_url) ?? member.image_url ?? member.id ?? '',
+                    featured: idx === featuredIdx && featuredIdx >= 0,
                 }))
                 if (!isActive) return
                 setContent((prev) => ({ ...prev, teamMembers: mapped }))
             } catch {
-                /* fall back to defaults */
+                if (isActive) {
+                    setContent((prev) => ({ ...prev, teamMembers: [] }))
+                }
+            } finally {
+                if (isActive) {
+                    setTeamLoading(false)
+                }
             }
         }
         fetchAbout()
@@ -416,7 +359,9 @@ function AboutUs() {
                                 <div className="work-card-body">
                                     <h3>{work.title}</h3>
                                     <p>{work.description}</p>
-                                    <a href={work.link} className="work-card-btn" role="button">Visit</a>
+                                    <a href={work.link} className="work-card-btn" role="button" target="_blank" rel="noreferrer">
+                                        Visit
+                                    </a>
                                 </div>
                             </article>
                         )
@@ -453,7 +398,7 @@ function AboutUs() {
                     </div>
                     <div className="ceo-img-wrap">
                         <img
-                            src={designerImg}
+                            src={jethroImg}
                             alt="Jethro Mark Da'ar â€“ CEO of Afresh Centre"
                             className="ceo-img"
                         />
@@ -488,42 +433,48 @@ function AboutUs() {
                     </div>
                 </div>
 
-                <div
-                    className={`team-carousel${isMobileTeam ? ' team-carousel--single' : ''}`}
-                    aria-live="polite"
-                    onMouseEnter={() => setIsTeamHovered(true)}
-                    onMouseLeave={() => setIsTeamHovered(false)}
-                    style={{ ['--start-idx']: startIdx } as React.CSSProperties}
-                >
-                    <div
-                        className="team-track"
-                        onTransitionEnd={handleTrackTransitionEnd}
-                        style={disableTrackTransition ? { transition: 'none' } : undefined}
-                    >
-                        {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
-                            const isFeatured = isMobileTeam || idx === loopFeaturedIndex
-                            return (
-                                <article
-                                    key={`${member.id}-${idx}`}
-                                    className={`team-card${isFeatured ? ' team-card--featured' : ''}`}
-                                >
-                                    <div className="team-card-img-wrap">
-                                        <img
-                                            src={imageMap[member.imgKey] ?? member.imgKey}
-                                            alt={member.name}
-                                            className="team-card-img"
-                                        />
-                                    </div>
-                                    <div className="team-card-body">
-                                        <h3>{member.name}</h3>
-                                        <p className="team-card-role">{member.role}</p>
-                                        <p className="team-card-bio">{member.bio}</p>
-                                    </div>
-                                </article>
-                            )
-                        })}
+                {teamLoading || totalMembers === 0 ? (
+                    <div className="team-loading" role="status" aria-live="polite">
+                        Loading team members...
                     </div>
-                </div>
+                ) : (
+                    <div
+                        className={`team-carousel${isMobileTeam ? ' team-carousel--single' : ''}`}
+                        aria-live="polite"
+                        onMouseEnter={() => setIsTeamHovered(true)}
+                        onMouseLeave={() => setIsTeamHovered(false)}
+                        style={{ ['--start-idx']: startIdx } as React.CSSProperties}
+                    >
+                        <div
+                            className="team-track"
+                            onTransitionEnd={handleTrackTransitionEnd}
+                            style={disableTrackTransition ? { transition: 'none' } : undefined}
+                        >
+                            {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
+                                const isFeatured = isMobileTeam || idx === loopFeaturedIndex
+                                return (
+                                    <article
+                                        key={`${member.id}-${idx}`}
+                                        className={`team-card${isFeatured ? ' team-card--featured' : ''}`}
+                                    >
+                                        <div className="team-card-img-wrap">
+                                            <img
+                                                src={imageMap[member.imgKey] ?? member.imgKey}
+                                                alt={member.name}
+                                                className="team-card-img"
+                                            />
+                                        </div>
+                                        <div className="team-card-body">
+                                            <h3>{member.name}</h3>
+                                            <p className="team-card-role">{member.role}</p>
+                                            <p className="team-card-bio">{member.bio}</p>
+                                        </div>
+                                    </article>
+                                )
+                            })}
+                        </div>
+                    </div>
+                )}
             </section>
 
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
