@@ -10,6 +10,7 @@ import {
   type ServiceItem,
 } from "../api/services";
 import { ReadyToGetStartedCard } from "./ReadyToGetStartedCard";
+import { useStaggerReveal } from "../hooks/useScrollReveal";
 
 function Services() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +54,8 @@ function Services() {
     setSearchParams({ id: service.id });
   };
 
+  const servicesStagger = useStaggerReveal(services.length || 6);
+
   return (
     <main className="services-page">
       {!detailService && (
@@ -65,7 +68,7 @@ function Services() {
             <div className="services-hero-overlay" />
             <SiteNavbar />
             <div className="services-hero-content">
-              <h1>Our Services</h1>
+              <h1 className="hero-anim-title">Our Services</h1>
             </div>
           </header>
 
@@ -88,9 +91,11 @@ function Services() {
               <p className="services-loading">Loading services…</p>
             ) : (
               <section className="services-section">
-                <div className="services-grid">
-                  {services.map((service) => (
-                    <article key={service.id} className="service-card">
+                <div ref={servicesStagger.ref} className="services-grid">
+                  {services.map((service, idx) => (
+                    <article
+                      key={service.id}
+                      className={`service-card reveal${idx < servicesStagger.visibleCount ? ` is-visible reveal--d${Math.min(idx + 1, 6)}` : ""}`}>
                       {getServiceImageUrl(service.image) ? (
                         <img
                           src={getServiceImageUrl(service.image) ?? ""}

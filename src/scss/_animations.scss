@@ -1,0 +1,240 @@
+/* ============================================================
+   GLOBAL ANIMATION UTILITIES
+   ============================================================ */
+
+/* ── Base: all reveal targets start hidden ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Variants ── */
+.reveal--left {
+  transform: translateX(-32px);
+}
+.reveal--left.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--right {
+  transform: translateX(32px);
+}
+.reveal--right.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--scale {
+  transform: scale(0.92);
+}
+.reveal--scale.is-visible {
+  transform: scale(1);
+}
+
+/* ── Stagger delays (applied via --delay CSS var or nth‑child) ── */
+.reveal--d1 { transition-delay: 0.08s; }
+.reveal--d2 { transition-delay: 0.18s; }
+.reveal--d3 { transition-delay: 0.28s; }
+.reveal--d4 { transition-delay: 0.38s; }
+.reveal--d5 { transition-delay: 0.48s; }
+.reveal--d6 { transition-delay: 0.58s; }
+
+/* ── Hero entrance (plays on mount, no JS needed) ── */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hero-anim-title {
+  animation: hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+.hero-anim-sub {
+  animation: hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.42s both;
+}
+.hero-anim-btns {
+  animation: hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+}
+.hero-anim-social {
+  animation: hero-fade-in 1s ease 0.9s both;
+}
+
+/* ── Parallax container ── */
+.parallax-hero {
+  will-change: background-position;
+}
+
+/* ── Smooth CTA hover glow ── */
+.btn-glow {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease !important;
+}
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(246, 128, 20, 0.45);
+}
+.btn-glow:active {
+  transform: translateY(0);
+}
+
+/* ── Floating badge (infinite gentle hover) ── */
+@keyframes float-badge {
+  0%, 100% { transform: translateY(0px);   }
+  50%       { transform: translateY(-8px);  }
+}
+
+.float-anim {
+  animation: float-badge 3.2s ease-in-out infinite;
+}
+
+/* ── Typewriter cursor blink ── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  margin-left: 4px;
+  background: currentColor;
+  animation: blink 0.75s step-start infinite;
+  vertical-align: middle;
+  height: 0.85em;
+}
+
+/* ── 3D tilt: ensure parent sets perspective ── */
+.tilt-parent {
+  perspective: 800px;
+}
+
+/* ══════════════════════════════════════════════
+   LOGO TICKER  (infinite scroll left)
+══════════════════════════════════════════════ */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 18s linear infinite;
+  will-change: transform;
+  &:hover { animation-play-state: paused; }
+}
+.ticker-viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+/* ══════════════════════════════════════════════
+   WORKS TILE – hover image lift + overlay
+══════════════════════════════════════════════ */
+.works-tile {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.32s ease;
+  &:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+    .works-tile-overlay { opacity: 1; }
+    .works-tile-image { transform: scale(1.08); }
+  }
+  .works-tile-image { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+}
+.works-tile-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(246, 128, 20, 0.78) 0%, rgba(10, 30, 50, 0.72) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+  span {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   FORM INPUT – animated orange focus underline
+══════════════════════════════════════════════ */
+.input-anim {
+  position: relative;
+  input, textarea {
+    border-bottom: 2px solid transparent !important;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
+    &:focus {
+      border-bottom-color: #f68014 !important;
+      box-shadow: 0 2px 0 0 rgba(246, 128, 20, 0.25) !important;
+      outline: none !important;
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════
+   SUCCESS CHECKMARK (SVG draw animation)
+══════════════════════════════════════════════ */
+.success-check-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 0 10px;
+  animation: hero-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.success-check-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(246, 128, 20, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.success-check-svg { width: 36px; height: 36px; }
+.success-check-path {
+  stroke: #f68014;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: draw-check 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+@keyframes draw-check { to { stroke-dashoffset: 0; } }
+.success-check-msg {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f68014;
+  text-align: center;
+}
+

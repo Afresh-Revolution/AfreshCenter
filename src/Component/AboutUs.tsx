@@ -7,8 +7,9 @@ import designerImg from '../assets/images/designerrrr.png'
 import joinUsImg from '../assets/images/faf5808cbbf8bf77544b1eed718d2e7cbd59dd0f.png'
 import afreshLogoImg from '../assets/images/AfreshLogo.png'
 import jethroImg from '../assets/images/JethroMD.jpg'
-
+import { useScrollReveal, useStaggerReveal } from '../hooks/useScrollReveal'
 import { SiteFooter, SiteNavbar } from './SharedLayout'
+
 type TopWork = {
     id: string
     title: string
@@ -235,6 +236,16 @@ function AboutUs() {
             : -1
     const activeMember = activeIdx >= 0 ? members[activeIdx] : null
 
+    // ── Scroll-reveal refs ──
+    const introReveal = useScrollReveal()
+    const storyReveal = useScrollReveal()
+    const missionReveal = useScrollReveal()
+    const visionReveal = useScrollReveal()
+    const worksReveal = useStaggerReveal(3)
+    const ceoReveal = useScrollReveal()
+    const teamReveal = useScrollReveal()
+    const joinReveal = useScrollReveal()
+
     return (
         <main className="about-page">
             <SiteNavbar />
@@ -263,7 +274,7 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           INTRO
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="about-intro" aria-label="Introduction">
+            <section ref={introReveal.ref} className={`about-intro reveal${introReveal.isVisible ? ' is-visible' : ''}`} aria-label="Introduction">
                 <p>
                     Afresh centre is a dynamic innovation hub committed to empowering Africa's next generation of entrepreneurs,
                     creators, athletes, and tech leaders.
@@ -281,7 +292,7 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR STORY
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="about-section about-section--light about-section--soft" aria-label="Our Story">
+            <section ref={storyReveal.ref} className={`about-section about-section--light about-section--soft reveal${storyReveal.isVisible ? ' is-visible' : ''}`} aria-label="Our Story">
                 <div className="about-two-col">
                     <div className="about-text-col">
                         <h2 className="section-label">OUR STORY</h2>
@@ -303,7 +314,7 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR MISSION
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="about-section about-section--light" aria-label="Our Mission">
+            <section ref={missionReveal.ref} className={`about-section about-section--light reveal${missionReveal.isVisible ? ' is-visible' : ''}`} aria-label="Our Mission">
                 <div className="about-two-col about-two-col--reversed">
                     <div className="about-img-col">
                         <div
@@ -322,7 +333,7 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR VISION
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="about-section about-section--light about-section--soft" aria-label="Our Vision">
+            <section ref={visionReveal.ref} className={`about-section about-section--light about-section--soft reveal${visionReveal.isVisible ? ' is-visible' : ''}`} aria-label="Our Vision">
                 <div className="about-two-col">
                     <div className="about-text-col">
                         <h2 className="section-label">OUR VISION</h2>
@@ -341,16 +352,16 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           OUR TOP WORKS
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="about-works" aria-label="Our Top Works">
+            <section ref={worksReveal.ref} className="about-works" aria-label="Our Top Works">
                 <div className="works-header">
                     <h2>Our Top Works</h2>
                     <p>Committed experts eager to revolutionize education using innovative technology.</p>
                 </div>
                 <div className="works-grid">
-                    {content.topWorks.map((work) => {
+                    {content.topWorks.map((work, idx) => {
                         const workImg = imageMap[work.imgKey] ?? work.imgKey
                         return (
-                            <article key={work.id} className="work-card">
+                            <article key={work.id} className={`work-card reveal${idx < worksReveal.visibleCount ? ` is-visible reveal--d${idx + 1}` : ''}`}>
                                 <div
                                     className="work-card-img"
                                     aria-label={`${work.title} project image`}
@@ -372,7 +383,7 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           INTRODUCING OUR CEO
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="ceo-section" aria-label="Introducing Our CEO">
+            <section ref={ceoReveal.ref} className={`ceo-section reveal${ceoReveal.isVisible ? ' is-visible' : ''}`} aria-label="Introducing Our CEO">
                 <div className="ceo-inner">
                     <div className="ceo-text">
                         <h2 className="ceo-heading">Introducing Our Chief Executive Officer</h2>
@@ -409,7 +420,7 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           MEET OUR TEAM
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="team-section" aria-label="Meet Our Team">
+            <section ref={teamReveal.ref} className={`team-section reveal${teamReveal.isVisible ? ' is-visible' : ''}`} aria-label="Meet Our Team">
                 <div className="team-header">
                     <h2>Meet Our Team</h2>
                     <p>Dedicated professionals passionate about transforming education through technology.</p>
@@ -480,7 +491,7 @@ function AboutUs() {
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           JOIN US
       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <section className="join-section" aria-label="Join Us">
+            <section ref={joinReveal.ref} className={`join-section reveal${joinReveal.isVisible ? ' is-visible' : ''}`} aria-label="Join Us">
                 <div className="join-inner">
                     <div className="join-img-wrap">
                         <img

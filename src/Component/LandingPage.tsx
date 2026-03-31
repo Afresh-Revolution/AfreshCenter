@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import heroBackground from "../assets/images/Background-Image.png";
-import afLogo from "../assets/images/af 1.png";
 import cbLogo from "../assets/images/cb 1.png";
 import gwaveLogo from "../assets/images/gwave 1.png";
 import popsLogo from "../assets/images/pops 1.png";
 import knowristLogo from "../assets/images/knowrist 1.png";
+import nabLogo from "../assets/images/NAB.jpg";
 import aboutImageLeft from "../assets/images/Image-Box-1.png";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
 import {
@@ -22,11 +22,15 @@ import olaImage from "../assets/images/Ola.png";
 import samLightImage from "../assets/images/Sam-light.jpg";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
 import { sendContact } from "../api/contact";
+import { useScrollReveal, useStaggerReveal } from "../hooks/useScrollReveal";
+import { useCountUp } from "../hooks/useCountUp";
+import { useTypewriter } from "../hooks/useTypewriter";
+import { TiltCard } from "./TiltCard";
 
 function LandingPage() {
   const affiliatedCompanies = [
     { name: "CBrilliance", logo: cbLogo },
-    { name: "Afresh", logo: afLogo },
+    { name: "NAB", logo: nabLogo, href: "https://aibuilders.ng", className: "brand-item--nab" },
     { name: "GeniusWave", logo: gwaveLogo },
     { name: "Popswit", logo: popsLogo },
     { name: "Knowrist", logo: knowristLogo },
@@ -42,14 +46,10 @@ function LandingPage() {
   useEffect(() => {
     let cancelled = false;
 
-    // Fetch services
     fetchPublicServices()
-      .then((list) => {
-        if (!cancelled) setLandingServices(list);
-      })
+      .then((list) => { if (!cancelled) setLandingServices(list); })
       .catch(() => {});
 
-    // Fetch teams
     fetchTeams()
       .then((list) => {
         if (!cancelled) {
@@ -69,33 +69,17 @@ function LandingPage() {
         }
       })
       .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setTeamLoading(false);
-      });
+      .finally(() => { if (!cancelled) setTeamLoading(false); });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   const topWorkTiles = [
     { type: "image", title: "vann", image: ourWork1 },
-    {
-      type: "text",
-      title: "consectet",
-      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod temp.",
-    },
+    { type: "text", title: "consectet", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod temp." },
     { type: "image", title: "delivery", image: ourWork2 },
-    {
-      type: "textHighlight",
-      title: "7.9%",
-      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.",
-    },
-    {
-      type: "text",
-      title: "voluptat",
-      body: "to be welcomed and every pain in certain.",
-    },
+    { type: "textHighlight", title: "7.9%", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do." },
+    { type: "text", title: "voluptat", body: "to be welcomed and every pain in certain." },
     { type: "image", title: "sos", image: ourWork3 },
   ];
 
@@ -143,11 +127,7 @@ function LandingPage() {
   const [isTeamHovered, setIsTeamHovered] = useState(false);
   const [teamTickSeed, setTeamTickSeed] = useState(0);
   const [contactForm, setContactForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
+    name: "", email: "", phone: "", subject: "", message: "",
   });
   const [contactStatus, setContactStatus] = useState<
     "idle" | "sending" | "success" | "error"
@@ -187,9 +167,7 @@ function LandingPage() {
 
   useEffect(() => {
     if (!disableTrackTransition) return;
-    const raf = window.requestAnimationFrame(() =>
-      setDisableTrackTransition(false),
-    );
+    const raf = window.requestAnimationFrame(() => setDisableTrackTransition(false));
     return () => window.cancelAnimationFrame(raf);
   }, [disableTrackTransition]);
 
@@ -224,9 +202,7 @@ function LandingPage() {
       setContactForm((prev) => ({ ...prev, [field]: event.target.value }));
     };
 
-  const handleContactSubmit = async (
-    event: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleContactSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setContactStatus("sending");
     setContactStatusMessage("");
@@ -240,13 +216,7 @@ function LandingPage() {
     if (response.success) {
       setContactStatus("success");
       setContactStatusMessage(response.message ?? "Message sent successfully.");
-      setContactForm({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-      });
+      setContactForm({ name: "", email: "", phone: "", subject: "", message: "" });
     } else {
       setContactStatus("error");
       setContactStatusMessage(response.message ?? "Failed to send message.");
@@ -258,22 +228,19 @@ function LandingPage() {
       name: "Samuel Light",
       role: "Full stack Dev",
       image: samLightImage,
-      quote:
-        "At our tech hub, we embrace innovation and creativity, ensuring that every challenge is met with a solution. Our team is dedicated to providing exceptional service, making it easy for you to navigate the complexities of technology.",
+      quote: "At our tech hub, we embrace innovation and creativity, ensuring that every challenge is met with a solution. Our team is dedicated to providing exceptional service, making it easy for you to navigate the complexities of technology.",
     },
     {
       name: "Ola Adeyemi",
       role: "Creative Director",
       image: olaImage,
-      quote:
-        "Afresh Centre helped our team move faster with clearer priorities and better collaboration. The experience felt structured, supportive, and focused on real outcomes.",
+      quote: "Afresh Centre helped our team move faster with clearer priorities and better collaboration. The experience felt structured, supportive, and focused on real outcomes.",
     },
     {
       name: "Afresh Team",
       role: "Product & Strategy",
       image: aboutImageRight,
-      quote:
-        "We value long-term partnerships built on trust and measurable progress. The process is transparent and the results speak for themselves.",
+      quote: "We value long-term partnerships built on trust and measurable progress. The process is transparent and the results speak for themselves.",
     },
   ];
 
@@ -284,9 +251,7 @@ function LandingPage() {
 
   const handleTestimonialPrev = () => {
     if (totalTestimonials < 2) return;
-    setActiveTestimonialIndex((i) =>
-      (i - 1 + totalTestimonials) % totalTestimonials,
-    );
+    setActiveTestimonialIndex((i) => (i - 1 + totalTestimonials) % totalTestimonials);
     setTestimonialTickSeed((s) => s + 1);
   };
 
@@ -306,85 +271,112 @@ function LandingPage() {
     return () => window.clearInterval(id);
   }, [isTestimonialHovered, totalTestimonials, testimonialTickSeed]);
 
+  // ── Scroll-reveal refs ──
+  const aboutSection = useScrollReveal<HTMLElement>();
+  const servicesSection = useStaggerReveal<HTMLElement>(6);
+  const teamSection = useScrollReveal<HTMLElement>();
+  const worksSection = useScrollReveal<HTMLElement>();
+  const contactSection = useScrollReveal<HTMLElement>();
+  const getstartedSection = useScrollReveal<HTMLElement>();
+  const { ref: countRef, count: projectCount } = useCountUp(100);
+
+  // ── Typewriter ──
+  const HERO_TEXT = "EMPOWERING AFRICA THROUGH INNOVATION AND CREATIVITY";
+  const { displayed: typedHero, done: typingDone } = useTypewriter(HERO_TEXT, 38, 400);
+
+  // ── Parallax on hero ──
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div className="landingPage">
-      {/* Navbar (exact from screenshot)  */}
-      <SiteNavbar />
+      <SiteNavbar ctaComingSoonMessage="Coming soon on the 7th of April" />
 
-      {/* Hero (exact copy)  */}
+      {/* Hero with entrance animations + parallax */}
       <header
-        className="hero"
+        className="hero parallax-hero"
         style={{
           backgroundImage: `url(${heroBackground})`,
+          backgroundPositionY: `calc(50% + ${scrollY * 0.3}px)`,
         }}>
         <div className="hero-content">
-          <h1>EMPOWERING AFRICA THROUGH INNOVATION AND CREATIVITY</h1>
-          <p>
+          <h1 className="hero-anim-title">
+            {typedHero}
+            {!typingDone && <span className="typewriter-cursor" aria-hidden="true" />}
+          </h1>
+          <p className="hero-anim-sub">
             AfRESH Center Is A Revolutionary Entrepreneurial Support Hub
             Delivering Technology, Media, Sports, and Entertainment Solutions
             That Drive Real Impact.
           </p>
-          <div className="btn-group">
-            <Link to="/about" className="btn btn-primary">
+          <div className="btn-group hero-anim-btns">
+            <Link to="/about" className="btn btn-primary btn-glow">
               Learn more
             </Link>
-            <Link to="/wailin" className="btn btn-outline">
+            <Link to="/wailin" className="btn btn-outline btn-glow">
               Wailin
             </Link>
           </div>
         </div>
-        <div className="hero-social">
-          <a href="#" aria-label="Facebook">
-            <i className="fab fa-facebook-f" aria-hidden="true" />
-          </a>
-          <a href="#" aria-label="Twitter">
-            <i className="fab fa-twitter" aria-hidden="true" />
-          </a>
-          <a href="#" aria-label="Instagram">
+        <div className="hero-social hero-anim-social">
+          <a href="https://www.instagram.com/afreshcenter?igsh=MXdweGsxOGU4Z2hidQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
             <i className="fab fa-instagram" aria-hidden="true" />
           </a>
-          <a href="#" aria-label="LinkedIn">
-            <i className="fab fa-linkedin-in" aria-hidden="true" />
+          <a href="https://x.com/afresh_center?s=21" aria-label="X" target="_blank" rel="noopener noreferrer">
+            <i className="fab fa-x-twitter" aria-hidden="true" />
+          </a>
+          <a href="https://wa.me/2348109151921" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+            <i className="fab fa-whatsapp" aria-hidden="true" />
           </a>
         </div>
       </header>
 
-      {/* Our Affiliated Companies  */}
+      {/* Our Affiliated Companies */}
       <section className="affiliated">
-        <h4>Our Affiliated Companies</h4>
+        <h4 className="reveal is-visible">Our Affiliated Companies</h4>
         <div className="brand-strip">
           {affiliatedCompanies.map((company) => (
-            <div className="brand-item" key={company.name}>
-              <img src={company.logo} alt={company.name} />
+            <div className={`brand-item${company.className ? ` ${company.className}` : ""}`} key={company.name}>
+              {company.href ? (
+                <a href={company.href} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${company.name}`}>
+                  <img src={company.logo} alt={company.name} />
+                </a>
+              ) : (
+                <img src={company.logo} alt={company.name} />
+              )}
             </div>
           ))}
         </div>
       </section>
 
-      {/* About us  */}
-      <section className="about container">
+      {/* About us */}
+      <section ref={aboutSection.ref} className={`about container reveal${aboutSection.isVisible ? " is-visible" : ""}`}>
         <div className="about-grid">
           <div className="about-text">
             <h2>About us</h2>
             <p>
               Afresh centre is a dynamic innovation hub committed to empowering
-              Africa’s next generation of entrepreneurs, creators, athletes, and
+              Africa's next generation of entrepreneurs, creators, athletes, and
               tech leaders. We exist to bridge opportunity gaps by combining
               technology, media, sports, and entertainment into one powerful
               ecosystem designed to support growth, creativity, and sustainable
-              impact. At AfRESH, we don’t just offer services — we build
+              impact. At AfRESH, we don't just offer services — we build
               platforms, create opportunities, and drive transformation.
             </p>
-            <button type="button" className="read-more-link">
+            <Link to="/about" className="read-more-link">
               Read More...
-            </button>
+            </Link>
           </div>
           <div className="about-visual">
             <div className="about-photo about-photo-left">
               <img src={aboutImageLeft} alt="Afresh team collaboration" />
             </div>
-            <div className="about-count-badge">
-              <span className="about-count-number">100+</span>
+            <div className="about-count-badge float-anim">
+              <span ref={countRef as React.RefObject<HTMLSpanElement>} className="about-count-number">{projectCount}+</span>
               <span className="about-count-text">Completed Projects</span>
             </div>
             <div className="about-photo about-photo-right">
@@ -394,13 +386,15 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Our Services — fetched from API, links to /services and detail  */}
-      <section className="services-preview">
+      {/* Our Services */}
+      <section ref={servicesSection.ref} className="services-preview">
         <div className="container">
-          <h2 className="section-title">Our Services</h2>
-          <div className="service-cards">
-            {landingServices.slice(0, SERVICES_PREVIEW_COUNT).map((service) => (
-              <article className="service-card" key={service.id}>
+          <h2 className="section-title reveal is-visible">Our Services</h2>
+          <div className="service-cards tilt-parent">
+            {landingServices.slice(0, SERVICES_PREVIEW_COUNT).map((service, idx) => (
+              <TiltCard
+                className={`service-card reveal${idx < servicesSection.visibleCount ? ` is-visible reveal--d${Math.min(idx + 1, 6)}` : ""}`}
+                key={service.id}>
                 {getServiceImageUrl(service.image) ? (
                   <img
                     src={getServiceImageUrl(service.image) ?? ""}
@@ -414,15 +408,12 @@ function LandingPage() {
                 )}
                 <h3>{service.title}</h3>
                 <p>
-                  {service.description ||
-                    "Contact us for more details about this service."}
+                  {service.description || "Contact us for more details about this service."}
                 </p>
-                <Link
-                  to={`/services?id=${service.id}`}
-                  className="service-learn-btn">
+                <Link to={`/services?id=${service.id}`} className="service-learn-btn">
                   Learn More
                 </Link>
-              </article>
+              </TiltCard>
             ))}
           </div>
           <div className="view-all">
@@ -432,8 +423,9 @@ function LandingPage() {
           </div>
         </div>
       </section>
-      {/* Meet Our Team  */}
-      <section className="team-section" aria-label="Meet Our Team">
+
+      {/* Meet Our Team */}
+      <section ref={teamSection.ref} className={`team-section reveal${teamSection.isVisible ? " is-visible" : ""}`} aria-label="Meet Our Team">
         <div className="team-header">
           <h2>Meet Our Team</h2>
           <p>
@@ -474,9 +466,7 @@ function LandingPage() {
               onTransitionEnd={handleTeamTrackTransitionEnd}
               style={disableTrackTransition ? { transition: "none" } : undefined}>
               {(isMobileTeam
-                ? activeMember
-                  ? [activeMember]
-                  : []
+                ? activeMember ? [activeMember] : []
                 : loopMembers
               ).map((member, idx) => {
                 const isFeatured = isMobileTeam || idx === loopFeaturedIndex;
@@ -486,11 +476,7 @@ function LandingPage() {
                     className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
                     <div className="team-card-img-wrap">
                       <img
-                        src={
-                          member.image_url
-                            ? (getTeamImageUrl(member.image_url) ?? "")
-                            : ""
-                        }
+                        src={member.image_url ? (getTeamImageUrl(member.image_url) ?? "") : ""}
                         alt={member.name || ""}
                         className="team-card-img"
                       />
@@ -507,8 +493,9 @@ function LandingPage() {
           </div>
         )}
       </section>
+
       {/* Our Top Works */}
-      <section className="topworks">
+      <section ref={worksSection.ref} className={`topworks reveal${worksSection.isVisible ? " is-visible" : ""}`}>
         <div className="container topworks-container">
           <div className="works-header">
             <h2>Our Top Works</h2>
@@ -523,11 +510,14 @@ function LandingPage() {
                 key={`${tile.title}-${idx}`}
                 className={`works-tile works-tile-${tile.type}`}>
                 {tile.type === "image" ? (
-                  <img
-                    src={tile.image}
-                    alt={tile.title}
-                    className="works-tile-image"
-                  />
+                  <>
+                    <img
+                      src={tile.image}
+                      alt={tile.title}
+                      className="works-tile-image"
+                    />
+                    <div className="works-tile-overlay"><span>{tile.title}</span></div>
+                  </>
                 ) : (
                   <>
                     <h3>{tile.title}</h3>
@@ -555,11 +545,7 @@ function LandingPage() {
               </ul>
             </div>
             <div className="why-choose-image-wrap">
-              <img
-                src={olaImage}
-                alt="Why choose us"
-                className="why-choose-image"
-              />
+              <img src={olaImage} alt="Why choose us" className="why-choose-image" />
             </div>
           </div>
 
@@ -576,18 +562,10 @@ function LandingPage() {
               <h4>{activeTestimonial.name}</h4>
               <p>{activeTestimonial.role}</p>
               <div className="testimonial-mini-nav">
-                <button
-                  type="button"
-                  aria-label="Previous testimonial"
-                  onClick={handleTestimonialPrev}
-                  disabled={totalTestimonials < 2}>
+                <button type="button" aria-label="Previous testimonial" onClick={handleTestimonialPrev} disabled={totalTestimonials < 2}>
                   &larr;
                 </button>
-                <button
-                  type="button"
-                  aria-label="Next testimonial"
-                  onClick={handleTestimonialNext}
-                  disabled={totalTestimonials < 2}>
+                <button type="button" aria-label="Next testimonial" onClick={handleTestimonialNext} disabled={totalTestimonials < 2}>
                   &rarr;
                 </button>
               </div>
@@ -599,79 +577,58 @@ function LandingPage() {
           </div>
         </div>
       </section>
+
       {/* Get in Touch with Us */}
-      <section className="contact-section">
+      <section ref={contactSection.ref} className={`contact-section reveal${contactSection.isVisible ? " is-visible" : ""}`}>
         <div className="container contact-wrap">
           <form className="contact-form-panel" onSubmit={handleContactSubmit}>
             <h3>Get in Touch with Us</h3>
             <div className="form-row">
-              <div className="input-group">
+              <div className="input-group input-anim">
                 <label>Name</label>
-                <input
-                  type="text"
-                  placeholder="Enter name"
-                  value={contactForm.name}
-                  onChange={handleContactChange("name")}
-                  required
-                />
+                <input type="text" placeholder="Enter name" value={contactForm.name} onChange={handleContactChange("name")} required />
               </div>
-              <div className="input-group">
+              <div className="input-group input-anim">
                 <label>Email</label>
-                <input
-                  type="email"
-                  placeholder="Enter Email"
-                  value={contactForm.email}
-                  onChange={handleContactChange("email")}
-                  required
-                />
+                <input type="email" placeholder="Enter Email" value={contactForm.email} onChange={handleContactChange("email")} required />
               </div>
             </div>
             <div className="form-row">
-              <div className="input-group">
+              <div className="input-group input-anim">
                 <label>Phone Number</label>
-                <input
-                  type="text"
-                  placeholder="Enter number"
-                  value={contactForm.phone}
-                  onChange={handleContactChange("phone")}
-                  required
-                />
+                <input type="text" placeholder="Enter number" value={contactForm.phone} onChange={handleContactChange("phone")} required />
               </div>
-              <div className="input-group">
+              <div className="input-group input-anim">
                 <label>Subject</label>
-                <input
-                  type="text"
-                  placeholder="Enter Subject"
-                  value={contactForm.subject}
-                  onChange={handleContactChange("subject")}
-                  required
-                />
+                <input type="text" placeholder="Enter Subject" value={contactForm.subject} onChange={handleContactChange("subject")} required />
               </div>
             </div>
-            <div className="input-group">
+            <div className="input-group input-anim">
               <label>Message</label>
-              <textarea
-                placeholder="Write your message"
-                value={contactForm.message}
-                onChange={handleContactChange("message")}
-                required></textarea>
+              <textarea placeholder="Write your message" value={contactForm.message} onChange={handleContactChange("message")} required></textarea>
             </div>
-            <button
-              className="submit-btn"
-              type="submit"
-              disabled={contactStatus === "sending"}>
+            <button className="submit-btn" type="submit" disabled={contactStatus === "sending"}>
               Submit
             </button>
-            {contactStatus !== "idle" && (
+            {contactStatus === "success" ? (
+              <div className="success-check-wrap" role="status" aria-live="polite">
+                <div className="success-check-circle">
+                  <svg className="success-check-svg" viewBox="0 0 36 36">
+                    <path className="success-check-path" d="M6 18 L14 26 L30 10" />
+                  </svg>
+                </div>
+                <p className="success-check-msg">{contactStatusMessage}</p>
+              </div>
+            ) : contactStatus === "error" ? (
               <p className="form-status" role="status" aria-live="polite">
                 {contactStatusMessage}
               </p>
-            )}
+            ) : null}
 
             <div className="contact-meta">
               <div className="contact-chip">
                 <i className="fas fa-phone"></i>
-                <span>+03586907042</span>
+                <span>+234 810 915 1921</span>
               </div>
               <div className="contact-chip">
                 <i className="fas fa-envelope"></i>
@@ -679,28 +636,22 @@ function LandingPage() {
               </div>
               <div className="contact-chip">
                 <i className="fas fa-map-pin"></i>
-                <span>N0-2344 OIL AIRPORT ROUNDABOUT JOS, PLATEAU STATE</span>
+                <span>No.50, Chanel 7, opposite Nasco foods, Jos Plateau State.</span>
               </div>
             </div>
 
             <div className="contact-social">
               <p>Follow our social media</p>
               <div className="social-row">
-                <button type="button" aria-label="Facebook">
-                  <i className="fab fa-facebook-f"></i>
-                </button>
-                <button type="button" aria-label="Twitter">
-                  <i className="fab fa-twitter"></i>
-                </button>
-                <button type="button" aria-label="Instagram">
+                <a href="https://www.instagram.com/afreshcenter?igsh=MXdweGsxOGU4Z2hidQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                   <i className="fab fa-instagram"></i>
-                </button>
-                <button type="button" aria-label="LinkedIn">
-                  <i className="fab fa-linkedin-in"></i>
-                </button>
-                <button type="button" aria-label="YouTube">
-                  <i className="fab fa-youtube"></i>
-                </button>
+                </a>
+                <a href="https://x.com/afresh_center?s=21" aria-label="X" target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-x-twitter"></i>
+                </a>
+                <a href="https://wa.me/2348109151921" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-whatsapp"></i>
+                </a>
               </div>
             </div>
           </form>
@@ -716,15 +667,16 @@ function LandingPage() {
       </section>
 
       {/* GET STARTED NOW */}
-      <section className="getstarted-banner">
+      <section ref={getstartedSection.ref} className={`getstarted-banner reveal--scale reveal${getstartedSection.isVisible ? " is-visible" : ""}`}>
         <div className="container getstarted-inner">
           <h2>GET STARTED NOW</h2>
-          <Link to="/services" className="getstarted-btn">
+          <Link to="/services" className="getstarted-btn btn-glow">
             Get Started
           </Link>
         </div>
       </section>
-      {/* footer with extra details  */}
+
+      {/* Footer */}
       <SiteFooter />
     </div>
   );

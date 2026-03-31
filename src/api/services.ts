@@ -18,17 +18,35 @@ export interface ServiceItem {
   whatYouGet?: string[];
 }
 
+type ServiceCollectionResponse =
+  | ServiceItem[]
+  | {
+      value?: ServiceItem[];
+      data?: ServiceItem[];
+      items?: ServiceItem[];
+    };
+
+function parseServiceCollection(payload: ServiceCollectionResponse): ServiceItem[] {
+  if (Array.isArray(payload)) return payload;
+  if (payload && Array.isArray(payload.value)) return payload.value;
+  if (payload && Array.isArray(payload.data)) return payload.data;
+  if (payload && Array.isArray(payload.items)) return payload.items;
+  return [];
+}
+
 export async function fetchServices(): Promise<ServiceItem[]> {
   const res = await fetch(`${API_BASE}/api/admin/services`);
   if (!res.ok) throw new Error('Failed to fetch services');
-  return res.json();
+  const data = (await res.json()) as ServiceCollectionResponse;
+  return parseServiceCollection(data);
 }
 
 /** Fetch visible services for the landing page (public). */
 export async function fetchPublicServices(): Promise<ServiceItem[]> {
   const res = await fetch(`${API_BASE}/api/services`);
   if (!res.ok) throw new Error('Failed to fetch services');
-  return res.json();
+  const data = (await res.json()) as ServiceCollectionResponse;
+  return parseServiceCollection(data);
 }
 
 /** Resolve service image to full URL (for display). */
