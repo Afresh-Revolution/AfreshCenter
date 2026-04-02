@@ -98,6 +98,7 @@ function LandingPage() {
     const idx = teamMembers.findIndex((member) => member.featured);
     return idx >= 0 ? idx : 0;
   };
+  const featuredIndex = getFeaturedIndex();
 
   const VISIBLE = 5;
   const FEAT_POS = 2;
@@ -119,7 +120,7 @@ function LandingPage() {
 
   const [disableTrackTransition, setDisableTrackTransition] = useState(false);
   const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(
-    () => minFeaturedIdx + getFeaturedIndex(),
+    () => minFeaturedIdx + featuredIndex,
   );
   const [isMobileTeam, setIsMobileTeam] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 900 : false,
@@ -164,6 +165,12 @@ function LandingPage() {
         totalMembers
       : -1;
   const activeMember = activeIdx >= 0 ? teamMembers[activeIdx] : null;
+
+  useEffect(() => {
+    if (!totalMembers) return;
+    setDisableTrackTransition(true);
+    setLoopFeaturedIndex(minFeaturedIdx + featuredIndex);
+  }, [featuredIndex, minFeaturedIdx, totalMembers]);
 
   useEffect(() => {
     if (!disableTrackTransition) return;
@@ -272,12 +279,12 @@ function LandingPage() {
   }, [isTestimonialHovered, totalTestimonials, testimonialTickSeed]);
 
   // ── Scroll-reveal refs ──
-  const aboutSection = useScrollReveal<HTMLElement>();
-  const servicesSection = useStaggerReveal<HTMLElement>(6);
-  const teamSection = useScrollReveal<HTMLElement>();
-  const worksSection = useScrollReveal<HTMLElement>();
-  const contactSection = useScrollReveal<HTMLElement>();
-  const getstartedSection = useScrollReveal<HTMLElement>();
+  const [aboutSectionRef, aboutSectionVisible] = useScrollReveal<HTMLElement>();
+  const [servicesSectionRef, servicesVisibleCount] = useStaggerReveal<HTMLElement>(6);
+  const [teamSectionRef, teamSectionVisible] = useScrollReveal<HTMLElement>();
+  const [worksSectionRef, worksSectionVisible] = useScrollReveal<HTMLElement>();
+  const [contactSectionRef, contactSectionVisible] = useScrollReveal<HTMLElement>();
+  const [getStartedSectionRef, getStartedSectionVisible] = useScrollReveal<HTMLElement>();
   const { ref: countRef, count: projectCount } = useCountUp(100);
 
   // ── Typewriter ──
@@ -354,7 +361,7 @@ function LandingPage() {
       </section>
 
       {/* About us */}
-      <section ref={aboutSection.ref} className={`about container reveal${aboutSection.isVisible ? " is-visible" : ""}`}>
+      <section ref={aboutSectionRef} className={`about container reveal${aboutSectionVisible ? " is-visible" : ""}`}>
         <div className="about-grid">
           <div className="about-text">
             <h2>About us</h2>
@@ -387,13 +394,13 @@ function LandingPage() {
       </section>
 
       {/* Our Services */}
-      <section ref={servicesSection.ref} className="services-preview">
+      <section ref={servicesSectionRef} className="services-preview">
         <div className="container">
           <h2 className="section-title reveal is-visible">Our Services</h2>
           <div className="service-cards tilt-parent">
             {landingServices.slice(0, SERVICES_PREVIEW_COUNT).map((service, idx) => (
               <TiltCard
-                className={`service-card reveal${idx < servicesSection.visibleCount ? ` is-visible reveal--d${Math.min(idx + 1, 6)}` : ""}`}
+                className={`service-card reveal${idx < servicesVisibleCount ? ` is-visible reveal--d${Math.min(idx + 1, 6)}` : ""}`}
                 key={service.id}>
                 {getServiceImageUrl(service.image) ? (
                   <img
@@ -425,7 +432,7 @@ function LandingPage() {
       </section>
 
       {/* Meet Our Team */}
-      <section ref={teamSection.ref} className={`team-section reveal${teamSection.isVisible ? " is-visible" : ""}`} aria-label="Meet Our Team">
+      <section ref={teamSectionRef} className={`team-section reveal${teamSectionVisible ? " is-visible" : ""}`} aria-label="Meet Our Team">
         <div className="team-header">
           <h2>Meet Our Team</h2>
           <p>
@@ -495,7 +502,7 @@ function LandingPage() {
       </section>
 
       {/* Our Top Works */}
-      <section ref={worksSection.ref} className={`topworks reveal${worksSection.isVisible ? " is-visible" : ""}`}>
+      <section ref={worksSectionRef} className={`topworks reveal${worksSectionVisible ? " is-visible" : ""}`}>
         <div className="container topworks-container">
           <div className="works-header">
             <h2>Our Top Works</h2>
@@ -553,7 +560,7 @@ function LandingPage() {
             className="testimonial-panel"
             onMouseEnter={() => setIsTestimonialHovered(true)}
             onMouseLeave={() => setIsTestimonialHovered(false)}>
-            <div className="testimonial-profile-card">
+            <div className="testimonial-profile-card" key={`profile-${activeTestimonial.name}`}>
               <img
                 src={activeTestimonial.image}
                 alt={activeTestimonial.name}
@@ -570,7 +577,7 @@ function LandingPage() {
                 </button>
               </div>
             </div>
-            <div className="testimonial-copy">
+            <div className="testimonial-copy" key={`copy-${activeTestimonial.name}`}>
               <h3>Testimonials</h3>
               <p>{activeTestimonial.quote}</p>
             </div>
@@ -579,7 +586,7 @@ function LandingPage() {
       </section>
 
       {/* Get in Touch with Us */}
-      <section ref={contactSection.ref} className={`contact-section reveal${contactSection.isVisible ? " is-visible" : ""}`}>
+      <section ref={contactSectionRef} className={`contact-section reveal${contactSectionVisible ? " is-visible" : ""}`}>
         <div className="container contact-wrap">
           <form className="contact-form-panel" onSubmit={handleContactSubmit}>
             <h3>Get in Touch with Us</h3>
@@ -667,7 +674,7 @@ function LandingPage() {
       </section>
 
       {/* GET STARTED NOW */}
-      <section ref={getstartedSection.ref} className={`getstarted-banner reveal--scale reveal${getstartedSection.isVisible ? " is-visible" : ""}`}>
+      <section ref={getStartedSectionRef} className={`getstarted-banner reveal--scale reveal${getStartedSectionVisible ? " is-visible" : ""}`}>
         <div className="container getstarted-inner">
           <h2>GET STARTED NOW</h2>
           <Link to="/services" className="getstarted-btn btn-glow">

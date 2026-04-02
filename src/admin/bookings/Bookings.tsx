@@ -51,8 +51,9 @@ export function Bookings() {
         if (!isActive) return;
         setError(err instanceof Error ? err.message : 'Failed to load bookings');
       } finally {
-        if (!isActive) return;
-        setIsLoading(false);
+        if (isActive) {
+          setIsLoading(false);
+        }
       }
     };
     loadBookings();

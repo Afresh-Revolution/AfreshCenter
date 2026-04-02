@@ -116,6 +116,8 @@
 
 .site-cta:hover {
   background: #e77208;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(246, 128, 20, 0.28);
 }
 
 .site-coming-soon-backdrop {
@@ -138,6 +140,7 @@
   padding: 28px 24px 24px;
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
   text-align: center;
+  animation: modal-card-in 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .site-coming-soon-eyebrow {
@@ -172,6 +175,7 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
+  animation: ripple-pop 0.7s ease-out 0.18s both;
 }
 
 .site-coming-soon-close:hover {
@@ -293,12 +297,27 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s ease, transform 0.15s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .site-footer-social-link:hover {
   background: #e67a01;
   color: #fff;
-  transform: scale(1.05);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.site-footer-social-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(255, 137, 1, 0.36);
+  transition: box-shadow 0.24s ease;
+}
+
+.site-footer-social-link:hover::after {
+  box-shadow: 0 0 0 10px rgba(255, 137, 1, 0);
 }
 
 .site-footer-bottom {

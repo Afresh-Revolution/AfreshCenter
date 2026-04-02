@@ -7,26 +7,31 @@ import { useEffect, useState } from 'react';
  * @param delay    ms before typing starts (default 300)
  */
 export function useTypewriter(text: string, speed = 40, delay = 300) {
-  const [displayed, setDisplayed] = useState('');
-  const [done, setDone] = useState(false);
+  const [typedLength, setTypedLength] = useState(0);
 
   useEffect(() => {
-    setDisplayed('');
-    setDone(false);
+    let intervalId: number | undefined;
     let i = 0;
     const start = window.setTimeout(() => {
-      const id = window.setInterval(() => {
+      setTypedLength(0);
+      intervalId = window.setInterval(() => {
         i += 1;
-        setDisplayed(text.slice(0, i));
-        if (i >= text.length) {
-          window.clearInterval(id);
-          setDone(true);
+        setTypedLength(i);
+        if (i >= text.length && intervalId !== undefined) {
+          window.clearInterval(intervalId);
         }
       }, speed);
-      return () => window.clearInterval(id);
     }, delay);
-    return () => window.clearTimeout(start);
+    return () => {
+      window.clearTimeout(start);
+      if (intervalId !== undefined) {
+        window.clearInterval(intervalId);
+      }
+    };
   }, [text, speed, delay]);
+
+  const displayed = text.slice(0, typedLength);
+  const done = typedLength >= text.length;
 
   return { displayed, done };
 }

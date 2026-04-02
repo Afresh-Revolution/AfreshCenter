@@ -7,7 +7,6 @@ import { setStoredToken, setStoredUser } from '../api/auth';
 export function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  // If RequireAuth redirected here, it stored the attempted path in state
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/admin';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -123,7 +122,10 @@ export function Login() {
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
                 tabIndex={-1}
               >
-                <span className={`login-input-wrap__icon login-input-wrap__icon--eye ${showPassword ? 'is-visible' : ''}`} aria-hidden />
+                <span
+                  className={`login-input-wrap__icon login-input-wrap__icon--eye ${showPassword ? 'is-visible' : ''}`}
+                  aria-hidden
+                />
               </button>
             </div>
             {fieldErrors.password && (
@@ -149,14 +151,14 @@ export function Login() {
           </div>
 
           <button type="submit" className="login-submit" disabled={loading}>
-            {loading ? 'Signing in…' : 'Sign In'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
       </div>
 
       <footer className="login-footer">
         <Link to="/" className="login-back">
-          ← Back to Home
+          Back to Home
         </Link>
       </footer>
     </div>

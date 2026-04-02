@@ -7,11 +7,14 @@ import { useEffect, useRef, useState } from 'react';
 export function useScrollReveal<T extends HTMLElement = HTMLElement>(
   options?: IntersectionObserverInit,
 ) {
-  const ref = useRef<T>(null);
+  const elementRef = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const threshold = options?.threshold ?? 0.12;
+  const root = options?.root ?? null;
+  const rootMargin = options?.rootMargin ?? '0px';
 
   useEffect(() => {
-    const el = ref.current;
+    const el = elementRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -20,13 +23,13 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(
           observer.unobserve(el); // animate once
         }
       },
-      { threshold: 0.12, ...options },
+      { threshold, root, rootMargin },
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [root, rootMargin, threshold]);
 
-  return { ref, isVisible };
+  return [elementRef, isVisible] as const;
 }
 
 /**
@@ -37,11 +40,14 @@ export function useStaggerReveal<T extends HTMLElement = HTMLElement>(
   count: number,
   options?: IntersectionObserverInit,
 ) {
-  const ref = useRef<T>(null);
+  const elementRef = useRef<T>(null);
   const [visibleCount, setVisibleCount] = useState(0);
+  const threshold = options?.threshold ?? 0.08;
+  const root = options?.root ?? null;
+  const rootMargin = options?.rootMargin ?? '0px';
 
   useEffect(() => {
-    const el = ref.current;
+    const el = elementRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -50,11 +56,11 @@ export function useStaggerReveal<T extends HTMLElement = HTMLElement>(
           observer.unobserve(el);
         }
       },
-      { threshold: 0.08, ...options },
+      { threshold, root, rootMargin },
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [count]);
+  }, [count, root, rootMargin, threshold]);
 
-  return { ref, visibleCount };
+  return [elementRef, visibleCount] as const;
 }

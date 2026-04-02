@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { sendContact } from '../api/contact'
 import { SiteFooter, SiteNavbar } from './SharedLayout'
-// import '../scss/Contact.scss'
 
 const PhoneIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -40,28 +39,28 @@ const contactItems: ContactItem[] = [
   {
     icon: <PhoneIcon />,
     title: 'Phone',
-    lines: ['+234 908 842 4461', 'Mon-Fri, 9:00 AM – 6:00 PM'],
+    lines: ['+234 810 915 1921', 'Mon-Fri, 9:00 AM - 6:00 PM'],
   },
   {
     icon: <EmailIcon />,
     title: 'Email',
-    lines: ['info@afresh.com', 'support@afresh.com'],
+    lines: ['afreshcenter@gmail.com'],
   },
   {
     icon: <LocationIcon />,
     title: 'Address',
-    lines: ['423 Park Ave, Suite 200', 'New York, NY 10022'],
+    lines: ['No.50, Chanel 7, opposite Nasco foods,', 'Jos Plateau State.'],
   },
   {
     icon: <ClockIcon />,
     title: 'Business Hours',
-    lines: ['Monday – Friday: 9:00 AM – 6:00 PM', 'Saturday: 10:00 AM – 2:00 PM'],
+    lines: ['Monday - Friday: 9:00 AM - 6:00 PM', 'Saturday: 10:00 AM - 2:00 PM'],
   },
 ]
 
-const CONTACT_PHONE_DISPLAY = '+234 908 842 4461'
-const CONTACT_PHONE_HREF = 'tel:+2349088424461'
-const CONTACT_WHATSAPP_HREF = 'https://wa.me/2349088424461'
+const CONTACT_PHONE_DISPLAY = '+234 810 915 1921'
+const CONTACT_PHONE_HREF = 'tel:+2348109151921'
+const CONTACT_WHATSAPP_HREF = 'https://wa.me/2348109151921'
 
 function Contact() {
   const [form, setForm] = useState({
@@ -120,13 +119,12 @@ function Contact() {
           <p>
             Get in touch with us.
             <br />
-            We’d love to hear from you and discuss how we can help your business grow.
+            We'd love to hear from you and discuss how we can help your business grow.
           </p>
         </div>
       </header>
 
       <section className="contact-main" aria-label="Contact details and form">
-        {/* ── Left Column: Form Card ── */}
         <section className="contact-form-card">
           <div className="form-card-header">
             <h2>Send Us a Message</h2>
@@ -164,7 +162,7 @@ function Contact() {
                   id="phone"
                   name="phone"
                   type="tel"
-                  placeholder="+234 908 842 4461"
+                  placeholder="+234 810 915 1921"
                   value={form.phone}
                   onChange={handleChange('phone')}
                   required
@@ -209,27 +207,36 @@ function Contact() {
             <div className="contact-social">
               <p>Follow our social media</p>
               <div className="social-row">
-                <button type="button" aria-label="Facebook">
-                  <i className="fab fa-facebook-f" aria-hidden="true" />
-                </button>
-                <button type="button" aria-label="Twitter">
-                  <i className="fab fa-twitter" aria-hidden="true" />
-                </button>
-                <button type="button" aria-label="Instagram">
+                <a
+                  href="https://www.instagram.com/afreshcenter?igsh=MXdweGsxOGU4Z2hidQ=="
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <i className="fab fa-instagram" aria-hidden="true" />
-                </button>
-                <button type="button" aria-label="LinkedIn">
-                  <i className="fab fa-linkedin-in" aria-hidden="true" />
-                </button>
+                </a>
+                <a
+                  href="https://x.com/afresh_center?s=21"
+                  aria-label="X"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fab fa-x-twitter" aria-hidden="true" />
+                </a>
+                <a
+                  href="https://wa.me/2348109151921"
+                  aria-label="WhatsApp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fab fa-whatsapp" aria-hidden="true" />
+                </a>
               </div>
             </div>
           </form>
         </section>
 
-        {/* ── Right Column: Three Stacked Cards ── */}
         <aside className="contact-side">
-
-          {/* Card 1 – Contact Info */}
           <section className="info-card">
             <h3>Contact Information</h3>
             <p className="info-card-sub">Reach us through any of these channels.</p>
@@ -263,7 +270,6 @@ function Contact() {
             </ul>
           </section>
 
-          {/* Card 2 – Office Image */}
           <section className="office-photo" aria-label="Our office">
             <div className="office-photo-inner" />
             <div className="office-photo-overlay">
@@ -274,7 +280,6 @@ function Contact() {
             </div>
           </section>
 
-          {/* Card 3 – CTA Card */}
           <section className="help-card">
             <div className="help-card-inner">
               <h3>Need Quick Help?</h3>
@@ -299,7 +304,6 @@ function Contact() {
               </div>
             </div>
           </section>
-
         </aside>
       </section>
 
@@ -309,4 +313,3 @@ function Contact() {
 }
 
 export default Contact
-

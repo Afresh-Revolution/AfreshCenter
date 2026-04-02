@@ -55,8 +55,9 @@ export function Contacts() {
         if (!isActive) return;
         setError(err instanceof Error ? err.message : 'Failed to load contacts');
       } finally {
-        if (!isActive) return;
-        setIsLoading(false);
+        if (isActive) {
+          setIsLoading(false);
+        }
       }
     };
     loadContacts();
@@ -96,36 +97,36 @@ export function Contacts() {
           {error && !isLoading && <p>{error}</p>}
           {!isLoading && !error && contacts.length === 0 && <p>No contact submissions yet.</p>}
           {!isLoading && !error && contacts.length > 0 && (
-          <table className="contacts-table">
-            <thead>
-              <tr>
-                <th>NAME</th>
-                <th>EMAIL</th>
-                <th>SUBJECT</th>
-                <th>DATE</th>
-                <th>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contacts.map((row) => (
-                <tr key={`${row.name}-${row.date}`}>
-                  <td>{row.name}</td>
-                  <td>{row.email}</td>
-                  <td>{row.subject}</td>
-                  <td>{row.date}</td>
-                  <td>
-                    <button
-                      type="button"
-                      className="contacts-table__action"
-                      onClick={() => setSelectedContact(row)}
-                    >
-                      View Message
-                    </button>
-                  </td>
+            <table className="contacts-table">
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>EMAIL</th>
+                  <th>SUBJECT</th>
+                  <th>DATE</th>
+                  <th>ACTIONS</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {contacts.map((row) => (
+                  <tr key={`${row.name}-${row.date}`}>
+                    <td>{row.name}</td>
+                    <td>{row.email}</td>
+                    <td>{row.subject}</td>
+                    <td>{row.date}</td>
+                    <td>
+                      <button
+                        type="button"
+                        className="contacts-table__action"
+                        onClick={() => setSelectedContact(row)}
+                      >
+                        View Message
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
       </div>
