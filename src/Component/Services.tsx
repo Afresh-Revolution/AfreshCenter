@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import servicesHeroImg from "../assets/images/Group 31.png";
-import { SiteFooter } from "./SharedLayout";
+import { SiteFooter, SiteNavbar } from "./SharedLayout";
 import "../scss/Services.scss";
-import { SiteNavbar } from "./SharedLayout";
 import {
   fetchPublicServices,
   getServiceImageUrl,
   type ServiceItem,
 } from "../api/services";
 import { ReadyToGetStartedCard } from "./ReadyToGetStartedCard";
+import { useStaggerReveal } from "../hooks/useScrollReveal";
 
 function Services() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,10 +18,12 @@ function Services() {
   const [error, setError] = useState<string | null>(null);
   const [detailService, setDetailService] = useState<ServiceItem | null>(null);
   const detailId = searchParams.get("id");
+  const [servicesGridRef, servicesVisibleCount] = useStaggerReveal<HTMLDivElement>(services.length || 6);
 
   useEffect(() => {
     let cancelled = false;
     setError(null);
+
     fetchPublicServices()
       .then((list) => {
         if (!cancelled) {
@@ -38,6 +40,7 @@ function Services() {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+
     return () => {
       cancelled = true;
     };
@@ -65,16 +68,16 @@ function Services() {
             <div className="services-hero-overlay" />
             <SiteNavbar />
             <div className="services-hero-content">
-              <h1>Our Services</h1>
+              <h1 className="hero-anim-title">Our Services</h1>
             </div>
           </header>
 
           <div className="services-main">
             <section className="description">
               <p>
-                At AFrESH Center (Africa Focused Revolutionary Entrepreneurial
+                At AfrESH Center (Africa Focused Revolutionary Entrepreneurial
                 Support Hub), we provide integrated solutions across technology,
-                media, sports, and entertainment — designed to empower
+                media, sports, and entertainment - designed to empower
                 entrepreneurs, businesses, and talents across Africa.
               </p>
             </section>
@@ -85,12 +88,15 @@ function Services() {
               </p>
             )}
             {loading ? (
-              <p className="services-loading">Loading services…</p>
+              <p className="services-loading">Loading services...</p>
             ) : (
               <section className="services-section">
-                <div className="services-grid">
-                  {services.map((service) => (
-                    <article key={service.id} className="service-card">
+                <div ref={servicesGridRef} className="services-grid">
+                  {services.map((service, idx) => (
+                    <article
+                      key={service.id}
+                      className={`service-card reveal${idx < servicesVisibleCount ? ` is-visible reveal--d${Math.min(idx + 1, 6)}` : ""}`}
+                    >
                       {getServiceImageUrl(service.image) ? (
                         <img
                           src={getServiceImageUrl(service.image) ?? ""}
@@ -147,7 +153,7 @@ function Services() {
                 className="service-detail-back"
                 onClick={closeDetail}
               >
-                ← Back to Services
+                Back to Services
               </button>
               <div className="service-detail-hero-content">
                 <h1 id="service-detail-title" className="service-detail-title">
@@ -171,9 +177,7 @@ function Services() {
                         {detailService.image && (
                           <div className="service-detail-overview-media">
                             <img
-                              src={
-                                getServiceImageUrl(detailService.image) ?? ""
-                              }
+                              src={getServiceImageUrl(detailService.image) ?? ""}
                               alt=""
                             />
                           </div>

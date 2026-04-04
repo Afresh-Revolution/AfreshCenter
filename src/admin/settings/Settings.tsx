@@ -29,9 +29,9 @@ export function Settings() {
   const [company, setCompany] = useState({
     companyName: 'Afresh',
     industry: 'Technology & Creative Services',
-    email: 'info@afresh.com',
-    phone: '+234 800 123 4567',
-    address: '',
+    email: 'afreshcenter@gmail.com',
+    phone: '+234 810 915 1921',
+    address: 'No.50, Chanel 7, opposite Nasco foods, Jos Plateau State.',
     about: '',
   });
   const [notifications, setNotifications] = useState({

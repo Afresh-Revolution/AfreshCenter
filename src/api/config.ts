@@ -7,8 +7,8 @@ const DEFAULT_DEV_API = 'http://localhost:5000';
 
 export function getApiBase(): string {
   const env = import.meta.env.VITE_API_URL;
-  if (typeof env === 'string' && env.length > 0) {
-    return env.replace(/\/$/, '');
+  if (typeof env === 'string' && env.trim().length > 0) {
+    return env.trim().replace(/\/$/, '');
   }
   if (import.meta.env.DEV) {
     return DEFAULT_DEV_API;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { ScrollProgressBar } from './ScrollProgressBar'
 
 const navItems = [
   { to: '/', label: 'Home' },
@@ -12,17 +13,19 @@ const quickLinks = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact Us' },
-  { label: 'Services' },
+  { to: '/services', label: 'Services' },
   { to: '/support', label: 'Support' },
   { label: 'Account' },
 ]
 
 type SiteNavbarProps = {
   ctaLabel?: string
+  ctaComingSoonMessage?: string
 }
 
-export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
+export function SiteNavbar({ ctaLabel = 'Afresh Academy', ctaComingSoonMessage }: SiteNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [showComingSoonCard, setShowComingSoonCard] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -36,9 +39,16 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
   }, [])
 
   const closeMenu = () => setMenuOpen(false)
+  const handleCtaClick = () => {
+    if (ctaComingSoonMessage) {
+      setShowComingSoonCard(true)
+    }
+  }
 
   return (
-    <nav className={`site-navbar-wrap${menuOpen ? ' menu-open' : ''}`}>
+    <>
+      <ScrollProgressBar />
+      <nav className={`site-navbar-wrap${menuOpen ? ' menu-open' : ''}`}>
       <div className="site-navbar">
         <div
           className="site-logo"
@@ -69,7 +79,7 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
             ))}
           </ul>
         </nav>
-        <button className="site-cta" type="button">
+        <button className="site-cta" type="button" onClick={handleCtaClick}>
           {ctaLabel}
         </button>
         <button
@@ -95,11 +105,30 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
           ))}
         </ul>
       </div>
-    </nav>
+      </nav>
+      {showComingSoonCard ? (
+        <div className="site-coming-soon-backdrop" role="presentation" onClick={() => setShowComingSoonCard(false)}>
+          <div
+            className="site-coming-soon-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="coming-soon-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="site-coming-soon-eyebrow">Afresh Academy</p>
+            <h2 id="coming-soon-title">Coming Soon</h2>
+            <p>{ctaComingSoonMessage}</p>
+            <button type="button" className="site-coming-soon-close" onClick={() => setShowComingSoonCard(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </>
   )
 }
 
-/* Footer icons: white on #ff8901 circle */
+/* Footer icons */
 const FooterPhoneIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -119,17 +148,12 @@ const FooterLocationIcon = () => (
 )
 
 const contactItems: { href?: string; icon: React.ReactNode; label: string }[] = [
-  { href: 'tel:+03586907042', icon: <FooterPhoneIcon />, label: '+03586907042' },
+  { href: 'tel:+2348109151921', icon: <FooterPhoneIcon />, label: '+234 810 915 1921' },
   { href: 'mailto:afreshcenter@gmail.com', icon: <FooterEmailIcon />, label: 'afreshcenter@gmail.com' },
-  { icon: <FooterLocationIcon />, label: 'N0-2344 OIL AIRPORT ROUNDABOUT JOS, PLATEAU STATE' },
+  { icon: <FooterLocationIcon />, label: 'No.50, Chanel 7, opposite Nasco foods, Jos Plateau State.' },
 ]
 
-/* Simple white social icons for orange circle */
-const FacebookIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-  </svg>
-)
+/* Social icons */
 const TwitterIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -149,10 +173,9 @@ const WhatsAppIcon = () => (
 )
 
 const socialItems: { href: string; label: string; icon: React.ReactNode }[] = [
-  { href: '#', label: 'Facebook', icon: <FacebookIcon /> },
-  { href: '#', label: 'Twitter', icon: <TwitterIcon /> },
-  { href: '#', label: 'Instagram', icon: <InstagramIcon /> },
-  { href: '#', label: 'WhatsApp', icon: <WhatsAppIcon /> },
+  { href: 'https://www.instagram.com/afreshcenter?igsh=MXdweGsxOGU4Z2hidQ==', label: 'Instagram', icon: <InstagramIcon /> },
+  { href: 'https://x.com/afresh_center?s=21', label: 'X', icon: <TwitterIcon /> },
+  { href: 'https://wa.me/2348109151921', label: 'WhatsApp', icon: <WhatsAppIcon /> },
 ]
 
 export function SiteFooter() {
@@ -211,7 +234,14 @@ export function SiteFooter() {
           <h4>FOLLOW US</h4>
           <div className="site-footer-social" aria-label="Social links">
             {socialItems.map((item) => (
-              <a key={item.label} href={item.href} className="site-footer-social-link" aria-label={item.label}>
+              <a
+                key={item.label}
+                href={item.href}
+                className="site-footer-social-link"
+                aria-label={item.label}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <span className="site-footer-icon" aria-hidden="true">{item.icon}</span>
               </a>
             ))}

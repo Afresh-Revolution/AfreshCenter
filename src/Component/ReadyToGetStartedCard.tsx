@@ -29,8 +29,8 @@ export type ReadyToGetStartedCardProps = {
 }
 
 const DEFAULT_DESCRIPTION = 'Book a consultation with our experts to discuss your project requirements and get a customized solution.'
-const DEFAULT_PHONE = '+234 908 842 4461'
-const DEFAULT_EMAIL = 'info@afresh.com'
+const DEFAULT_PHONE = '+234 810 915 1921'
+const DEFAULT_EMAIL = 'afreshcenter@gmail.com'
 
 const initialForm = {
   fullName: '',
