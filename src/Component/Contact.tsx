@@ -1,4 +1,6 @@
-import './Contact.css'
+import { useEffect, useState } from 'react'
+import { sendContact } from '../api/contact'
+import { SiteFooter, SiteNavbar } from './SharedLayout'
 
 const PhoneIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -37,100 +39,204 @@ const contactItems: ContactItem[] = [
   {
     icon: <PhoneIcon />,
     title: 'Phone',
-    lines: ['+234 908 842 4461', 'Mon-Fri, 9:00 AM – 6:00 PM'],
+    lines: ['+234 810 915 1921', 'Mon-Fri, 9:00 AM - 6:00 PM'],
   },
   {
     icon: <EmailIcon />,
     title: 'Email',
-    lines: ['info@afresh.com', 'support@afresh.com'],
+    lines: ['afreshcenter@gmail.com'],
   },
   {
     icon: <LocationIcon />,
     title: 'Address',
-    lines: ['423 Park Ave, Suite 200', 'New York, NY 10022'],
+    lines: ['No.50, Chanel 7, opposite Nasco foods,', 'Jos Plateau State.'],
   },
   {
     icon: <ClockIcon />,
     title: 'Business Hours',
-    lines: ['Monday – Friday: 9:00 AM – 6:00 PM', 'Saturday: 10:00 AM – 2:00 PM'],
+    lines: ['Monday - Friday: 9:00 AM - 6:00 PM', 'Saturday: 10:00 AM - 2:00 PM'],
   },
 ]
 
-const quickLinks = ['Home', 'About', 'Services', 'Support', 'Account']
+const CONTACT_PHONE_DISPLAY = '+234 810 915 1921'
+const CONTACT_PHONE_HREF = 'tel:+2348109151921'
+const CONTACT_WHATSAPP_HREF = 'https://wa.me/2348109151921'
 
 function Contact() {
+  const [form, setForm] = useState({
+    firstName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  })
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
+
+  useEffect(() => {
+    if (status === 'success' || status === 'error') {
+      const timeout = window.setTimeout(() => {
+        setStatus('idle')
+        setStatusMessage('')
+      }, 5000)
+      return () => window.clearTimeout(timeout)
+    }
+    return undefined
+  }, [status])
+
+  const handleChange = (field: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((prev) => ({ ...prev, [field]: event.target.value }))
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setStatus('sending')
+    setStatusMessage('')
+    const response = await sendContact({
+      name: form.firstName.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+    })
+    if (response.success) {
+      setStatus('success')
+      setStatusMessage(response.message ?? 'Message sent successfully.')
+      setForm({ firstName: '', email: '', phone: '', subject: '', message: '' })
+    } else {
+      setStatus('error')
+      setStatusMessage(response.message ?? 'Failed to send message.')
+    }
+  }
+
   return (
     <main className="contact-page">
+      <SiteNavbar />
       <header className="contact-hero" aria-label="Contact page hero">
         <div className="hero-overlay" />
-        <div className="hero-topbar">
-          <div className="hero-logo">
-            <span className="hero-mark" aria-hidden="true">afr</span>
-            <span className="hero-logo-text">afresh</span>
-          </div>
-          <nav aria-label="Primary navigation">
-            <ul className="hero-nav">
-              <li>Home</li>
-              <li>About</li>
-              <li>Services</li>
-              <li>Contact Us</li>
-            </ul>
-          </nav>
-          <button className="hero-cta" type="button">Book A Meeting</button>
-        </div>
         <div className="hero-content">
           <h1>Contact Us</h1>
           <p>
             Get in touch with us.
             <br />
-            We’d love to hear from you and discuss how we can help your business grow.
+            We'd love to hear from you and discuss how we can help your business grow.
           </p>
         </div>
       </header>
 
       <section className="contact-main" aria-label="Contact details and form">
-        {/* ── Left Column: Form Card ── */}
         <section className="contact-form-card">
           <div className="form-card-header">
             <h2>Send Us a Message</h2>
             <p className="card-subtitle">Fill out the form below and our team will get back to you within 24 hours.</p>
           </div>
-          <form onSubmit={(event) => event.preventDefault()}>
+          <form onSubmit={handleSubmit}>
             <div className="form-grid">
               <div className="field">
                 <label htmlFor="firstName">First Name</label>
-                <input id="firstName" name="firstName" type="text" placeholder="John" />
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  placeholder="John"
+                  value={form.firstName}
+                  onChange={handleChange('firstName')}
+                  required
+                />
               </div>
               <div className="field">
                 <label htmlFor="email">Email Address</label>
-                <input id="email" name="email" type="email" placeholder="john@example.com" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="john@example.com"
+                  value={form.email}
+                  onChange={handleChange('email')}
+                  required
+                />
               </div>
               <div className="field">
                 <label htmlFor="phone">Phone Number</label>
-                <input id="phone" name="phone" type="tel" placeholder="+234 908 842 4461" />
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="+234 810 915 1921"
+                  value={form.phone}
+                  onChange={handleChange('phone')}
+                  required
+                />
               </div>
               <div className="field">
                 <label htmlFor="subject">Subject</label>
-                <input id="subject" name="subject" type="text" placeholder="How can we help?" />
+                <input
+                  id="subject"
+                  name="subject"
+                  type="text"
+                  placeholder="How can we help?"
+                  value={form.subject}
+                  onChange={handleChange('subject')}
+                  required
+                />
               </div>
             </div>
             <div className="field field-message">
               <label htmlFor="message">Message</label>
-              <textarea id="message" name="message" rows={6} placeholder="Tell us about your project or inquiry..." />
+              <textarea
+                id="message"
+                name="message"
+                rows={6}
+                placeholder="Tell us about your project or inquiry..."
+                value={form.message}
+                onChange={handleChange('message')}
+                required
+              />
             </div>
-            <button className="submit-btn" type="submit">
+            <button className="submit-btn" type="submit" disabled={status === 'sending'}>
               <span>Send Message</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="btn-arrow">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
+            {status !== 'idle' && (
+              <p className="form-status" role="status" aria-live="polite">
+                {statusMessage}
+              </p>
+            )}
+            <div className="contact-social">
+              <p>Follow our social media</p>
+              <div className="social-row">
+                <a
+                  href="https://www.instagram.com/afreshcenter?igsh=MXdweGsxOGU4Z2hidQ=="
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fab fa-instagram" aria-hidden="true" />
+                </a>
+                <a
+                  href="https://x.com/afresh_center?s=21"
+                  aria-label="X"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fab fa-x-twitter" aria-hidden="true" />
+                </a>
+                <a
+                  href="https://wa.me/2348109151921"
+                  aria-label="WhatsApp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fab fa-whatsapp" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
           </form>
         </section>
 
-        {/* ── Right Column: Three Stacked Cards ── */}
         <aside className="contact-side">
-
-          {/* Card 1 – Contact Info */}
           <section className="info-card">
             <h3>Contact Information</h3>
             <p className="info-card-sub">Reach us through any of these channels.</p>
@@ -144,7 +250,7 @@ function Contact() {
                       if (item.title === 'Phone' && line.includes('+234')) {
                         return (
                           <p key={line}>
-                            <a href="tel:+2349088424461">{line}</a>
+                            <a href={CONTACT_PHONE_HREF}>{line}</a>
                           </p>
                         )
                       }
@@ -164,7 +270,6 @@ function Contact() {
             </ul>
           </section>
 
-          {/* Card 2 – Office Image */}
           <section className="office-photo" aria-label="Our office">
             <div className="office-photo-inner" />
             <div className="office-photo-overlay">
@@ -175,73 +280,36 @@ function Contact() {
             </div>
           </section>
 
-          {/* Card 3 – CTA Card */}
           <section className="help-card">
             <div className="help-card-inner">
               <h3>Need Quick Help?</h3>
               <p>Check out our FAQ section or browse our services to learn more about what we offer.</p>
               <div className="help-btns">
-                <button type="button" className="help-btn-primary">Chat With Us</button>
-                <button type="button" className="help-btn-outline">Call Now</button>
+                <a
+                  href={CONTACT_WHATSAPP_HREF}
+                  className="help-btn-primary"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Chat with us on WhatsApp at ${CONTACT_PHONE_DISPLAY}`}
+                >
+                  Chat With Us
+                </a>
+                <a
+                  href={CONTACT_PHONE_HREF}
+                  className="help-btn-outline"
+                  aria-label={`Call us at ${CONTACT_PHONE_DISPLAY}`}
+                >
+                  Call Now
+                </a>
               </div>
             </div>
           </section>
-
         </aside>
       </section>
 
-      <footer className="contact-footer">
-        <div className="footer-content">
-          {/* Brand column */}
-          <section className="footer-brand-col">
-            <div className="footer-brand-row">
-              <span className="footer-mark" aria-hidden="true">afr</span>
-              <h3 className="footer-brand">afresh</h3>
-            </div>
-            <p>Delivering quality support built with dependable workflows and practical service standards.</p>
-          </section>
-
-          <section className="footer-col">
-            <h4>Quick Links</h4>
-            <ul className="footer-links">
-              {quickLinks.map((link) => (
-                <li key={link}>{link}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="footer-col footer-contact">
-            <h4>Contact Us</h4>
-            <ul className="footer-contact-list">
-              <li>
-                <span className="footer-icon" aria-hidden="true"><PhoneIcon /></span>
-                <a href="tel:+2349088424461">+234 908 842 4461</a>
-              </li>
-              <li>
-                <span className="footer-icon" aria-hidden="true"><EmailIcon /></span>
-                <a href="mailto:info@afresh.com">info@afresh.com</a>
-              </li>
-              <li>
-                <span className="footer-icon" aria-hidden="true"><LocationIcon /></span>
-                <span>423 Park Ave, Suite 200</span>
-              </li>
-            </ul>
-          </section>
-
-          <section className="footer-col footer-follow">
-            <h4>Follow Us</h4>
-            <div className="social-row" aria-label="Social links">
-              <span aria-label="Facebook">f</span>
-              <span aria-label="LinkedIn">in</span>
-              <span aria-label="X">x</span>
-              <span aria-label="Instagram">ig</span>
-            </div>
-          </section>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   )
 }
 
 export default Contact
-

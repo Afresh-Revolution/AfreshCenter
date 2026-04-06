@@ -1,0 +1,31 @@
+import { Routes, Route } from 'react-router-dom';
+import { AdminLayout } from './AdminLayout';
+import { Overview } from './overview/Overview';
+import { Services } from './services/Services';
+import { Team } from './team/Team';
+import { Bookings } from './bookings/Bookings';
+import { Contacts } from './contacts/Contacts';
+import { Settings } from './settings/Settings';
+import { RequireAuth } from './RequireAuth';
+
+export function AdminRoutes() {
+  return (
+    <Routes>
+      <Route
+        element={
+          <RequireAuth>
+            <AdminLayout />
+          </RequireAuth>
+        }
+      >
+        <Route index element={<Overview />} />
+        <Route path="services" element={<Services />} />
+        <Route path="team" element={<Team />} />
+        <Route path="bookings" element={<Bookings />} />
+        <Route path="contacts" element={<Contacts />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
+    </Routes>
+  );
+}
+

@@ -1,0 +1,301 @@
+@use '../admin' as *;
+
+.contacts-page {
+  max-width: 1200px;
+}
+
+.contacts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.contacts-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $admin-text-primary;
+}
+
+.contacts-date {
+  font-size: 0.9375rem;
+  color: $admin-text-secondary;
+}
+
+.contacts-card {
+  background: #fff;
+  border-radius: $admin-card-radius;
+  box-shadow: $admin-card-shadow;
+  padding: 24px;
+}
+
+.contacts-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $admin-text-primary;
+  margin: 0 0 20px;
+}
+
+.contacts-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.contacts-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+
+  thead {
+    background: #f9fafb;
+  }
+
+  th {
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: $admin-text-secondary;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 16px 20px;
+    color: $admin-text-primary;
+    border-top: 1px solid #f3f4f6;
+  }
+
+  tbody tr:hover {
+    background: #fafafa;
+  }
+}
+
+.contacts-table__action {
+  padding: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: $admin-accent;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    color: $admin-accent-hover;
+    text-decoration: underline;
+  }
+}
+
+// Contact Message modal (View Message popup)
+.contact-message-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.contact-message-modal {
+  background: #fff;
+  border-radius: $admin-card-radius;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 520px;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-message-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.contact-message-modal__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $admin-text-primary;
+  margin: 0;
+}
+
+.contact-message-modal__close {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+.contact-message-modal__close-icon {
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  color: $admin-text-primary;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.contact-message-modal__body {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.contact-message-modal__list {
+  margin: 0;
+}
+
+.contact-message-modal__row {
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  dt {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: $admin-text-secondary;
+    margin: 0 0 4px;
+  }
+
+  dd {
+    font-size: 0.9375rem;
+    color: $admin-text-primary;
+    margin: 0;
+  }
+}
+
+.contact-message-modal__message {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.contact-message-modal__footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 1px solid #f3f4f6;
+  background: #fafafa;
+  border-radius: 0 0 $admin-card-radius $admin-card-radius;
+}
+
+.contact-message-modal__btn {
+  padding: 10px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  &--close {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: $admin-text-primary;
+
+    &:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+  }
+
+  &--reply {
+    background: $admin-accent;
+    border: none;
+    color: #fff;
+
+    &:hover {
+      background: $admin-accent-hover;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: $bp-tablet) {
+  .contacts-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: $bp-mobile) {
+  .contacts-title {
+    font-size: 1.25rem;
+  }
+  .contacts-card {
+    padding: 16px;
+  }
+  .contacts-table th,
+  .contacts-table td {
+    padding: 12px 14px;
+    font-size: 0.875rem;
+  }
+  .contact-message-backdrop {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: max(16px, env(safe-area-inset-top));
+    overflow-y: auto;
+  }
+  .contact-message-modal {
+    max-width: none;
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    margin: auto 0;
+  }
+  .contact-message-modal__header {
+    padding: 16px 20px;
+  }
+  .contact-message-modal__title {
+    font-size: 1.125rem;
+  }
+  .contact-message-modal__body {
+    padding: 20px;
+  }
+  .contact-message-modal__footer {
+    flex-direction: column;
+    padding: 16px 20px;
+    gap: 10px;
+  }
+  .contact-message-modal__btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: $bp-mobile) {
+  .contact-message-backdrop {
+    padding: 12px;
+  }
+  .contact-message-modal {
+    border-radius: 12px;
+  }
+  .contact-message-modal__header {
+    padding: 14px 16px;
+  }
+  .contact-message-modal__body {
+    padding: 16px;
+  }
+}
