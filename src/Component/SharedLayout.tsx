@@ -20,12 +20,10 @@ const quickLinks = [
 
 type SiteNavbarProps = {
   ctaLabel?: string
-  ctaComingSoonMessage?: string
 }
 
-export function SiteNavbar({ ctaLabel = 'Afresh Academy', ctaComingSoonMessage }: SiteNavbarProps) {
+export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [showComingSoonCard, setShowComingSoonCard] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -40,9 +38,7 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy', ctaComingSoonMessage }
 
   const closeMenu = () => setMenuOpen(false)
   const handleCtaClick = () => {
-    if (ctaComingSoonMessage) {
-      setShowComingSoonCard(true)
-    }
+    window.open('https://afreshclub.com', '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -106,24 +102,6 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy', ctaComingSoonMessage }
         </ul>
       </div>
       </nav>
-      {showComingSoonCard ? (
-        <div className="site-coming-soon-backdrop" role="presentation" onClick={() => setShowComingSoonCard(false)}>
-          <div
-            className="site-coming-soon-card"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="coming-soon-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <p className="site-coming-soon-eyebrow">Afresh Academy</p>
-            <h2 id="coming-soon-title">Coming Soon</h2>
-            <p>{ctaComingSoonMessage}</p>
-            <button type="button" className="site-coming-soon-close" onClick={() => setShowComingSoonCard(false)}>
-              Close
-            </button>
-          </div>
-        </div>
-      ) : null}
     </>
   )
 }

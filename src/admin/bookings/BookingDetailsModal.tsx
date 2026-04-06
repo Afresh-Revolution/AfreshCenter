@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
+import { updateBookingStatus, triggerBookingEmail } from '../../api/bookings';
 
 export interface BookingDetail {
+  id?: string;
   client: string;
   email: string;
   phone: string;
   service: string;
-  status: 'Pending' | 'Confirmed' | 'Completed';
+  status: 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
   date: string;
   dateTime: string;
   location: string;
@@ -15,77 +17,76 @@ export interface BookingDetail {
 interface BookingDetailsModalProps {
   booking: BookingDetail;
   onClose: () => void;
+  onStatusChange?: (id: string, newStatus: BookingDetail['status']) => void;
 }
 
-const STATUS_OPTIONS: BookingDetail['status'][] = ['Pending', 'Confirmed', 'Completed'];
+const STATUS_OPTIONS: BookingDetail['status'][] = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
 
-export function BookingDetailsModal({ booking, onClose }: BookingDetailsModalProps) {
+export function BookingDetailsModal({ booking, onClose, onStatusChange }: BookingDetailsModalProps) {
+  const [currentStatus, setCurrentStatus] = useState<BookingDetail['status']>(booking.status);
   const [showUpdateStatus, setShowUpdateStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<BookingDetail['status']>(booking.status);
-  const [showReschedule, setShowReschedule] = useState(false);
-  const [rescheduleForm, setRescheduleForm] = useState({
-    newDate: '',
-    newTime: '',
-    location: booking.location,
-    reason: '',
-  });
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
   const [showSendEmail, setShowSendEmail] = useState(false);
-  const [emailForm, setEmailForm] = useState({
-    to: booking.email,
-    clientName: booking.client,
-    subject: `Regarding your ${booking.service} booking.`,
-    message: '',
-  });
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailMessage, setEmailMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Keep status in sync if parent updates the booking prop
+  useEffect(() => {
+    setCurrentStatus(booking.status);
+    setSelectedStatus(booking.status);
+  }, [booking.status]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (showSendEmail) setShowSendEmail(false);
-        else if (showReschedule) setShowReschedule(false);
         else if (showUpdateStatus) setShowUpdateStatus(false);
         else onClose();
       }
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [onClose, showUpdateStatus, showReschedule, showSendEmail]);
+  }, [onClose, showUpdateStatus, showSendEmail]);
 
-  const openUpdateStatus = () => {
-    setSelectedStatus(booking.status);
-    setShowUpdateStatus(true);
+  const handleUpdateStatusSubmit = async () => {
+    if (!booking.id) {
+      // No id — just update locally
+      setCurrentStatus(selectedStatus);
+      setShowUpdateStatus(false);
+      return;
+    }
+    setStatusLoading(true);
+    setStatusMessage(null);
+    const result = await updateBookingStatus(booking.id, selectedStatus);
+    setStatusLoading(false);
+    if (result.success) {
+      setCurrentStatus(selectedStatus);
+      onStatusChange?.(booking.id, selectedStatus);
+      setStatusMessage({ type: 'success', text: result.message ?? 'Status updated.' });
+      setTimeout(() => { setStatusMessage(null); setShowUpdateStatus(false); }, 1500);
+    } else {
+      setStatusMessage({ type: 'error', text: result.message ?? 'Failed to update status.' });
+    }
   };
 
-  const handleUpdateStatusSubmit = () => {
-    setShowUpdateStatus(false);
-  };
-
-  const openReschedule = () => {
-    setRescheduleForm({
-      newDate: '',
-      newTime: '',
-      location: booking.location,
-      reason: '',
-    });
-    setShowReschedule(true);
-  };
-
-  const handleRescheduleSubmit = () => {
-    setShowReschedule(false);
-  };
-
-  const openSendEmail = () => {
-    setEmailForm({
-      to: booking.email,
-      clientName: booking.client,
-      subject: `Regarding your ${booking.service} booking.`,
-      message: '',
-    });
-    setShowSendEmail(true);
-  };
-
-  const handleSendEmailSubmit = () => {
-    setShowSendEmail(false);
-    // Could send email via API here
+  const handleSendEmail = async () => {
+    if (!booking.id) {
+      setEmailMessage({ type: 'error', text: 'Cannot send email — booking ID is missing.' });
+      return;
+    }
+    setEmailLoading(true);
+    setEmailMessage(null);
+    const result = await triggerBookingEmail(booking.id);
+    setEmailLoading(false);
+    if (result.success) {
+      setEmailMessage({ type: 'success', text: result.message ?? 'Email sent successfully.' });
+      setTimeout(() => { setEmailMessage(null); setShowSendEmail(false); }, 2000);
+    } else {
+      setEmailMessage({ type: 'error', text: result.message ?? 'Failed to send email.' });
+    }
   };
 
   return (
@@ -108,11 +109,11 @@ export function BookingDetailsModal({ booking, onClose }: BookingDetailsModalPro
               </div>
               <div className="booking-modal__row">
                 <dt><span className="booking-modal__icon booking-modal__icon--envelope" aria-hidden /> Email</dt>
-                <dd>{booking.email}</dd>
+                <dd>{booking.email || '—'}</dd>
               </div>
               <div className="booking-modal__row">
                 <dt><span className="booking-modal__icon booking-modal__icon--phone" aria-hidden /> Phone</dt>
-                <dd>{booking.phone}</dd>
+                <dd>{booking.phone || '—'}</dd>
               </div>
             </dl>
           </section>
@@ -122,53 +123,51 @@ export function BookingDetailsModal({ booking, onClose }: BookingDetailsModalPro
             <dl className="booking-modal__list">
               <div className="booking-modal__row">
                 <dt>Service</dt>
-                <dd>{booking.service}</dd>
+                <dd>{booking.service || '—'}</dd>
               </div>
               <div className="booking-modal__row">
                 <dt>Status</dt>
                 <dd>
-                  <span className={`booking-modal__status booking-modal__status--${booking.status.toLowerCase()}`}>
-                    {booking.status}
+                  <span className={`booking-modal__status booking-modal__status--${currentStatus.toLowerCase()}`}>
+                    {currentStatus}
                   </span>
                 </dd>
               </div>
-              <div className="booking-modal__row">
-                <dt><span className="booking-modal__icon booking-modal__icon--calendar" aria-hidden /> Date & Time</dt>
-                <dd>{booking.dateTime}</dd>
-              </div>
-              <div className="booking-modal__row">
-                <dt><span className="booking-modal__icon booking-modal__icon--pin" aria-hidden /> Location</dt>
-                <dd>{booking.location}</dd>
-              </div>
-              <div className="booking-modal__row">
-                <dt>Notes</dt>
-                <dd>{booking.notes}</dd>
-              </div>
+              {booking.dateTime && (
+                <div className="booking-modal__row">
+                  <dt><span className="booking-modal__icon booking-modal__icon--calendar" aria-hidden /> Date &amp; Time</dt>
+                  <dd>{booking.dateTime}</dd>
+                </div>
+              )}
+              {booking.notes && (
+                <div className="booking-modal__row">
+                  <dt>Project Details</dt>
+                  <dd style={{ whiteSpace: 'pre-wrap' }}>{booking.notes}</dd>
+                </div>
+              )}
             </dl>
           </section>
         </div>
 
         <footer className="booking-modal__footer">
-          <button type="button" className="booking-modal__btn booking-modal__btn--update" onClick={openUpdateStatus}>
+          <button type="button" className="booking-modal__btn booking-modal__btn--update" onClick={() => { setSelectedStatus(currentStatus); setShowUpdateStatus(true); }}>
             <span className="booking-modal__btn-icon booking-modal__btn-icon--pencil" aria-hidden />
             Update Status
           </button>
-          <button type="button" className="booking-modal__btn booking-modal__btn--reschedule" onClick={openReschedule}>
-            <span className="booking-modal__btn-icon booking-modal__btn-icon--clock" aria-hidden />
-            Reschedule
-          </button>
-          <button type="button" className="booking-modal__btn booking-modal__btn--email" onClick={openSendEmail}>
+          <button type="button" className="booking-modal__btn booking-modal__btn--email" onClick={() => setShowSendEmail(true)}>
             <span className="booking-modal__btn-icon booking-modal__btn-icon--envelope" aria-hidden />
             Send Email
           </button>
         </footer>
       </div>
 
+      {/* ── Update Status Modal ── */}
       {showUpdateStatus && (
         <div className="update-status-backdrop" onClick={() => setShowUpdateStatus(false)}>
           <div className="update-status-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="update-status-title">
             <h2 id="update-status-title" className="update-status-modal__title">Update Booking Status</h2>
-            <label className="update-status-modal__label" htmlFor="update-status-select">Select Status</label>
+            <p className="update-status-modal__sub">Client: <strong>{booking.client}</strong></p>
+            <label className="update-status-modal__label" htmlFor="update-status-select">Select New Status</label>
             <select
               id="update-status-select"
               className="update-status-modal__select"
@@ -179,116 +178,59 @@ export function BookingDetailsModal({ booking, onClose }: BookingDetailsModalPro
                 <option key={opt} value={opt}>{opt}</option>
               ))}
             </select>
+            {statusMessage && (
+              <div className={`badge badge--${statusMessage.type}`} role="status">{statusMessage.text}</div>
+            )}
             <div className="update-status-modal__actions">
               <button type="button" className="update-status-modal__btn update-status-modal__btn--cancel" onClick={() => setShowUpdateStatus(false)}>
                 Cancel
               </button>
-              <button type="button" className="update-status-modal__btn update-status-modal__btn--submit" onClick={handleUpdateStatusSubmit}>
-                Update Status
+              <button
+                type="button"
+                className="update-status-modal__btn update-status-modal__btn--submit"
+                onClick={handleUpdateStatusSubmit}
+                disabled={statusLoading || selectedStatus === currentStatus}
+              >
+                {statusLoading ? 'Saving…' : 'Update Status'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {showReschedule && (
-        <div className="reschedule-backdrop" onClick={() => setShowReschedule(false)}>
-          <div className="reschedule-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="reschedule-title">
-            <h2 id="reschedule-title" className="reschedule-modal__title">Reschedule Booking</h2>
-            <div className="reschedule-modal__body">
-              <label className="reschedule-modal__label" htmlFor="reschedule-new-date">New Date</label>
-              <input
-                id="reschedule-new-date"
-                type="date"
-                className="reschedule-modal__input"
-                value={rescheduleForm.newDate}
-                onChange={(e) => setRescheduleForm((f) => ({ ...f, newDate: e.target.value }))}
-              />
-              <label className="reschedule-modal__label" htmlFor="reschedule-new-time">New Time</label>
-              <input
-                id="reschedule-new-time"
-                type="time"
-                className="reschedule-modal__input"
-                value={rescheduleForm.newTime}
-                onChange={(e) => setRescheduleForm((f) => ({ ...f, newTime: e.target.value }))}
-              />
-              <label className="reschedule-modal__label" htmlFor="reschedule-location">Location</label>
-              <input
-                id="reschedule-location"
-                type="text"
-                className="reschedule-modal__input"
-                value={rescheduleForm.location}
-                onChange={(e) => setRescheduleForm((f) => ({ ...f, location: e.target.value }))}
-                placeholder="e.g. Virtual Meeting"
-              />
-              <label className="reschedule-modal__label" htmlFor="reschedule-reason">Reason (Optional)</label>
-              <textarea
-                id="reschedule-reason"
-                className="reschedule-modal__textarea"
-                value={rescheduleForm.reason}
-                onChange={(e) => setRescheduleForm((f) => ({ ...f, reason: e.target.value }))}
-                placeholder="Enter reason for rescheduling"
-                rows={3}
-              />
-            </div>
-            <div className="reschedule-modal__actions">
-              <button type="button" className="reschedule-modal__btn reschedule-modal__btn--cancel" onClick={() => setShowReschedule(false)}>
-                Cancel
-              </button>
-              <button type="button" className="reschedule-modal__btn reschedule-modal__btn--submit" onClick={handleRescheduleSubmit}>
-                Reschedule & Notify
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* ── Send Email Modal ── */}
       {showSendEmail && (
         <div className="send-email-backdrop" onClick={() => setShowSendEmail(false)}>
           <div className="send-email-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="send-email-title">
-            <h2 id="send-email-title" className="send-email-modal__title">Send Email to Client</h2>
-            <div className="send-email-modal__body">
-              <label className="send-email-modal__label" htmlFor="send-email-to">To</label>
-              <input
-                id="send-email-to"
-                type="email"
-                className="send-email-modal__input"
-                value={emailForm.to}
-                onChange={(e) => setEmailForm((f) => ({ ...f, to: e.target.value }))}
-              />
-              <label className="send-email-modal__label" htmlFor="send-email-name">Client Name</label>
-              <input
-                id="send-email-name"
-                type="text"
-                className="send-email-modal__input"
-                value={emailForm.clientName}
-                onChange={(e) => setEmailForm((f) => ({ ...f, clientName: e.target.value }))}
-              />
-              <label className="send-email-modal__label" htmlFor="send-email-subject">Subject</label>
-              <input
-                id="send-email-subject"
-                type="text"
-                className="send-email-modal__input"
-                value={emailForm.subject}
-                onChange={(e) => setEmailForm((f) => ({ ...f, subject: e.target.value }))}
-              />
-              <label className="send-email-modal__label" htmlFor="send-email-message">Message</label>
-              <textarea
-                id="send-email-message"
-                className="send-email-modal__textarea"
-                value={emailForm.message}
-                onChange={(e) => setEmailForm((f) => ({ ...f, message: e.target.value }))}
-                placeholder="Enter your message here..."
-                rows={4}
-              />
-            </div>
+            <h2 id="send-email-title" className="send-email-modal__title">Send Booking Email</h2>
+            <p className="send-email-modal__sub">
+              This will re-send the booking notification email to the admin using the configured email template.
+            </p>
+            <dl className="send-email-modal__preview">
+              <div className="booking-modal__row">
+                <dt>To:</dt>
+                <dd>{booking.email || '(no email on record)'}</dd>
+              </div>
+              <div className="booking-modal__row">
+                <dt>Client:</dt>
+                <dd>{booking.client}</dd>
+              </div>
+            </dl>
+            {emailMessage && (
+              <div className={`badge badge--${emailMessage.type}`} role="status">{emailMessage.text}</div>
+            )}
             <div className="send-email-modal__actions">
               <button type="button" className="send-email-modal__btn send-email-modal__btn--cancel" onClick={() => setShowSendEmail(false)}>
                 Cancel
               </button>
-              <button type="button" className="send-email-modal__btn send-email-modal__btn--submit" onClick={handleSendEmailSubmit}>
+              <button
+                type="button"
+                className="send-email-modal__btn send-email-modal__btn--submit"
+                onClick={handleSendEmail}
+                disabled={emailLoading}
+              >
                 <span className="send-email-modal__btn-icon" aria-hidden />
-                Send Email
+                {emailLoading ? 'Sending…' : 'Send Email'}
               </button>
             </div>
           </div>

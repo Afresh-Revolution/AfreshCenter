@@ -29,11 +29,11 @@ import { TiltCard } from "./TiltCard";
 
 function LandingPage() {
   const affiliatedCompanies = [
-    { name: "CBrilliance", logo: cbLogo },
+    { name: "CBrilliance", logo: cbLogo, href: "https://cbrilliance.io" },
     { name: "NAB", logo: nabLogo, href: "https://aibuilders.ng", className: "brand-item--nab" },
     { name: "GeniusWave", logo: gwaveLogo },
     { name: "Popswit", logo: popsLogo },
-    { name: "Knowrist", logo: knowristLogo },
+    { name: "Knowrist", logo: knowristLogo, href: "https://knowrist.com" },
   ];
 
   const [landingServices, setLandingServices] = useState<ServiceItem[]>([]);
@@ -41,7 +41,12 @@ function LandingPage() {
     (TeamMemberDTO & { featured?: boolean })[]
   >([]);
   const [teamLoading, setTeamLoading] = useState(true);
+  const [disableTrackTransition, setDisableTrackTransition] = useState(false);
+  const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(0);
   const SERVICES_PREVIEW_COUNT = 6;
+  const VISIBLE = 5;
+  const FEAT_POS = 2;
+  const CLONES = VISIBLE;
 
   useEffect(() => {
     let cancelled = false;
@@ -65,14 +70,17 @@ function LandingPage() {
             ...m,
             featured: idx === featuredIdx && featuredIdx >= 0,
           }));
+          const nextCloneCount = Math.min(CLONES, membersWithFeatured.length);
           setTeamMembers(membersWithFeatured);
+          setDisableTrackTransition(true);
+          setLoopFeaturedIndex(nextCloneCount + (featuredIdx >= 0 ? featuredIdx : 0));
         }
       })
       .catch(() => {})
       .finally(() => { if (!cancelled) setTeamLoading(false); });
 
     return () => { cancelled = true; };
-  }, []);
+  }, [CLONES]);
 
   const topWorkTiles = [
     { type: "image", title: "vann", image: ourWork1 },
@@ -94,16 +102,6 @@ function LandingPage() {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   ];
 
-  const getFeaturedIndex = () => {
-    const idx = teamMembers.findIndex((member) => member.featured);
-    return idx >= 0 ? idx : 0;
-  };
-  const featuredIndex = getFeaturedIndex();
-
-  const VISIBLE = 5;
-  const FEAT_POS = 2;
-  const CLONES = VISIBLE;
-
   const totalMembers = teamMembers.length;
   const cloneCount = Math.min(CLONES, totalMembers);
   const loopMembers =
@@ -118,10 +116,6 @@ function LandingPage() {
   const minFeaturedIdx = cloneCount;
   const maxFeaturedIdx = cloneCount + totalMembers - 1;
 
-  const [disableTrackTransition, setDisableTrackTransition] = useState(false);
-  const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(
-    () => minFeaturedIdx + featuredIndex,
-  );
   const [isMobileTeam, setIsMobileTeam] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 900 : false,
   );
@@ -165,12 +159,6 @@ function LandingPage() {
         totalMembers
       : -1;
   const activeMember = activeIdx >= 0 ? teamMembers[activeIdx] : null;
-
-  useEffect(() => {
-    if (!totalMembers) return;
-    setDisableTrackTransition(true);
-    setLoopFeaturedIndex(minFeaturedIdx + featuredIndex);
-  }, [featuredIndex, minFeaturedIdx, totalMembers]);
 
   useEffect(() => {
     if (!disableTrackTransition) return;
@@ -301,7 +289,7 @@ function LandingPage() {
 
   return (
     <div className="landingPage">
-      <SiteNavbar ctaComingSoonMessage="Coming soon on the 7th of April" />
+      <SiteNavbar />
 
       {/* Hero with entrance animations + parallax */}
       <header

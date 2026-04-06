@@ -28,7 +28,7 @@ function toCardData(m: TeamMemberDTO): TeamCardData {
         role: m.role ?? '',
         bio: m.bio ?? '',
         image_url: m.image_url ?? '',
-        status: m.status,
+        status: m.visible === false ? 'Inactive' : 'Active',
     };
 }
 

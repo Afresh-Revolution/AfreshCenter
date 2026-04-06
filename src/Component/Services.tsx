@@ -22,12 +22,12 @@ function Services() {
 
   useEffect(() => {
     let cancelled = false;
-    setError(null);
 
     fetchPublicServices()
       .then((list) => {
         if (!cancelled) {
           setServices(list);
+          setError(null);
           if (detailId && list.length) {
             const found = list.find((s) => s.id === detailId);
             if (found) setDetailService(found);

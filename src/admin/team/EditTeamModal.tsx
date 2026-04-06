@@ -36,7 +36,7 @@ export function EditTeamModal({ isOpen, member, onClose, onSubmit, onSuccess }: 
                 role: member.role ?? '',
                 bio: member.bio ?? '',
                 image_url: member.image_url ?? '',
-                visible: member.status !== 'Inactive',
+                visible: member.visible !== false,
             });
             setSuccess(null);
             setError(null);
