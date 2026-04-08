@@ -7,7 +7,7 @@ import gwaveLogo from "../assets/images/gwave 1.png";
 import popsLogo from "../assets/images/pops 1.png";
 import knowristLogo from "../assets/images/knowrist 1.png";
 import nabLogo from "../assets/images/NAB.jpg";
-import aboutImageLeft from "../assets/images/Image-Box-1.png";
+import aboutImageLeft from "../assets/images/Image-Box-1.JPG";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
 import {
   fetchPublicServices,
@@ -31,9 +31,9 @@ function LandingPage() {
   const affiliatedCompanies = [
     { name: "CBrilliance", logo: cbLogo, href: "https://cbrilliance.io" },
     { name: "NAB", logo: nabLogo, href: "https://aibuilders.ng", className: "brand-item--nab" },
-    { name: "GeniusWave", logo: gwaveLogo },
-    { name: "Popswit", logo: popsLogo },
-    { name: "Knowrist", logo: knowristLogo, href: "https://knowrist.com" },
+    { name: "GeniusWave", logo: gwaveLogo, href: "https://genius.ng/" },
+    { name: "Popswit", logo: popsLogo, href: "https://popswit.com/" },
+    { name: "Knowrist", logo: knowristLogo, href: "https://www.knowrist.com/" },
   ];
 
   const [landingServices, setLandingServices] = useState<ServiceItem[]>([]);
