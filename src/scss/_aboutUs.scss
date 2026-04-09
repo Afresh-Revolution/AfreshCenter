@@ -578,8 +578,27 @@ body {
     transition: filter 0.3s ease, transform 0.45s ease;
 }
 
+.team-card-img-fallback {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at top, rgba(246, 128, 20, 0.28), transparent 42%),
+      linear-gradient(135deg, #dfe7ee, #cbd7e2);
+    color: var(--deep-blue);
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
 .team-card--featured .team-card-img {
     filter: none;
+    transform: scale(1.05);
+}
+
+.team-card--featured .team-card-img-fallback {
     transform: scale(1.05);
 }
 

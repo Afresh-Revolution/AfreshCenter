@@ -1,4 +1,5 @@
 import { API_BASE } from "./config";
+import { getAuthHeaders } from "./auth";
 
 export type TeamMemberDTO = {
   id?: string;
@@ -37,7 +38,9 @@ export async function fetchTeams(): Promise<TeamMemberDTO[]> {
 /** Fetch all team members for admin (includes inactive). */
 export async function fetchAdminTeams(): Promise<TeamMemberDTO[]> {
   const adminUrl = API_BASE ? `${API_BASE}/api/admin/teams` : '/api/admin/teams';
-  let res = await fetch(adminUrl);
+  let res = await fetch(adminUrl, {
+    headers: getAuthHeaders(),
+  });
   if (!res.ok && res.status === 404) {
     const fallbackUrl = API_BASE ? `${API_BASE}/api/teams` : '/api/teams';
     res = await fetch(fallbackUrl);
@@ -75,6 +78,7 @@ export async function uploadTeamImage(
   form.append("image", file);
   const res = await fetch(`${API_BASE}/api/admin/upload`, {
     method: "POST",
+    headers: getAuthHeaders(),
     body: form,
   });
   const data = await res.json();
@@ -111,7 +115,7 @@ export async function createTeamMember(
 ): Promise<CreateTeamResponse> {
   const res = await fetch(`${API_BASE}/api/teams`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
       name: payload.name.trim(),
       role: payload.role.trim(),
@@ -162,7 +166,7 @@ export async function updateTeamMember(
 ): Promise<UpdateTeamResponse> {
   const res = await fetch(`${API_BASE}/api/teams/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
       name: payload.name?.trim(),
       role: payload.role?.trim(),
@@ -201,7 +205,7 @@ export async function toggleTeamMemberVisibility(
 ): Promise<ToggleTeamVisibilityResponse> {
   const res = await fetch(`${API_BASE}/api/teams/${id}/visibility`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ visible }),
   });
   const data = (await res.json()) as ToggleTeamVisibilityResponse;
@@ -226,6 +230,7 @@ export async function deleteTeamMember(
 ): Promise<DeleteTeamResponse> {
   const res = await fetch(`${API_BASE}/api/teams/${id}`, {
     method: "DELETE",
+    headers: getAuthHeaders(),
   });
   const data = (await res.json()) as DeleteTeamResponse;
   if (!res.ok) {

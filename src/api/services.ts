@@ -1,4 +1,5 @@
 import { API_BASE } from './config';
+import { getAuthHeaders } from './auth';
 
 export interface ServiceItem {
   id: string;
@@ -35,7 +36,9 @@ function parseServiceCollection(payload: ServiceCollectionResponse): ServiceItem
 }
 
 export async function fetchServices(): Promise<ServiceItem[]> {
-  const res = await fetch(`${API_BASE}/api/admin/services`);
+  const res = await fetch(`${API_BASE}/api/admin/services`, {
+    headers: getAuthHeaders(),
+  });
   if (!res.ok) throw new Error('Failed to fetch services');
   const data = (await res.json()) as ServiceCollectionResponse;
   return parseServiceCollection(data);
@@ -66,6 +69,7 @@ export async function adminImageUpload(file: File): Promise<{ success: true; url
   form.append('image', file);
   const res = await fetch(`${API_BASE}/api/admin/upload`, {
     method: 'POST',
+    headers: getAuthHeaders(),
     body: form,
   });
   const data = await res.json();
@@ -105,7 +109,7 @@ export type CreateServiceResponse = CreateServiceSuccess | CreateServiceError;
 export async function createService(payload: CreateServicePayload): Promise<CreateServiceResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({
       title: payload.title.trim(),
       category: payload.category.trim() || 'General',
@@ -150,7 +154,7 @@ export async function toggleServiceVisibility(
 ): Promise<ToggleVisibilityResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services/${id}/visibility`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ visible }),
   });
   const data = (await res.json()) as ToggleVisibilityResponse;
@@ -197,7 +201,7 @@ export async function updateService(
 ): Promise<UpdateServiceResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services/${id}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({
       title: payload.title?.trim(),
       category: payload.category?.trim(),
@@ -238,6 +242,7 @@ export type DeleteServiceResponse = DeleteServiceSuccess | DeleteServiceError;
 export async function deleteService(id: string): Promise<DeleteServiceResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services/${id}`, {
     method: 'DELETE',
+    headers: getAuthHeaders(),
   });
   const data = (await res.json()) as DeleteServiceResponse;
   if (!res.ok) {

@@ -7,6 +7,17 @@ export function getStoredToken(): string | null {
   return sessionStorage.getItem(TOKEN_KEY) ?? localStorage.getItem(TOKEN_KEY);
 }
 
+export function getAuthHeaders(extraHeaders?: HeadersInit): HeadersInit {
+  const token = getStoredToken();
+  const headers = new Headers(extraHeaders);
+
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  return headers;
+}
+
 export function setStoredToken(token: string, remember: boolean): void {
   if (remember) {
     localStorage.setItem(TOKEN_KEY, token);
