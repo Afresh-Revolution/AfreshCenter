@@ -15,17 +15,14 @@ const quickLinks = [
   { to: '/contact', label: 'Contact Us' },
   { to: '/services', label: 'Services' },
   { to: '/support', label: 'Support' },
-  { label: 'Account' },
 ]
 
 type SiteNavbarProps = {
   ctaLabel?: string
-  ctaComingSoonMessage?: string
 }
 
-export function SiteNavbar({ ctaLabel = 'Afresh Academy', ctaComingSoonMessage }: SiteNavbarProps) {
+export function SiteNavbar({ ctaLabel = 'Afresh Academy' }: SiteNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [showComingSoonCard, setShowComingSoonCard] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -40,90 +37,70 @@ export function SiteNavbar({ ctaLabel = 'Afresh Academy', ctaComingSoonMessage }
 
   const closeMenu = () => setMenuOpen(false)
   const handleCtaClick = () => {
-    if (ctaComingSoonMessage) {
-      setShowComingSoonCard(true)
-    }
+    window.open('https://afreshclub.com', '_blank', 'noopener,noreferrer')
   }
 
   return (
     <>
       <ScrollProgressBar />
       <nav className={`site-navbar-wrap${menuOpen ? ' menu-open' : ''}`}>
-      <div className="site-navbar">
-        <div
-          className="site-logo"
-          aria-label="AfrESH home"
-          role="link"
-          tabIndex={0}
-          onClick={() => navigate('/')}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault()
-              navigate('/')
-            }
-          }}
-        >
-          <span className="site-mark" aria-hidden="true">
-            afr
-          </span>
-          <span className="site-logo-text">AfrESH</span>
+        <div className="site-navbar">
+          <div
+            className="site-logo"
+            aria-label="AfrESH home"
+            role="link"
+            tabIndex={0}
+            onClick={() => navigate('/')}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                navigate('/')
+              }
+            }}
+          >
+            <span className="site-mark" aria-hidden="true">
+              afr
+            </span>
+            <span className="site-logo-text">AfrESH</span>
+          </div>
+          <nav className="site-nav-wrap" aria-label="Primary navigation">
+            <ul className="site-nav">
+              {navItems.map((item) => (
+                <li key={item.label}>
+                  <NavLink to={item.to} end={item.to === '/'}>
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <button className="site-cta" type="button" onClick={handleCtaClick}>
+            {ctaLabel}
+          </button>
+          <button
+            type="button"
+            className="site-menu-toggle"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
-        <nav className="site-nav-wrap" aria-label="Primary navigation">
-          <ul className="site-nav">
+        <div className={`site-mobile-menu${menuOpen ? ' open' : ''}`}>
+          <ul>
             {navItems.map((item) => (
-              <li key={item.label}>
-                <NavLink to={item.to} end={item.to === '/'}>
+              <li key={`mobile-${item.label}`}>
+                <NavLink to={item.to} end={item.to === '/'} onClick={closeMenu}>
                   {item.label}
                 </NavLink>
               </li>
             ))}
           </ul>
-        </nav>
-        <button className="site-cta" type="button" onClick={handleCtaClick}>
-          {ctaLabel}
-        </button>
-        <button
-          type="button"
-          className="site-menu-toggle"
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </div>
-      <div className={`site-mobile-menu${menuOpen ? ' open' : ''}`}>
-        <ul>
-          {navItems.map((item) => (
-            <li key={`mobile-${item.label}`}>
-              <NavLink to={item.to} end={item.to === '/'} onClick={closeMenu}>
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </div>
-      </nav>
-      {showComingSoonCard ? (
-        <div className="site-coming-soon-backdrop" role="presentation" onClick={() => setShowComingSoonCard(false)}>
-          <div
-            className="site-coming-soon-card"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="coming-soon-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <p className="site-coming-soon-eyebrow">Afresh Academy</p>
-            <h2 id="coming-soon-title">Coming Soon</h2>
-            <p>{ctaComingSoonMessage}</p>
-            <button type="button" className="site-coming-soon-close" onClick={() => setShowComingSoonCard(false)}>
-              Close
-            </button>
-          </div>
         </div>
-      ) : null}
+      </nav>
     </>
   )
 }

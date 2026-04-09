@@ -7,7 +7,7 @@ import gwaveLogo from "../assets/images/gwave 1.png";
 import popsLogo from "../assets/images/pops 1.png";
 import knowristLogo from "../assets/images/knowrist 1.png";
 import nabLogo from "../assets/images/NAB.jpg";
-import aboutImageLeft from "../assets/images/Image-Box-1.png";
+import aboutImageLeft from "../assets/images/Image-Box-1.JPG";
 import aboutImageRight from "../assets/images/Image-Box-2.png";
 import {
   fetchPublicServices,
@@ -15,9 +15,9 @@ import {
   type ServiceItem,
 } from "../api/services";
 import { fetchTeams, getTeamImageUrl, type TeamMemberDTO } from "../api/teams";
-import ourWork1 from "../assets/images/our-woks-1.png";
-import ourWork2 from "../assets/images/our-woks-2.png";
-import ourWork3 from "../assets/images/our-woks-3.png";
+import joscityImg from "../assets/images/joscity.jpg";
+import popswitImg from "../assets/images/popswit.jpg";
+import knowristdbImg from "../assets/images/knowristdb.jpg";
 import olaImage from "../assets/images/Ola.png";
 import samLightImage from "../assets/images/Sam-light.jpg";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
@@ -29,11 +29,11 @@ import { TiltCard } from "./TiltCard";
 
 function LandingPage() {
   const affiliatedCompanies = [
-    { name: "CBrilliance", logo: cbLogo },
+    { name: "CBrilliance", logo: cbLogo, href: "https://cbrilliance.io" },
     { name: "NAB", logo: nabLogo, href: "https://aibuilders.ng", className: "brand-item--nab" },
-    { name: "GeniusWave", logo: gwaveLogo },
-    { name: "Popswit", logo: popsLogo },
-    { name: "Knowrist", logo: knowristLogo },
+    { name: "GeniusWave", logo: gwaveLogo, href: "https://genius.ng/" },
+    { name: "Popswit", logo: popsLogo, href: "https://popswit.com/" },
+    { name: "Knowrist", logo: knowristLogo, href: "https://www.knowrist.com/" },
   ];
 
   const [landingServices, setLandingServices] = useState<ServiceItem[]>([]);
@@ -41,14 +41,19 @@ function LandingPage() {
     (TeamMemberDTO & { featured?: boolean })[]
   >([]);
   const [teamLoading, setTeamLoading] = useState(true);
+  const [disableTrackTransition, setDisableTrackTransition] = useState(false);
+  const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(0);
   const SERVICES_PREVIEW_COUNT = 6;
+  const VISIBLE = 5;
+  const FEAT_POS = 2;
+  const CLONES = VISIBLE;
 
   useEffect(() => {
     let cancelled = false;
 
     fetchPublicServices()
       .then((list) => { if (!cancelled) setLandingServices(list); })
-      .catch(() => {});
+      .catch(() => { });
 
     fetchTeams()
       .then((list) => {
@@ -65,23 +70,27 @@ function LandingPage() {
             ...m,
             featured: idx === featuredIdx && featuredIdx >= 0,
           }));
+          const nextCloneCount = Math.min(CLONES, membersWithFeatured.length);
           setTeamMembers(membersWithFeatured);
+          setDisableTrackTransition(true);
+          setLoopFeaturedIndex(nextCloneCount + (featuredIdx >= 0 ? featuredIdx : 0));
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => { if (!cancelled) setTeamLoading(false); });
 
     return () => { cancelled = true; };
-  }, []);
+  }, [CLONES]);
 
-  const topWorkTiles = [
-    { type: "image", title: "vann", image: ourWork1 },
-    { type: "text", title: "consectet", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod temp." },
-    { type: "image", title: "delivery", image: ourWork2 },
-    { type: "textHighlight", title: "7.9%", body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do." },
-    { type: "text", title: "voluptat", body: "to be welcomed and every pain in certain." },
-    { type: "image", title: "sos", image: ourWork3 },
-  ];
+  const topWorkTiles = {
+    hero: { image: joscityImg, alt: "Joscity" },
+    stat: { value: "7.9%", label: "Accuracy" },
+    desc: "Our work is dedicated to creating a welcoming environment where every challenge is met with care and understanding.",
+    bottom: [
+      { image: popswitImg, alt: "Popswit" },
+      { image: knowristdbImg, alt: "Knowrist DB" },
+    ],
+  };
 
   const whyChoosePoints = [
     "But I must explain to you how all this nonsense",
@@ -94,34 +103,20 @@ function LandingPage() {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   ];
 
-  const getFeaturedIndex = () => {
-    const idx = teamMembers.findIndex((member) => member.featured);
-    return idx >= 0 ? idx : 0;
-  };
-  const featuredIndex = getFeaturedIndex();
-
-  const VISIBLE = 5;
-  const FEAT_POS = 2;
-  const CLONES = VISIBLE;
-
   const totalMembers = teamMembers.length;
   const cloneCount = Math.min(CLONES, totalMembers);
   const loopMembers =
     totalMembers > 0
       ? [
-          ...teamMembers.slice(-cloneCount),
-          ...teamMembers,
-          ...teamMembers.slice(0, cloneCount),
-        ]
+        ...teamMembers.slice(-cloneCount),
+        ...teamMembers,
+        ...teamMembers.slice(0, cloneCount),
+      ]
       : [];
 
   const minFeaturedIdx = cloneCount;
   const maxFeaturedIdx = cloneCount + totalMembers - 1;
 
-  const [disableTrackTransition, setDisableTrackTransition] = useState(false);
-  const [loopFeaturedIndex, setLoopFeaturedIndex] = useState(
-    () => minFeaturedIdx + featuredIndex,
-  );
   const [isMobileTeam, setIsMobileTeam] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 900 : false,
   );
@@ -162,15 +157,9 @@ function LandingPage() {
   const activeIdx =
     totalMembers > 0
       ? (((loopFeaturedIndex - minFeaturedIdx) % totalMembers) + totalMembers) %
-        totalMembers
+      totalMembers
       : -1;
   const activeMember = activeIdx >= 0 ? teamMembers[activeIdx] : null;
-
-  useEffect(() => {
-    if (!totalMembers) return;
-    setDisableTrackTransition(true);
-    setLoopFeaturedIndex(minFeaturedIdx + featuredIndex);
-  }, [featuredIndex, minFeaturedIdx, totalMembers]);
 
   useEffect(() => {
     if (!disableTrackTransition) return;
@@ -205,9 +194,9 @@ function LandingPage() {
 
   const handleContactChange =
     (field: keyof typeof contactForm) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setContactForm((prev) => ({ ...prev, [field]: event.target.value }));
-    };
+      (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setContactForm((prev) => ({ ...prev, [field]: event.target.value }));
+      };
 
   const handleContactSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -301,7 +290,7 @@ function LandingPage() {
 
   return (
     <div className="landingPage">
-      <SiteNavbar ctaComingSoonMessage="Coming soon on the 7th of April" />
+      <SiteNavbar />
 
       {/* Hero with entrance animations + parallax */}
       <header
@@ -511,30 +500,43 @@ function LandingPage() {
               innovative technology.
             </span>
           </div>
-          <div className="works-mosaic">
-            {topWorkTiles.map((tile, idx) => (
-              <article
-                key={`${tile.title}-${idx}`}
-                className={`works-tile works-tile-${tile.type}`}>
-                {tile.type === "image" ? (
-                  <>
-                    <img
-                      src={tile.image}
-                      alt={tile.title}
-                      className="works-tile-image"
-                    />
-                    <div className="works-tile-overlay"><span>{tile.title}</span></div>
-                  </>
-                ) : (
-                  <>
-                    <h3>{tile.title}</h3>
-                    <p>{tile.body}</p>
-                  </>
-                )}
-              </article>
-            ))}
+          <div className="works-bento">
+            {/* Top row */}
+            <div className="works-bento-row works-bento-row--top">
+              <div className="works-bento-hero">
+                <img src={topWorkTiles.hero.image} alt={topWorkTiles.hero.alt} className="works-bento-img" />
+              </div>
+              <div className="works-bento-side">
+                <div className="works-bento-stat">
+                  <span className="works-bento-stat-value">{topWorkTiles.stat.value}</span>
+                  <span className="works-bento-stat-label">{topWorkTiles.stat.label}</span>
+                </div>
+                <div className="works-bento-desc">
+                  <span className="works-bento-desc-icon" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                      <rect width="28" height="28" rx="8" fill="#1a2432" />
+                      <path d="M8 10h12M8 14h8M8 18h10" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                  <p>{topWorkTiles.desc}</p>
+                </div>
+              </div>
+            </div>
+            {/* Bottom row */}
+            <div className="works-bento-row works-bento-row--bottom">
+              {topWorkTiles.bottom.map((item) => (
+                <div className="works-bento-bottom-tile" key={item.alt}>
+                  <img src={item.image} alt={item.alt} className="works-bento-img" />
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
+      </section>
 
+      {/* Why Choose Us & Testimonials */}
+      <section className="why-choose-section">
+        <div className="container">
           <div className="why-choose-wrap">
             <div className="why-choose-copy">
               <h3>Why Choose us?</h3>

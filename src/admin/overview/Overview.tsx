@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchBookings, type BookingDTO } from '../../api/bookings';
 import { fetchAdminContacts, type AdminContactDTO } from '../../api/adminContacts';
@@ -7,10 +7,7 @@ import { fetchAdminTeams, type TeamMemberDTO } from '../../api/teams';
 
 function formatOverviewDate() {
   return new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
 }
 
@@ -28,30 +25,29 @@ export function Overview() {
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [team, setTeam] = useState<TeamMemberDTO[]>([]);
   const [loadState, setLoadState] = useState<LoadState>('loading');
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      try {
-        const [b, c, s, t] = await Promise.allSettled([
-          fetchBookings(),
-          fetchAdminContacts(),
-          fetchServices(),
-          fetchAdminTeams(),
-        ]);
-        if (!active) return;
-        setBookings(b.status === 'fulfilled' ? b.value : []);
-        setContacts(c.status === 'fulfilled' ? c.value : []);
-        setServices(s.status === 'fulfilled' ? s.value : []);
-        setTeam(t.status === 'fulfilled' ? t.value : []);
-        setLoadState('done');
-      } catch {
-        if (active) setLoadState('error');
-      }
-    };
-    load();
-    return () => { active = false; };
+  const load = useCallback(async () => {
+    setLoadState('loading');
+    try {
+      const [b, c, s, t] = await Promise.allSettled([
+        fetchBookings(),
+        fetchAdminContacts(),
+        fetchServices(),
+        fetchAdminTeams(),
+      ]);
+      setBookings(b.status === 'fulfilled' ? b.value : []);
+      setContacts(c.status === 'fulfilled' ? c.value : []);
+      setServices(s.status === 'fulfilled' ? s.value : []);
+      setTeam(t.status === 'fulfilled' ? t.value : []);
+      setLastRefreshed(new Date());
+      setLoadState('done');
+    } catch {
+      setLoadState('error');
+    }
   }, []);
+
+  useEffect(() => { load(); }, [load]);
 
   // Derived counts
   const totalBookings = bookings.length;
@@ -59,55 +55,42 @@ export function Overview() {
   const totalContacts = contacts.length;
   const activeServices = services.filter(s => s.status === 'Active').length;
   const totalServices = services.length;
-  // Public /api/teams only returns visible members, so count all of them
   const totalTeam = team.length;
 
-  // Recent 5 entries (newest first — reverse the array since they come oldest-first)
   const recentBookings = [...bookings].reverse().slice(0, 5);
   const recentContacts = [...contacts].reverse().slice(0, 5);
 
   const metricCards = [
-    {
-      title: 'Total Bookings',
-      value: loadState === 'loading' ? '…' : String(totalBookings),
-      sub: loadState === 'done' ? `${pendingBookings} pending` : '',
-      icon: 'calendar',
-      color: 'blue',
-      link: '/admin/bookings',
-    },
-    {
-      title: 'Contact Messages',
-      value: loadState === 'loading' ? '…' : String(totalContacts),
-      sub: loadState === 'done' ? 'total received' : '',
-      icon: 'chat',
-      color: 'orange',
-      link: '/admin/contacts',
-    },
-    {
-      title: 'Active Services',
-      value: loadState === 'loading' ? '…' : `${activeServices}/${totalServices}`,
-      sub: loadState === 'done' ? 'services enabled' : '',
-      icon: 'briefcase',
-      color: 'green',
-      link: '/admin/services',
-    },
-    {
-      title: 'Team Members',
-      value: loadState === 'loading' ? '…' : String(totalTeam),
-      sub: loadState === 'done' ? 'active members' : '',
-      icon: 'users',
-      color: 'purple',
-      link: '/admin/team',
-    },
+    { title: 'Total Bookings', value: loadState === 'loading' ? '…' : String(totalBookings), sub: loadState === 'done' ? `${pendingBookings} pending` : '', icon: 'calendar', color: 'blue', link: '/admin/bookings' },
+    { title: 'Contact Messages', value: loadState === 'loading' ? '…' : String(totalContacts), sub: loadState === 'done' ? 'total received' : '', icon: 'chat', color: 'orange', link: '/admin/contacts' },
+    { title: 'Active Services', value: loadState === 'loading' ? '…' : `${activeServices}/${totalServices}`, sub: loadState === 'done' ? 'services enabled' : '', icon: 'briefcase', color: 'green', link: '/admin/services' },
+    { title: 'Team Members', value: loadState === 'loading' ? '…' : String(totalTeam), sub: loadState === 'done' ? 'active members' : '', icon: 'users', color: 'purple', link: '/admin/team' },
   ];
 
   return (
     <div className="overview">
       <header className="overview-header">
-        <h1 className="overview-title">Overview</h1>
-        <time className="overview-date" dateTime={new Date().toISOString().slice(0, 10)}>
-          {formatOverviewDate()}
-        </time>
+        <div>
+          <h1 className="overview-title">Overview</h1>
+          <time className="overview-date" dateTime={new Date().toISOString().slice(0, 10)}>
+            {formatOverviewDate()}
+          </time>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
+          <button
+            type="button"
+            className="service-modal__btn service-modal__btn--cancel"
+            onClick={load}
+            disabled={loadState === 'loading'}
+            aria-label="Refresh data"
+            style={{ padding: '0.45rem 1rem', fontSize: '0.82rem' }}
+          >
+            {loadState === 'loading' ? '⟳ Loading…' : '↻ Refresh'}
+          </button>
+          <span style={{ fontSize: '0.72rem', opacity: 0.5 }}>
+            Updated {lastRefreshed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+          </span>
+        </div>
       </header>
 
       {/* ── Metric cards ── */}
@@ -142,11 +125,7 @@ export function Overview() {
                 const name = b.full_name ?? b.company ?? 'Client';
                 const service = b.project_details?.split('\n')[0] ?? '—';
                 const statusRaw = (b.status ?? 'pending').toLowerCase();
-                const status = statusRaw === 'confirmed'
-                  ? 'Confirmed'
-                  : statusRaw === 'completed'
-                  ? 'Completed'
-                  : 'Pending';
+                const status = statusRaw === 'confirmed' ? 'Confirmed' : statusRaw === 'completed' ? 'Completed' : statusRaw === 'cancelled' ? 'Cancelled' : 'Pending';
                 return (
                   <li key={`${name}-${i}`} className="activity-list__item">
                     <div className="activity-list__main">
@@ -161,9 +140,7 @@ export function Overview() {
               })}
             </ul>
           )}
-          <Link to="/admin/bookings" className="activity-card__link">
-            View All Bookings →
-          </Link>
+          <Link to="/admin/bookings" className="activity-card__link">View All Bookings →</Link>
         </div>
 
         {/* Recent Contacts */}
@@ -188,9 +165,7 @@ export function Overview() {
               ))}
             </ul>
           )}
-          <Link to="/admin/contacts" className="activity-card__link">
-            View All Contacts →
-          </Link>
+          <Link to="/admin/contacts" className="activity-card__link">View All Contacts →</Link>
         </div>
       </section>
     </div>
