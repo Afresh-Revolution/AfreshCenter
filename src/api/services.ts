@@ -39,7 +39,13 @@ export async function fetchServices(): Promise<ServiceItem[]> {
   const res = await fetch(`${API_BASE}/api/admin/services`, {
     headers: getAuthHeaders(),
   });
-  if (!res.ok) throw new Error('Failed to fetch services');
+  if (!res.ok) {
+    if (res.status === 401) {
+      clearAuth();
+      throw new Error('SESSION_EXPIRED');
+    }
+    throw new Error('Failed to fetch services');
+  }
   const data = (await res.json()) as ServiceCollectionResponse;
   return parseServiceCollection(data);
 }

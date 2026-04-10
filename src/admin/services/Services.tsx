@@ -53,7 +53,11 @@ export function Services() {
         return 0;
       });
       setServices(sorted);
-    } catch {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message === 'SESSION_EXPIRED') {
+        window.location.href = '/admin/login';
+        return;
+      }
       setPageMessage({ type: 'error', text: 'Failed to load services.' });
       setServices([]);
     } finally {
