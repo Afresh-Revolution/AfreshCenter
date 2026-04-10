@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { fetchBookings } from '../../api/bookings';
+import { fetchBookings, type BookingDTO } from '../../api/bookings';
 import { BookingDetailsModal } from './BookingDetailsModal';
 import type { BookingDetail } from './BookingDetailsModal';
 
@@ -9,7 +9,7 @@ function formatBookingsDate() {
   });
 }
 
-function mapToDetail(booking: Parameters<typeof fetchBookings>[0] extends Promise<infer T> ? (T extends (infer U)[] ? U : never) : never): BookingDetail {
+function mapToDetail(booking: BookingDTO): BookingDetail {
   const dateValue = (booking as { scheduled_at?: string; created_at?: string }).scheduled_at
     ?? (booking as { created_at?: string }).created_at ?? '';
   const dateObj = dateValue ? new Date(dateValue) : null;
@@ -51,7 +51,7 @@ export function Bookings() {
     setError('');
     try {
       const data = await fetchBookings();
-      setBookings(data.map((b) => mapToDetail(b as Parameters<typeof mapToDetail>[0])));
+      setBookings(data.map((b) => mapToDetail(b)));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load bookings');
     } finally {

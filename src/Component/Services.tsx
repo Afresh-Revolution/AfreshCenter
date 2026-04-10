@@ -17,6 +17,7 @@ function Services() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [detailService, setDetailService] = useState<ServiceItem | null>(null);
+  const [brokenServiceImages, setBrokenServiceImages] = useState<Record<string, boolean>>({});
   const detailId = searchParams.get("id");
   const [servicesGridRef, servicesVisibleCount] = useStaggerReveal<HTMLDivElement>(services.length || 6);
 
@@ -27,6 +28,7 @@ function Services() {
       .then((list) => {
         if (!cancelled) {
           setServices(list);
+          setBrokenServiceImages({});
           setError(null);
           if (detailId && list.length) {
             const found = list.find((s) => s.id === detailId);
@@ -54,6 +56,11 @@ function Services() {
   const openDetail = (service: ServiceItem) => {
     setDetailService(service);
     setSearchParams({ id: service.id });
+  };
+
+  const getResolvedServiceImage = (service: ServiceItem) => {
+    if (brokenServiceImages[service.id]) return null;
+    return getServiceImageUrl(service.image);
   };
 
   return (
@@ -92,37 +99,46 @@ function Services() {
             ) : (
               <section className="services-section">
                 <div ref={servicesGridRef} className="services-grid">
-                  {services.map((service, idx) => (
-                    <article
-                      key={service.id}
-                      className={`service-card reveal${idx < servicesVisibleCount ? ` is-visible reveal--d${Math.min(idx + 1, 6)}` : ""}`}
-                    >
-                      {getServiceImageUrl(service.image) ? (
-                        <img
-                          src={getServiceImageUrl(service.image) ?? ""}
-                          alt={service.title}
-                        />
-                      ) : (
-                        <div className="service-card-image-placeholder" aria-label={`${service.title} image not uploaded`}>
-                          No image uploaded yet
+                  {services.map((service, idx) => {
+                    const imageUrl = getResolvedServiceImage(service);
+
+                    return (
+                      <article
+                        key={service.id}
+                        className={`service-card reveal${idx < servicesVisibleCount ? ` is-visible reveal--d${Math.min(idx + 1, 6)}` : ""}`}
+                      >
+                        {imageUrl ? (
+                          <img
+                            src={imageUrl}
+                            alt={service.title}
+                            onError={() => {
+                              setBrokenServiceImages((prev) =>
+                                prev[service.id] ? prev : { ...prev, [service.id]: true }
+                              );
+                            }}
+                          />
+                        ) : (
+                          <div className="service-card-image-placeholder" aria-label={`${service.title} image not available`}>
+                            Image coming soon
+                          </div>
+                        )}
+                        <div className="service-content">
+                          <h3>{service.title}</h3>
+                          <p>
+                            {service.description ||
+                              "Contact us for more details about this service."}
+                          </p>
+                          <button
+                            type="button"
+                            className="btn-learn"
+                            onClick={() => openDetail(service)}
+                          >
+                            Learn More
+                          </button>
                         </div>
-                      )}
-                      <div className="service-content">
-                        <h3>{service.title}</h3>
-                        <p>
-                          {service.description ||
-                            "Contact us for more details about this service."}
-                        </p>
-                        <button
-                          type="button"
-                          className="btn-learn"
-                          onClick={() => openDetail(service)}
-                        >
-                          Learn More
-                        </button>
-                      </div>
-                    </article>
-                  ))}
+                      </article>
+                    );
+                  })}
                 </div>
               </section>
             )}
@@ -142,8 +158,8 @@ function Services() {
             <header
               className="service-detail-hero"
               style={{
-                backgroundImage: detailService.image
-                  ? `url(${getServiceImageUrl(detailService.image)})`
+                backgroundImage: getResolvedServiceImage(detailService)
+                  ? `url(${getResolvedServiceImage(detailService)})`
                   : undefined,
               }}
             >
@@ -174,11 +190,16 @@ function Services() {
                     <section className="service-detail-block service-detail-overview">
                       <div className="service-detail-card">
                         <h2>Overview</h2>
-                        {detailService.image && (
+                        {getResolvedServiceImage(detailService) && (
                           <div className="service-detail-overview-media">
                             <img
-                              src={getServiceImageUrl(detailService.image) ?? ""}
+                              src={getResolvedServiceImage(detailService) ?? ""}
                               alt=""
+                              onError={() => {
+                                setBrokenServiceImages((prev) =>
+                                  prev[detailService.id] ? prev : { ...prev, [detailService.id]: true }
+                                );
+                              }}
                             />
                           </div>
                         )}

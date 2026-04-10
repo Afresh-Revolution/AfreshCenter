@@ -81,6 +81,7 @@ function AboutUs() {
     teamMembers: [],
   })
   const [teamLoading, setTeamLoading] = useState(true)
+  const [brokenTeamImages, setBrokenTeamImages] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     let isActive = true
@@ -131,9 +132,11 @@ function AboutUs() {
         }))
 
         if (!isActive) return
+        setBrokenTeamImages({})
         setContent((prev) => ({ ...prev, teamMembers: mapped }))
       } catch {
         if (isActive) {
+          setBrokenTeamImages({})
           setContent((prev) => ({ ...prev, teamMembers: [] }))
         }
       } finally {
@@ -244,6 +247,14 @@ function AboutUs() {
   const [ceoRef, ceoVisible] = useScrollReveal()
   const [teamRef, teamVisible] = useScrollReveal()
   const [joinRef, joinVisible] = useScrollReveal()
+  const getTeamFallbackLabel = (member: TeamMember) =>
+    member.name
+      .split(' ')
+      .map((part) => part[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || 'AF'
 
   return (
     <main className="about-page">
@@ -407,9 +418,13 @@ function AboutUs() {
           </div>
         </div>
 
-        {teamLoading || totalMembers === 0 ? (
+        {teamLoading ? (
           <div className="team-loading" role="status" aria-live="polite">
             Loading team members...
+          </div>
+        ) : totalMembers === 0 ? (
+          <div className="team-loading" role="status" aria-live="polite">
+            Team members will appear here soon.
           </div>
         ) : (
           <div
@@ -426,17 +441,30 @@ function AboutUs() {
             >
               {(isMobileTeam ? (activeMember ? [activeMember] : []) : loopMembers).map((member, idx) => {
                 const isFeatured = isMobileTeam || idx === loopFeaturedIndex
+                const memberImage = imageMap[member.imgKey] ?? member.imgKey
+                const showImage = Boolean(memberImage) && !brokenTeamImages[member.id]
                 return (
                   <article
                     key={`${member.id}-${idx}`}
                     className={`team-card${isFeatured ? ' team-card--featured' : ''}`}
                   >
                     <div className="team-card-img-wrap">
-                      <img
-                        src={imageMap[member.imgKey] ?? member.imgKey}
-                        alt={member.name}
-                        className="team-card-img"
-                      />
+                      {showImage ? (
+                        <img
+                          src={memberImage}
+                          alt={member.name}
+                          className="team-card-img"
+                          onError={() => {
+                            setBrokenTeamImages((prev) =>
+                              prev[member.id] ? prev : { ...prev, [member.id]: true }
+                            )
+                          }}
+                        />
+                      ) : (
+                        <div className="team-card-img-fallback" aria-label={`${member.name} image unavailable`}>
+                          <span>{getTeamFallbackLabel(member)}</span>
+                        </div>
+                      )}
                     </div>
                     <div className="team-card-body">
                       <h3>{member.name}</h3>

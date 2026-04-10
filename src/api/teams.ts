@@ -1,4 +1,5 @@
 import { API_BASE } from "./config";
+import { clearAuth, getApiErrorMessage, getAuthHeaders, parseApiPayload } from "./auth";
 
 export type TeamMemberDTO = {
   id?: string;
@@ -37,7 +38,9 @@ export async function fetchTeams(): Promise<TeamMemberDTO[]> {
 /** Fetch all team members for admin (includes inactive). */
 export async function fetchAdminTeams(): Promise<TeamMemberDTO[]> {
   const adminUrl = API_BASE ? `${API_BASE}/api/admin/teams` : '/api/admin/teams';
-  let res = await fetch(adminUrl);
+  let res = await fetch(adminUrl, {
+    headers: getAuthHeaders(),
+  });
   if (!res.ok && res.status === 404) {
     const fallbackUrl = API_BASE ? `${API_BASE}/api/teams` : '/api/teams';
     res = await fetch(fallbackUrl);
@@ -75,13 +78,29 @@ export async function uploadTeamImage(
   form.append("image", file);
   const res = await fetch(`${API_BASE}/api/admin/upload`, {
     method: "POST",
+    headers: getAuthHeaders(),
     body: form,
   });
-  const data = await res.json();
-  if (!res.ok)
-    return { success: false, message: data.message || "Upload failed" };
-  if (data.success && data.url) return { success: true, url: data.url };
-  return { success: false, message: data.message || "Upload failed" };
+  const data = await parseApiPayload<{ success?: boolean; url?: string; secure_url?: string; message?: string; reason?: string; details?: string }>(res);
+  if (!res.ok) {
+    console.error('[uploadTeamImage] Upload failed — full server response:', {
+      status: res.status,
+      payload: data,
+    });
+    const message = getApiErrorMessage(
+      data,
+      res.status === 401
+        ? "Your admin session expired. Please sign in again."
+        : "Upload failed",
+    );
+    if (res.status === 401) clearAuth();
+    return { success: false, message };
+  }
+  // Backend returns `secure_url` (Cloudinary) — fall back to `url` for compatibility.
+  const imageUrl = data?.secure_url || data?.url;
+  if (data?.success && imageUrl) return { success: true, url: imageUrl };
+  console.error('[uploadTeamImage] Unexpected response (no url/secure_url):', data);
+  return { success: false, message: getApiErrorMessage(data, "Upload failed") };
 }
 
 // ── CREATE ──────────────────────────────────────────────────────────────────
@@ -111,7 +130,7 @@ export async function createTeamMember(
 ): Promise<CreateTeamResponse> {
   const res = await fetch(`${API_BASE}/api/teams`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
       name: payload.name.trim(),
       role: payload.role.trim(),
@@ -162,7 +181,7 @@ export async function updateTeamMember(
 ): Promise<UpdateTeamResponse> {
   const res = await fetch(`${API_BASE}/api/teams/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
       name: payload.name?.trim(),
       role: payload.role?.trim(),
@@ -201,7 +220,7 @@ export async function toggleTeamMemberVisibility(
 ): Promise<ToggleTeamVisibilityResponse> {
   const res = await fetch(`${API_BASE}/api/teams/${id}/visibility`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ visible }),
   });
   const data = (await res.json()) as ToggleTeamVisibilityResponse;
@@ -226,6 +245,7 @@ export async function deleteTeamMember(
 ): Promise<DeleteTeamResponse> {
   const res = await fetch(`${API_BASE}/api/teams/${id}`, {
     method: "DELETE",
+    headers: getAuthHeaders(),
   });
   const data = (await res.json()) as DeleteTeamResponse;
   if (!res.ok) {

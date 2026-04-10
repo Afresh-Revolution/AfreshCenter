@@ -1,4 +1,5 @@
 import { API_BASE } from './config';
+import { clearAuth, getApiErrorMessage, getAuthHeaders, parseApiPayload } from './auth';
 
 export interface ServiceItem {
   id: string;
@@ -35,8 +36,16 @@ function parseServiceCollection(payload: ServiceCollectionResponse): ServiceItem
 }
 
 export async function fetchServices(): Promise<ServiceItem[]> {
-  const res = await fetch(`${API_BASE}/api/admin/services`);
-  if (!res.ok) throw new Error('Failed to fetch services');
+  const res = await fetch(`${API_BASE}/api/admin/services`, {
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) {
+    if (res.status === 401) {
+      clearAuth();
+      throw new Error('SESSION_EXPIRED');
+    }
+    throw new Error('Failed to fetch services');
+  }
   const data = (await res.json()) as ServiceCollectionResponse;
   return parseServiceCollection(data);
 }
@@ -66,12 +75,29 @@ export async function adminImageUpload(file: File): Promise<{ success: true; url
   form.append('image', file);
   const res = await fetch(`${API_BASE}/api/admin/upload`, {
     method: 'POST',
+    headers: getAuthHeaders(),
     body: form,
   });
-  const data = await res.json();
-  if (!res.ok) return { success: false, message: data.message || 'Upload failed' };
-  if (data.success && data.url) return { success: true, url: data.url };
-  return { success: false, message: data.message || 'Upload failed' };
+  const data = await parseApiPayload<{ success?: boolean; url?: string; secure_url?: string; message?: string; reason?: string; details?: string }>(res);
+  if (!res.ok) {
+    console.error('[adminImageUpload] Upload failed — full server response:', {
+      status: res.status,
+      payload: data,
+    });
+    const message = getApiErrorMessage(
+      data,
+      res.status === 401
+        ? 'Your admin session expired. Please sign in again.'
+        : 'Upload failed'
+    );
+    if (res.status === 401) clearAuth();
+    return { success: false, message };
+  }
+  // Backend returns `secure_url` (Cloudinary) — fall back to `url` for compatibility.
+  const imageUrl = data?.secure_url || data?.url;
+  if (data?.success && imageUrl) return { success: true, url: imageUrl };
+  console.error('[adminImageUpload] Unexpected response (no url/secure_url):', data);
+  return { success: false, message: getApiErrorMessage(data, 'Upload failed') };
 }
 
 export type CreateServicePayload = {
@@ -105,7 +131,7 @@ export type CreateServiceResponse = CreateServiceSuccess | CreateServiceError;
 export async function createService(payload: CreateServicePayload): Promise<CreateServiceResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({
       title: payload.title.trim(),
       category: payload.category.trim() || 'General',
@@ -150,7 +176,7 @@ export async function toggleServiceVisibility(
 ): Promise<ToggleVisibilityResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services/${id}/visibility`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ visible }),
   });
   const data = (await res.json()) as ToggleVisibilityResponse;
@@ -197,7 +223,7 @@ export async function updateService(
 ): Promise<UpdateServiceResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services/${id}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({
       title: payload.title?.trim(),
       category: payload.category?.trim(),
@@ -238,6 +264,7 @@ export type DeleteServiceResponse = DeleteServiceSuccess | DeleteServiceError;
 export async function deleteService(id: string): Promise<DeleteServiceResponse> {
   const res = await fetch(`${API_BASE}/api/admin/services/${id}`, {
     method: 'DELETE',
+    headers: getAuthHeaders(),
   });
   const data = (await res.json()) as DeleteServiceResponse;
   if (!res.ok) {
