@@ -29,6 +29,7 @@ function toCardData(s: ServiceItem): ServiceCardData {
     priceRange: s.priceRange,
     totalBookings: s.totalBookings,
     status: s.status,
+    image: s.image,
   };
 }
 

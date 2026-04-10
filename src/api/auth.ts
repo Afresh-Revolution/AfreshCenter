@@ -64,3 +64,53 @@ export function clearAuth(): void {
   clearStoredToken();
   clearStoredUser();
 }
+
+export async function parseApiPayload<T = unknown>(res: Response): Promise<T | null> {
+  const contentType = res.headers.get('content-type') ?? '';
+
+  try {
+    if (contentType.includes('application/json')) {
+      return (await res.json()) as T;
+    }
+
+    const text = await res.text();
+    if (!text.trim()) return null;
+
+    try {
+      return JSON.parse(text) as T;
+    } catch {
+      return { message: text } as T;
+    }
+  } catch {
+    return null;
+  }
+}
+
+export function getApiErrorMessage(
+  payload: unknown,
+  fallbackMessage: string,
+): string {
+  if (!payload || typeof payload !== 'object') return fallbackMessage;
+
+  const p = payload as Record<string, unknown>;
+
+  const message =
+    typeof p['message'] === 'string' ? p['message'].trim() : '';
+  const reason =
+    typeof p['reason'] === 'string' ? p['reason'].trim() : '';
+  const details =
+    typeof p['details'] === 'string' ? p['details'].trim() : '';
+
+  // Log the enriched backend diagnostic info to the browser console.
+  if (reason || details) {
+    console.warn(
+      '[AfreshCenter API] Diagnostic info from server:',
+      { message, reason, details },
+    );
+  }
+
+  // Build a human-readable error string.
+  const base = message || fallbackMessage;
+  if (reason && reason !== message) return `${base} — ${reason}`;
+  return base;
+}

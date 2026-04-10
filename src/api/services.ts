@@ -1,5 +1,5 @@
 import { API_BASE } from './config';
-import { getAuthHeaders } from './auth';
+import { clearAuth, getApiErrorMessage, getAuthHeaders, parseApiPayload } from './auth';
 
 export interface ServiceItem {
   id: string;
@@ -72,10 +72,26 @@ export async function adminImageUpload(file: File): Promise<{ success: true; url
     headers: getAuthHeaders(),
     body: form,
   });
-  const data = await res.json();
-  if (!res.ok) return { success: false, message: data.message || 'Upload failed' };
-  if (data.success && data.url) return { success: true, url: data.url };
-  return { success: false, message: data.message || 'Upload failed' };
+  const data = await parseApiPayload<{ success?: boolean; url?: string; secure_url?: string; message?: string; reason?: string; details?: string }>(res);
+  if (!res.ok) {
+    console.error('[adminImageUpload] Upload failed — full server response:', {
+      status: res.status,
+      payload: data,
+    });
+    const message = getApiErrorMessage(
+      data,
+      res.status === 401
+        ? 'Your admin session expired. Please sign in again.'
+        : 'Upload failed'
+    );
+    if (res.status === 401) clearAuth();
+    return { success: false, message };
+  }
+  // Backend returns `secure_url` (Cloudinary) — fall back to `url` for compatibility.
+  const imageUrl = data?.secure_url || data?.url;
+  if (data?.success && imageUrl) return { success: true, url: imageUrl };
+  console.error('[adminImageUpload] Unexpected response (no url/secure_url):', data);
+  return { success: false, message: getApiErrorMessage(data, 'Upload failed') };
 }
 
 export type CreateServicePayload = {

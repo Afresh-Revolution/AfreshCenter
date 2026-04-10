@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getServiceImageUrl } from '../../api/services';
 
 export interface ServiceCardData {
   id?: string;
@@ -7,6 +8,7 @@ export interface ServiceCardData {
   priceRange: string;
   totalBookings: number;
   status: 'Active' | 'Inactive';
+  image?: string | null;
 }
 
 interface ServiceCardProps {
@@ -74,7 +76,16 @@ export function ServiceCard({ service, onToggleVisibility, onEdit, onDelete }: S
   return (
     <article className="service-card">
       <div className="service-card__head">
-        <h3 className="service-card__title">{service.title}</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+          {service.image && (
+            <img
+              src={getServiceImageUrl(service.image) ?? ''}
+              alt={service.title}
+              style={{ width: 40, height: 40, borderRadius: '6px', objectFit: 'cover', flexShrink: 0 }}
+            />
+          )}
+          <h3 className="service-card__title">{service.title}</h3>
+        </div>
         <button
           type="button"
           className={`service-card__toggle ${isOn ? 'is-on' : ''}`}
