@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import servicesHeroImg from "../assets/images/Group 31.png";
+import servicesHeroImg from "../assets/images/services.jpg";
 import { SiteFooter, SiteNavbar } from "./SharedLayout";
 import "../scss/Services.scss";
 import {

@@ -4,6 +4,9 @@ import cbrillianceImg from '../assets/images/cbrilliance.png'
 import knowristImg from '../assets/images/knowrist.jpg'
 import josCityImg from '../assets/images/joscity.jpg'
 import designerImg from '../assets/images/designerrrr.png'
+import missionImg from '../assets/images/mission.jpg'
+import visionImg from '../assets/images/vision.jpg'
+import joinImg from '../assets/images/join.jpg'
 import joinUsImg from '../assets/images/faf5808cbbf8bf77544b1eed718d2e7cbd59dd0f.png'
 import afreshLogoImg from '../assets/images/AfreshLogo.png'
 import jethroImg from '../assets/images/JethroMD.jpg'
@@ -306,7 +309,7 @@ function AboutUs() {
             <div
               className="about-img-placeholder"
               aria-label="Our mission image"
-              style={{ backgroundImage: `url(${designerImg})` }}
+              style={{ backgroundImage: `url(${missionImg})` }}
             />
           </div>
           <div className="about-text-col">
@@ -326,7 +329,7 @@ function AboutUs() {
             <div
               className="about-img-placeholder"
               aria-label="Our vision image"
-              style={{ backgroundImage: `url(${designerImg})` }}
+              style={{ backgroundImage: `url(${visionImg})` }}
             />
           </div>
         </div>
@@ -483,7 +486,7 @@ function AboutUs() {
         <div className="join-inner">
           <div className="join-img-wrap">
             <img
-              src={joinUsImg}
+              src={joinImg}
               alt="Join the AfrESH team"
               className="join-img"
             />
