@@ -93,14 +93,14 @@ function LandingPage() {
   };
 
   const whyChoosePoints = [
-    "But I must explain to you how all this nonsense",
-    "Quo Voluptas Fugi",
-    "Lorem ipsum",
-    "Lorem ipsum is simply dummy text of the printing and typesetting",
-    "Lorem ipsum is simply dummy text of the printing and type",
-    "Lorem ipsum dolor sit amet",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, and do",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Discover why we're the top choice for you. Our unwavering",
+    "commitment to quality ensures every product meets the highest",
+    "standards. We lead with innovation, constantly improving to bring you",
+    "the latest and most effective solutions. Customer satisfaction is at",
+    "the heart of everything we do, with dedicated support and",
+    "personalized service. Join countless others who trust us for",
+    "exceptional results every time and experience the difference we can",
+    "make in your journey.",
   ];
 
   const totalMembers = teamMembers.length;
@@ -541,11 +541,10 @@ function LandingPage() {
             <div className="why-choose-copy">
               <h3>Why Choose us?</h3>
               <p>
-                Conversely, we may reject the allure of fleeting pleasures that
-                can mislead and desensitize individuals. We believe in making
-                choices that prioritize long-term well-being over momentary
-                satisfaction, ensuring that our clients can navigate challenges
-                with foresight and resilience.
+                We focus on long-term well-being, helping you make smart choices that
+                build resilience and guide you through challenges with confidence.
+                Remember, every step you take towards your health is a step towards a
+                stronger, more vibrant future.
               </p>
               <ul>
                 {whyChoosePoints.map((point) => (

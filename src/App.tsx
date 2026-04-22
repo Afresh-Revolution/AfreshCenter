@@ -7,10 +7,12 @@ import Support from "./Component/Support";
 import WailinPage from "./wailin/WailinPage";
 import { AdminRoutes } from "./admin";
 import { Login } from "./admin/Login";
+import { ScrollToTop } from "./ScrollToTop";
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<AboutUs />} />

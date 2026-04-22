@@ -392,6 +392,8 @@ function AboutUs() {
               src={jethroImg}
               alt="Jethro Mark Da'ar - CEO of Afresh Centre"
               className="ceo-img"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -457,6 +459,8 @@ function AboutUs() {
                           src={memberImage}
                           alt={member.name}
                           className="team-card-img"
+                          loading="lazy"
+                          decoding="async"
                           onError={() => {
                             setBrokenTeamImages((prev) =>
                               prev[member.id] ? prev : { ...prev, [member.id]: true }
@@ -489,6 +493,8 @@ function AboutUs() {
               src={joinImg}
               alt="Join the AfrESH team"
               className="join-img"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           <div className="join-text">

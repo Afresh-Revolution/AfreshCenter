@@ -108,9 +108,9 @@ body {
    INTRO BLOCK
 ----------------------------------------------- */
 .about-intro {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 48px auto 0;
-    padding: 0 20px 56px;
+    padding: 0 12px 56px;
     background: whitesmoke;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
@@ -142,9 +142,9 @@ body {
 }
 
 .about-two-col {
-  max-width: 1060px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 52px 32px;
+  padding: 52px 12px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
@@ -201,7 +201,7 @@ body {
 ----------------------------------------------- */
 .about-works {
     background: whitesmoke;
-    padding: 64px 32px;
+    padding: 64px 16px;
     border-top: 1px solid var(--line);
 }
 
@@ -230,12 +230,12 @@ body {
 }
 
 .works-grid {
-    max-width: 1060px;
+    max-width: 1280px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 28px;
-    padding: 0 20px;
+    padding: 0 12px;
 }
 
 .work-card {
@@ -334,11 +334,11 @@ body {
 .ceo-section {
   background: #efefef;
   border-top: 1px solid var(--line);
-  padding: 64px 32px;
+  padding: 64px 16px;
 }
 
 .ceo-inner {
-  max-width: 1060px;
+  max-width: 1280px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -410,9 +410,9 @@ body {
 }
 
 .team-header {
-    max-width: 1060px;
+    max-width: 1280px;
     margin: 0 auto 12px;
-    padding: 0 32px;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -442,7 +442,7 @@ body {
     display: flex;
     gap: 10px;
     position: absolute;
-    right: 32px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 40;
@@ -503,8 +503,10 @@ body {
     --init: calc(-1 * (2 * var(--step) + (var(--cw) / 2)));
     --feature-scale: 1.14;
     --feature-lift: clamp(10px, 2.4vw, 22px);
+    --peek: clamp(14px, 3vw, 44px);
     position: relative;
-    width: 100%;
+    width: min(1280px, calc(100% - (2 * var(--peek))));
+    margin: 0 auto;
     overflow: hidden;
     overflow: hidden;
     padding-top: clamp(2px, 1vw, 10px);
@@ -565,14 +567,19 @@ body {
     width: 100%;
     overflow: hidden;
     flex-shrink: 0;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    background: #fff;
 }
 
 .team-card-img {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    object-position: top center;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
     display: block;
+    position: relative;
+    z-index: 1;
     filter: blur(1.8px);
     transform: scale(1);
     transition: filter 0.3s ease, transform 0.45s ease;
@@ -740,6 +747,7 @@ body {
   grid-template-columns: 0.55fr 1fr;
   align-items: center;
   min-height: 480px;
+  gap: 0;
 }
 
 .join-img-wrap {
@@ -747,7 +755,7 @@ body {
   min-height: 380px;
   overflow: hidden;
   position: relative;
-  padding: 20px;
+  padding: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -765,7 +773,7 @@ body {
 }
 
 .join-text {
-    padding: 64px 72px 64px 60px;
+    padding: 64px 40px 64px 28px;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-style: normal;
