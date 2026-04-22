@@ -1,7 +1,7 @@
 // LandingPage.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import heroBackground from "../assets/images/Background-Image.png";
+import heroBackground from "../assets/images/corporategroup.jpg";
 import cbLogo from "../assets/images/cb 1.png";
 import gwaveLogo from "../assets/images/gwave 1.png";
 import popsLogo from "../assets/images/pops 1.png";
@@ -93,14 +93,11 @@ function LandingPage() {
   };
 
   const whyChoosePoints = [
-    "Discover why we're the top choice for you. Our unwavering",
-    "commitment to quality ensures every product meets the highest",
-    "standards. We lead with innovation, constantly improving to bring you",
-    "the latest and most effective solutions. Customer satisfaction is at",
-    "the heart of everything we do, with dedicated support and",
-    "personalized service. Join countless others who trust us for",
-    "exceptional results every time and experience the difference we can",
-    "make in your journey.",
+    "Discover why we're the top choice for you.",
+    "Our unwavering commitment to quality ensures every product meets the highest standards.",
+    "We lead with innovation, constantly improving to bring you the latest and most effective solutions.",
+    "Customer satisfaction is at the heart of everything we do, with dedicated support and personalized service.",
+    "Join countless others who trust us for exceptional results every time and experience the difference we can make in your journey.",
   ];
 
   const totalMembers = teamMembers.length;
@@ -227,14 +224,14 @@ function LandingPage() {
       quote: "At our tech hub, we embrace innovation and creativity, ensuring that every challenge is met with a solution. Our team is dedicated to providing exceptional service, making it easy for you to navigate the complexities of technology.",
     },
     {
-      name: "Ola Adeyemi",
-      role: "Creative Director",
+      name: "Micheal Audu",
+      role: "Cybersecurity Expert",
       image: olaImage,
       quote: "Afresh Centre helped our team move faster with clearer priorities and better collaboration. The experience felt structured, supportive, and focused on real outcomes.",
     },
     {
-      name: "Afresh Team",
-      role: "Product & Strategy",
+      name: "William Bosworth",
+      role: "Software Engineer",
       image: aboutImageRight,
       quote: "We value long-term partnerships built on trust and measurable progress. The process is transparent and the results speak for themselves.",
     },
@@ -280,14 +277,6 @@ function LandingPage() {
   const HERO_TEXT = "EMPOWERING AFRICA THROUGH INNOVATION AND CREATIVITY";
   const { displayed: typedHero, done: typingDone } = useTypewriter(HERO_TEXT, 38, 400);
 
-  // ── Parallax on hero ──
-  const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <div className="landingPage">
       <SiteNavbar />
@@ -297,7 +286,7 @@ function LandingPage() {
         className="hero parallax-hero"
         style={{
           backgroundImage: `url(${heroBackground})`,
-          backgroundPositionY: `calc(50% + ${scrollY * 0.3}px)`,
+          backgroundPosition: "center",
         }}>
         <div className="hero-content">
           <h1 className="hero-anim-title">

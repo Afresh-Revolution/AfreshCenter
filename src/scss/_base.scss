@@ -11,6 +11,11 @@ body {
   overflow-x: hidden;
 }
 
+:root {
+  --site-page-max-width: 1280px;
+  --site-page-gutter: clamp(16px, 3vw, 32px);
+}
+
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,

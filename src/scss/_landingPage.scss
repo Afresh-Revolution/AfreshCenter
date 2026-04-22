@@ -24,39 +24,44 @@ body {
 
 .landingPage {
   width: 100%;
+  --lp-page-gutter: var(--site-page-gutter);
+  --lp-page-max-width: var(--site-page-max-width);
 }
 
 /* utility */
 .container {
-  max-width: 1280px;
+  max-width: var(--lp-page-max-width);
   margin: 0 auto;
-  padding: 0 32px;
+  padding-inline: var(--lp-page-gutter);
 }
 
 /* hero */
 .hero {
   position: relative;
-  background-color: #f0f7fa;
+  background-color: #0b1520;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  padding: 60px 32px;
+  padding: 60px var(--lp-page-gutter);
   border-radius: 0 0 40px 40px;
   overflow: hidden;
+  min-height: clamp(520px, 72vh, 860px);
 }
 
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(6, 16, 30, 0.74), rgba(6, 16, 30, 0.78));
+  background: linear-gradient(180deg, rgba(6, 16, 30, 0.62), rgba(6, 16, 30, 0.72));
+  z-index: 1;
 }
 
 .hero-content {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   max-width: 800px;
   margin: 0 auto;
+  padding-inline: var(--lp-page-gutter);
   text-align: center;
 }
 
@@ -122,10 +127,10 @@ body {
 
 .hero-social {
   position: absolute;
-  right: 36px;
+  right: var(--lp-page-gutter);
   top: 50%;
   transform: translateY(-50%);
-  z-index: 2;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -151,7 +156,7 @@ body {
 
 /* affiliated companies */
 .affiliated {
-  padding: 40px 32px 20px;
+  padding: 40px var(--lp-page-gutter) 20px;
   text-align: center;
 }
 
@@ -212,7 +217,7 @@ body {
 /* about section */
 .about {
   background: whitesmoke;
-  padding: 64px 32px;
+  padding: 64px var(--lp-page-gutter);
 }
 
 .about-grid {
@@ -276,7 +281,7 @@ body {
 
 .about-photo {
   width: clamp(190px, 18vw, 250px);
-  height: clamp(270px, 26vw, 340px);
+  height: clamp(310px, 30vw, 390px);
   border-radius: 999px;
   overflow: hidden;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
@@ -369,7 +374,8 @@ body {
 
   .service-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: 700px;
+    width: 100%;
+    max-width: none;
   }
 
   .lp-team-nav-actions {
@@ -385,6 +391,8 @@ body {
 
   .service-cards {
     grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
   }
 
   .lp-team-header {
@@ -400,7 +408,7 @@ body {
 /* services preview (exactly from screenshot: six cards, view all) */
 .services-preview {
   position: relative;
-  padding: 48px 32px 54px;
+  padding: 48px var(--lp-page-gutter) 54px;
   background: #f4f4f4;
   overflow: hidden;
 }
@@ -563,9 +571,17 @@ body {
   --lp-team-feature-scale: 1.14;
   --lp-team-gap: 10px;
   --lp-team-step: calc(var(--lp-team-card-width) + var(--lp-team-gap));
-  padding: 44px 24px 58px;
+  padding: 44px var(--lp-page-gutter) 58px;
   background: #ebebeb;
   max-width: 1440px;
+}
+
+.landingPage .team-section {
+  padding-inline: var(--lp-page-gutter);
+}
+
+.landingPage .team-header {
+  padding-inline: var(--lp-page-gutter);
 }
 
 .lp-team-header {
@@ -698,7 +714,7 @@ body {
 .topworks {
   position: relative;
   background: #efefef;
-  padding: 50px 24px 64px;
+  padding: 50px var(--lp-page-gutter) 64px;
   overflow: hidden;
 }
 
@@ -715,7 +731,8 @@ body {
 }
 
 .topworks-container {
-  max-width: 980px;
+  width: 100%;
+  max-width: none;
 }
 
 .works-header {
@@ -826,7 +843,7 @@ body {
 }
 
 .why-choose-section {
-  padding: 40px 24px 64px;
+  padding: 40px var(--lp-page-gutter) 64px;
   background: #ffffff;
 }
 
@@ -1015,14 +1032,15 @@ body {
 /* contact / get in touch */
 .contact-section {
   background: #efefef;
-  padding: 36px 24px 12px;
+  padding: 36px var(--lp-page-gutter) 12px;
 }
 
 .contact-wrap {
   display: grid;
   grid-template-columns: 1.3fr 0.9fr;
   gap: 0;
-  max-width: 1120px;
+  width: 100%;
+  max-width: none;
   border-radius: 14px;
   overflow: hidden;
   margin: 0 auto;
@@ -1168,7 +1186,7 @@ body {
   position: relative;
   background: #f4f4f4;
   margin-top: 36px;
-  padding: 96px 24px 108px;
+  padding: 96px var(--lp-page-gutter) 108px;
   overflow: hidden;
   min-height: 300px;
 }
@@ -1273,17 +1291,10 @@ body {
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 0;
-  }
-
-  .contact-wrap {
-    padding: 0;
-  }
-
   .hero {
-    padding: 42px 18px;
+    padding: 42px var(--lp-page-gutter);
     border-radius: 0 0 26px 26px;
+    min-height: 460px;
   }
 
   .hero h1 {
@@ -1302,12 +1313,12 @@ body {
   }
 
   .hero-social {
-    right: 22px;
+    right: var(--lp-page-gutter);
     gap: 10px;
   }
 
   .affiliated {
-    padding: 28px 16px 10px;
+    padding: 28px var(--lp-page-gutter) 10px;
   }
 
   .affiliated h4 {
@@ -1330,7 +1341,7 @@ body {
   }
 
   .about {
-    padding: 38px 12px;
+    padding: 38px var(--lp-page-gutter);
   }
 
   .about-text h2 {
@@ -1351,7 +1362,7 @@ body {
 
   .about-photo {
     width: 138px;
-    height: 188px;
+    height: 220px;
   }
 
   .about-count-number {
@@ -1363,7 +1374,7 @@ body {
   }
 
   .services-preview {
-    padding: 30px 12px 34px;
+    padding: 30px var(--lp-page-gutter) 34px;
   }
 
   .section-title {
@@ -1396,7 +1407,7 @@ body {
   }
 
   .team-section {
-    padding: 0 14px;
+    padding-inline: var(--lp-page-gutter);
   }
 
   .team-header {
@@ -1515,7 +1526,7 @@ body {
 
   .about-photo {
     width: 120px;
-    height: 164px;
+    height: 196px;
   }
 
   .about-count-badge {
@@ -1574,12 +1585,9 @@ body {
 }
 
 @media (max-width: 380px) {
-  .container {
-    padding: 0 10px;
-  }
-
   .hero {
-    padding: 34px 10px;
+    padding: 34px var(--lp-page-gutter);
+    min-height: 400px;
   }
 
   .hero h1 {
@@ -1631,7 +1639,7 @@ body {
   }
 
   .team-section {
-    padding: 26px 8px 34px;
+    padding-inline: var(--lp-page-gutter);
   }
 
   .team-slider-viewport {
