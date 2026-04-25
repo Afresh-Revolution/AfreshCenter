@@ -166,7 +166,7 @@ $close-color: #aaa;
   // ── Main content: fills viewport height, full-width page with centered content ──
   .services-main {
     flex: 1;
-
+    width: min(1280px, calc(100% - 24px));
     margin: 0 auto;
     position: relative;
     z-index: 2;
