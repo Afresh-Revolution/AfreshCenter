@@ -824,10 +824,13 @@ body {
 
   .ceo-img-wrap {
     order: -1;
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .ceo-img {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 3 / 4;
   }
 
   .team-carousel {

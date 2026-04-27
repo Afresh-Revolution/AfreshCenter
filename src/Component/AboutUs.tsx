@@ -452,6 +452,8 @@ function AboutUs() {
                   <article
                     key={`${member.id}-${idx}`}
                     className={`team-card${isFeatured ? ' team-card--featured' : ''}`}
+                    onClick={!isFeatured ? () => { setLoopFeaturedIndex(idx); setTeamTickSeed((s) => s + 1); } : undefined}
+                    style={!isFeatured ? { cursor: 'pointer' } : undefined}
                   >
                     <div className="team-card-img-wrap">
                       {showImage ? (

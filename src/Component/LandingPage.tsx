@@ -458,7 +458,9 @@ function LandingPage() {
                 return (
                   <article
                     key={`${member.id}-${idx}`}
-                    className={`team-card${isFeatured ? " team-card--featured" : ""}`}>
+                    className={`team-card${isFeatured ? " team-card--featured" : ""}`}
+                    onClick={!isFeatured ? () => { setLoopFeaturedIndex(idx); setTeamTickSeed((s) => s + 1); } : undefined}
+                    style={!isFeatured ? { cursor: "pointer" } : undefined}>
                     <div className="team-card-img-wrap">
                       <img
                         src={member.image_url ? (getTeamImageUrl(member.image_url) ?? "") : ""}

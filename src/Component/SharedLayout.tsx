@@ -228,7 +228,7 @@ export function SiteFooter() {
       <div className="site-footer-bottom">
         <p>
           ALL RIGHT RESERVED
-          <NavLink to="/admin/login" className="site-footer-admin-link" aria-label="Admin login">
+          <NavLink to="/login" className="site-footer-admin-link" aria-label="Admin login">
             ©
           </NavLink>{' '}
           AfrESH {currentYear}
